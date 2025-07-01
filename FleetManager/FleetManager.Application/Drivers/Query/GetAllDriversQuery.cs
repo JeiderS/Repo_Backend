@@ -5,5 +5,5 @@ using FleetManager.Application.Drivers.Dto;
 
 namespace FleetManager.Application.Drivers.Query;
 
-public record GetAllDriversQuery(PaginationParams paginationParams) : IRequest<IEnumerable<DriversDto>>;
+public record GetAllDriversQuery(PaginationParams PaginationParams) : IRequest<IEnumerable<DriversDto>>;
 

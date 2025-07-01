@@ -1,15 +1,15 @@
-﻿using FleetManager.Application.Drivers.Query;
+﻿using FleetManager.Application.Routes.Query;
 using FleetManager.Domain.Common.Pagination;
 using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
 using FleetManager.Application.Common.Features;
 
-namespace FleetManager.Api.Controllers.Drivers
+namespace FleetManager.Api.Controllers.Routes
 {
+
     [ApiController]
-    [Route("api/v1/drivers")]
-    public class DriversControllers(IMediator mediator) : ControllerBase
+    [Route("api/v1/routes")]
+    public class RoutesController(IMediator mediator) :  ControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -19,11 +19,11 @@ namespace FleetManager.Api.Controllers.Drivers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var data = await mediator.Send(new GetAllDriversQuery(new PaginationParams
-                    {
-                        PageNumber = paginationParams.PageNumber,
-                        PageSize = paginationParams.PageSize
-                    }
+            var data = await mediator.Send(new GetAllRoutesQuery(new PaginationParams
+            {
+                PageNumber = paginationParams.PageNumber,
+                PageSize = paginationParams.PageSize
+            }
                 )
             );
             if (data is null)
@@ -34,3 +34,4 @@ namespace FleetManager.Api.Controllers.Drivers
         }
     }
 }
+

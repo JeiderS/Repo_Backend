@@ -1,7 +1,22 @@
-﻿namespace FleetManager.Infrastructure.Persistence.Mysql
+﻿using FleetManager.Domain.Drivers.DomainDrivers;
+using FleetManager.Domain.Routes.DomainRoutes;
+using FleetManager.Domain.Vehicles.DomainVehicles;
+using FleetManager.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl;
+using FleetManager.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl;
+using FleetManager.Infrastructure.Persistence.Mysql.Vehicles.DomainService.Impl;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace FleetManager.Infrastructure.Persistence.Mysql
 {
-    public class DependencyInjectionService
+    public static class DependencyInjectionService
     {
+        public static IServiceCollection AddPersistence(this IServiceCollection services)
+        {
+            services.AddScoped<IDriversGetAllService, DriversGetAllServices>();
+            services.AddScoped<IRoutesGetAllService, RoutesGetAllServices>();
+            services.AddScoped<IVehiclesGetAllService, VehiclesGetAllServices>();
+            return services;
+        }
 
     }
 }

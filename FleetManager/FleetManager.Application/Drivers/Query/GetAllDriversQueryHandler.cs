@@ -5,7 +5,9 @@ using FleetManager.Domain.Drivers.DomainDrivers;
 
 namespace FleetManager.Application.Drivers.Query
 {
-    public class GetAllDriversQueryHandler(IMapper mapper, IDriversGetAllService driversGetAllService) : IRequestHandler<GetAllDriversQuery, IEnumerable<DriversDto>>
+    public class GetAllDriversQueryHandler(IMapper mapper, 
+        IDriversGetAllService driversGetAllService) 
+        : IRequestHandler<GetAllDriversQuery, IEnumerable<DriversDto>>
     {
         public async Task<IEnumerable<DriversDto>> Handle(GetAllDriversQuery request, CancellationToken cancellationToken)
         {

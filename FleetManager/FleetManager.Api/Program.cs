@@ -1,4 +1,7 @@
 using FleetManager.Application;
+using FleetManager.Infrastructure.Persistence.Mysql;
+using FleetManager.Infrastructure.Persistence.Mysql.Context;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -7,13 +10,23 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+builder.Services.AddApplication();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services
-    .AddApplication();
-    
+    .AddApplication()
+    .AddPersistence();
+
+// configure Conexion MySQL
+var connectionString = builder.Configuration.GetConnectionString("MysqlConnection");
+
+builder.Services.AddDbContext<DataBaseContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 
 var app = builder.Build();
 

@@ -6,7 +6,9 @@ using FleetManager.Domain.Routes.DomainRoutes;
 
 namespace FleetManager.Application.Routes.Query
 {
-    public class GetAllRoutesQueryHandler(IMapper mapper, IRoutesGetAllService routesGetAllService) : IRequestHandler<GetAllRoutesQuery, IEnumerable<RoutesDto>>
+    public class GetAllRoutesQueryHandler(IMapper mapper, 
+        IRoutesGetAllService routesGetAllService) 
+        : IRequestHandler<GetAllRoutesQuery, IEnumerable<RoutesDto>>
     {
         public async Task<IEnumerable<RoutesDto>> Handle(GetAllRoutesQuery request, CancellationToken cancellationToken)
         {

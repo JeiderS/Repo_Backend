@@ -6,6 +6,6 @@ using System.Collections.Generic;
 
 namespace FleetManager.Application.Routes.Query;
 
-public record GetAllRoutesQuery(PaginationParams paginationParams) : IRequest<IEnumerable<RoutesDto>>;
+public record GetAllRoutesQuery(PaginationParams PaginationParams) : IRequest<IEnumerable<RoutesDto>>;
 
 

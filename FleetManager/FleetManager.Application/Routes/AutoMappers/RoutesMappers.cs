@@ -1,9 +1,9 @@
 ﻿
 using AutoMapper;
-using Fleet.Application.Routes.Dto;
-using Fleet.Domain.Routes.Entity;
+using FleetManager.Application.Routes.Dto;
+using FleetManager.Domain.Routes.Entity;
 
-namespace Fleet.Application.Routes.AutoMappers
+namespace FleetManager.Application.Routes.AutoMappers
 {
     public class RoutesMappers : Profile
     {

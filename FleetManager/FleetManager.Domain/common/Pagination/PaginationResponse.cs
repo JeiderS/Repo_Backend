@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-
+﻿
 namespace FleetManager.Domain.Common.Pagination
 {
     public class PaginationResponse<T>

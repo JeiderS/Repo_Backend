@@ -8,7 +8,7 @@ namespace FleetManager.Api.Controllers.Vehicles
 {
     [ApiController]
     [Route("api/v1/Vehicles")]
-    public class VehiclesControllers(IMediator mediator) : ControllerBase
+    public class VehiclesController(IMediator mediator) : ControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -7,7 +7,11 @@ using FleetManager.Application.Vehicles.Dto;
 
 namespace FleetManager.Application.Vehicles.Query
 {
-    public class GetAllVehiclesQueryHandler(IMapper mapper, IVehiclesGetAllService vehiclesGetAllService) : IRequestHandler<GetAllVehiclesQuery, IEnumerable<VehiclesDto>>
+    public class GetAllVehiclesQueryHandler(
+        IMapper mapper, 
+        IVehiclesGetAllService vehiclesGetAllService) 
+        : IRequestHandler<GetAllVehiclesQuery, IEnumerable<VehiclesDto>>
+ 
     {
         public async Task<IEnumerable<VehiclesDto>> Handle(GetAllVehiclesQuery request, CancellationToken cancellationToken)
         {

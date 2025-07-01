@@ -6,7 +6,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using FleetManager.Application.Common.Behaviors;
 using FleetManager.Application.Drivers.AutoMappers;
-using Fleet.Application.Routes.AutoMappers;
+using FleetManager.Application.Routes.AutoMappers;
 using FleetManager.Application.Vehicles.AutoMappers;
 
 namespace FleetManager.Application;
