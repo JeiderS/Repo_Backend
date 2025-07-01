@@ -14,4 +14,10 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FleetManager.Application\FleetManager.Application.csproj" />
+    <ProjectReference Include="..\FleetManager.Domain\FleetManager.Domain.csproj" />
+    <ProjectReference Include="..\FleetManager.Infrastructure.Persistence.Mysql\FleetManager.Infrastructure.Persistence.Mysql.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FleetManager.Domain\FleetManager.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
