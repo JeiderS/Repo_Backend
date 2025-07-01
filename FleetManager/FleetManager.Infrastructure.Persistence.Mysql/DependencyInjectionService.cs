@@ -19,6 +19,11 @@ namespace FleetManager.Infrastructure.Persistence.Mysql
             services.AddScoped<IDriversDeleteService, DriversDeleteService>();
 
             services.AddScoped<IRoutesGetAllService, RoutesGetAllServices>();
+            services.AddScoped<IRoutesCreateService, RoutesCreateService>();
+            services.AddScoped<IRoutesGetByIdService, RoutesGetByIdService>();
+            services.AddScoped<IRoutesUpdateService, RoutesUpdateService>();
+            services.AddScoped<IRoutesDeleteService, RoutesDeleteService>();
+
             services.AddScoped<IVehiclesGetAllService, VehiclesGetAllServices>();
             return services;
         }
