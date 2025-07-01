@@ -1,12 +1,11 @@
 ﻿using System.Net;
-using Fleet.Domain.Common.Results;
 
-namespace Fleet.Domain.Common.Results.Errors
+namespace FleetManager.Domain.Common.Results.Errors
 {
     /// <summary>
     /// Represents an error with a code, description, and associated HTTP status code.
     /// </summary>
-    public class Error
+    public record Error
     {
     /// <summary>
     /// Gets or sets the error code.

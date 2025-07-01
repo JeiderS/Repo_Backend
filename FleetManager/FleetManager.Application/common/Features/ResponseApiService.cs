@@ -1,13 +1,13 @@
-﻿using Fleet.Domain.Common.Models;
+﻿using FleetManager.Domain.Common.Models;
 
-namespace Fleet.Application.Common.Features
+namespace FleetManager.Application.Common.Features
 {
     public static class ResponseApiService
     {
         public static BaseResponseModel Response(
             int statusCode,
-            object data = null,
-            string message = null)
+            object? data = null,
+            string? message = null)
         {
             bool success = false;
 

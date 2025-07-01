@@ -1,4 +1,4 @@
-﻿namespace Fleet.Domain.Common.Pagination
+﻿namespace FleetManager.Domain.Common.Pagination
 {
     public class PaginationParams
     {

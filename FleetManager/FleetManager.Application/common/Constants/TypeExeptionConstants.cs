@@ -1,4 +1,4 @@
-﻿namespace WebApi.Application.Common.Constants
+﻿namespace FleetManager.Application.Common.Constants
 {
     public static class TypeExeptionConstants
     {

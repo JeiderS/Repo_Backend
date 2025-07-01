@@ -1,8 +1,5 @@
-﻿namespace WebApi.Domain.Common.Results.Errors
+﻿namespace FleetManager.Domain.Common.Results.Errors
 {
-    public interface IError
-    {
-        
-    }
+    public interface IError;
 }
 

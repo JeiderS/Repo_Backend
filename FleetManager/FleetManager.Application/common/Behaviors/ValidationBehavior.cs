@@ -1,41 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
-using FluentValidation;
+﻿using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
-using System.Linq;
 
-namespace Fleet.Application.Common.Behaviors
+namespace FleetManager.Application.Common.Behaviors;
+
+public class ValidationBehaviour<TRequest,
+    TResponse>(IEnumerable<IValidator<TRequest>> validators)
+
+    : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
-    public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
-
-        public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
+        if (validators.Any())
         {
-            _validators = validators;
-        }
-
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-
-        {
-            if (_validators.Any())
+            ValidationContext<TRequest> context = new ValidationContext<TRequest>(request);
+            List<ValidationFailure> list = (await Task.WhenAll(validators.Select((v) => v.ValidateAsync(context, cancellationToken)))).Where((r) => r.Errors.Any()).SelectMany((r) => r.Errors).ToList();
+            if (list.Any())
             {
-                var context = new ValidationContext<TRequest>(request);
-                var failures = (await Task.WhenAll(
-                        _validators.Select(v => v.ValidateAsync(context, cancellationToken))))
-                    .SelectMany(r => r.Errors)
-                    .Where(f => f != null)
-                    .ToList();
-
-                if (failures.Any())
-                    throw new ValidationException(failures);
+                throw new ValidationException(list);
             }
-
-            return await next();
         }
+
+        return await next();
     }
-
 }
-
