@@ -1,7 +1,6 @@
 ﻿
-using System;
 
-namespace Fleet.Domain.Drivers.Entity
+namespace FleetManager.Domain.Drivers.Entity
 {
     public class DriversEntity
     {

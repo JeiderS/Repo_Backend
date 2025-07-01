@@ -1,17 +1,13 @@
 ﻿
 
-using Fleet.Domain.Common.Pagination;
-using Fleet.Domain.Routes.Entity;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using FleetManager.Domain.Common.Pagination;
+using FleetManager.Domain.Routes.Entity;
 
 
-namespace Fleet.Domain.Routes.DomainRoutes
+namespace FleetManager.Domain.Routes.DomainRoutes;
+
+public interface IRoutesGetAllService
 {
-    public interface IRoutesGetAllService
-    {
-        Task<IEnumerable<RoutesEntity>> GetAllAsync(PaginationParams PaginationParams);
-    }
-
+    Task<IEnumerable<RoutesEntity>> GetAllAsync(PaginationParams PaginationParams);
 }
 

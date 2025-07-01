@@ -1,17 +1,14 @@
 ﻿
 
-using Fleet.Domain.Common.Pagination;
-using Fleet.Domain.Vehicles.Entity;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using FleetManager.Domain.Common.Pagination;
+using FleetManager.Domain.Vehicles.Entity;
 
 
-namespace Fleet.Domain.Vehicles.DomainVehicles
+namespace FleetManager.Domain.Vehicles.DomainVehicles;
+
+public interface IVehiclesGetAllService
 {
-    public interface IVehiclesGetAllService
-    {
-        Task<IEnumerable<VehiclesEntity>> GetAllAsync(PaginationParams PaginationParams);
-    }
+    Task<IEnumerable<VehiclesEntity>> GetAllAsync(PaginationParams PaginationParams);
 }
 
 
