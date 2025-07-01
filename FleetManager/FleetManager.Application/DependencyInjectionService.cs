@@ -1,6 +1,6 @@
 ﻿namespace FleetManager.Application
 {
-    public class Class1
+    public class DependencyInjectionService
     {
 
     }
