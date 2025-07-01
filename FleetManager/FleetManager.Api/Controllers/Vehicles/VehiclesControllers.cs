@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using FleetManager.Application.Common.Features;
 
-namespace Fleet.Api.Controllers.Vehicles
+namespace FleetManager.Api.Controllers.Vehicles
 {
     [ApiController]
     [Route("api/v1/Vehicles")]
