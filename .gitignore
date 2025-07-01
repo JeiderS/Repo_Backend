@@ -1,0 +1,22 @@
+## Build results
+bin/
+obj/
+*.dll
+*.exe
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Visual Studio
+.vs/
+*.VC.db
+
+## NuGet
+packages/
+*.nupkg
+
+## Logs
+*.log
