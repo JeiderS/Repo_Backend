@@ -5,14 +5,14 @@ namespace FleetManager.Domain.Drivers.Entity
     public class DriversEntity
     {
         public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string SSN { get; set; }
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+        public required string SSN { get; set; }
         public DateTime Dob { get; set; }
-        public string Address { get; set; }
-        public string City { get; set; }
-        public string Zip { get; set; }
-        public string Phone { get; set; }
+        public required string Address { get; set; }
+        public required string City { get; set; }
+        public required string Zip { get; set; }
+        public required string Phone { get; set; }
         public bool Active { get; set; }
     }
 }

@@ -5,11 +5,14 @@ using Microsoft.EntityFrameworkCore;
 
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddApplication();
@@ -26,6 +29,7 @@ var connectionString = builder.Configuration.GetConnectionString("MysqlConnectio
 
 builder.Services.AddDbContext<DataBaseContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 
 
 var app = builder.Build();

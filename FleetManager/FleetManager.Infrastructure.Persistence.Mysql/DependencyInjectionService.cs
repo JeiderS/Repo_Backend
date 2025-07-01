@@ -13,6 +13,11 @@ namespace FleetManager.Infrastructure.Persistence.Mysql
         public static IServiceCollection AddPersistence(this IServiceCollection services)
         {
             services.AddScoped<IDriversGetAllService, DriversGetAllServices>();
+            services.AddScoped<IDriversCreateService, DriversCreateService>();
+            services.AddScoped<IDriversGetByIdService, DriversGetByIdService>();
+            services.AddScoped<IDriversUpdateService, DriversUpdateService>();
+            services.AddScoped<IDriversDeleteService, DriversDeleteService>();
+
             services.AddScoped<IRoutesGetAllService, RoutesGetAllServices>();
             services.AddScoped<IVehiclesGetAllService, VehiclesGetAllServices>();
             return services;

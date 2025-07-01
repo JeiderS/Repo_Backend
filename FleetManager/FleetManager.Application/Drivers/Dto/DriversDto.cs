@@ -1,17 +1,16 @@
 ﻿
-namespace FleetManager.Application.Drivers.Dto
-{
-    public class DriversDto
-    {
-        public int Id { get; set; }
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public string? SSN { get; set; }
-        public DateTime Dob { get; set; }
-        public string? Address { get; set; }
-        public string? City { get; set; }
-        public string? Zip { get; set; }
-        public string? Phone { get; set; }
-        public bool Active { get; set; }
-    }
-}
+namespace FleetManager.Application.Drivers.Dto;
+
+public record DriversDto(
+    int Id,
+    string? FirstName,
+    string? LastName,
+    string? SSN,
+    DateTime Dob,
+    string? Address,
+    string? City,
+    string? Zip,
+    string? Phone,
+    bool Active
+);
+
