@@ -8,6 +8,7 @@ using FleetManager.Application.Vehicles.Commands.DeleteVehicles;
 using FleetManager.Application.Vehicles.Commands.UpdateVehicles;
 using FleetManager.Application.Vehicles.Errors;
 using FleetManager.Application.Vehicles.Query.GetVehiclesById;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FleetManager.Api.Controllers.Vehicles
 {
@@ -20,6 +21,7 @@ namespace FleetManager.Api.Controllers.Vehicles
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
@@ -36,6 +38,7 @@ namespace FleetManager.Api.Controllers.Vehicles
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -52,6 +55,7 @@ namespace FleetManager.Api.Controllers.Vehicles
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IResult> GetById([FromRoute] int id)
         {
@@ -70,6 +74,7 @@ namespace FleetManager.Api.Controllers.Vehicles
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpPost]
         public async Task<IResult> Create([FromBody] CreateVehiclesCommand createVehiclesCommand)
         //[FromServices] IValidator<CreateDriversRequestDto> validator)
@@ -92,6 +97,7 @@ namespace FleetManager.Api.Controllers.Vehicles
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateVehiclesCommand updateVehiclesCommand)
         {

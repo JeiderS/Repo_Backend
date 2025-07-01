@@ -8,6 +8,7 @@ using FleetManager.Application.Routes.Commands.UpdateRoutes;
 using FleetManager.Application.Routes.Errors;
 using FleetManager.Application.Routes.Query.GetRoutesById;
 using FleetManager.Application.Routes.Commands.DeleteRoutes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FleetManager.Api.Controllers.Routes
 {
@@ -21,6 +22,7 @@ namespace FleetManager.Api.Controllers.Routes
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
@@ -39,6 +41,7 @@ namespace FleetManager.Api.Controllers.Routes
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -55,6 +58,7 @@ namespace FleetManager.Api.Controllers.Routes
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IResult> GetById([FromRoute] int id)
         {
@@ -73,6 +77,7 @@ namespace FleetManager.Api.Controllers.Routes
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpPost]
         public async Task<IResult> Create([FromBody] CreateRoutesCommand createRoutesCommand)
         //[FromServices] IValidator<CreateDriversRequestDto> validator)
@@ -95,6 +100,7 @@ namespace FleetManager.Api.Controllers.Routes
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UpdateRoutesCommand updateRoutesCommand)
         {
