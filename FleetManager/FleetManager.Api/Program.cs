@@ -13,11 +13,18 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost",
+        policy => policy.WithOrigins()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
+
 
 builder.Services.AddControllers();
 
-
+builder.Services.AddRouting(routing => routing.LowercaseUrls = true);
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddApplication();
@@ -98,6 +105,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowLocalhost");
+
+
 app.UseAuthentication();
 app.UseAuthorization();
 
