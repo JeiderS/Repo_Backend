@@ -32,9 +32,10 @@ builder.Services.AddApplication();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services
-    .AddApplication()
-    .AddPersistence();
+
+    builder.Services
+        .AddApplication()
+        .AddPersistence();
 
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -92,9 +93,18 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(type => type.FullName);
 });
 
+//comentar si se va compilar localmente
 builder.WebHost.UseUrls("http://*:8081");
 
 var app = builder.Build();
+
+
+//configure Migration
+using (var scope = app.Services.CreateScope())
+{
+    DataBaseContext context = scope.ServiceProvider.GetRequiredService<DataBaseContext>();
+    context.Database.Migrate();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
