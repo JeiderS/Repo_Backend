@@ -34,7 +34,7 @@
 ## 🚀 Instrucciones de Despliegue (Docker)
 
 ### 1. Clonar el repositorio
-```bash
+```
 git clone https://github.com/jeider05/BackendFleet.git
 cd FleetManager
 
@@ -42,6 +42,9 @@ cd FleetManager
 docker build -t fleetmanager-api .
 4. Ejecutar el contenedor
 docker run -p 8081:8081 fleetmanager-api
+```
+URL API:
+http://localhost:8081
 
 🔐 Keycloak
 Se recomienda tener un Keycloak corriendo por separado (por Docker o instancia propia) y luego importar manualmente el archivo realm-export.json.
@@ -51,23 +54,26 @@ Para iniciar Keycloak con configuración básica:
 
 Iniciar Keycloak con configuración básica en Docker:
 
+```
 docker run -p 8080:8080 \
     -e KEYCLOAK_ADMIN=admin \
     -e KEYCLOAK_ADMIN_PASSWORD=admin \
     quay.io/keycloak/keycloak:24.0.1 \
     start-dev
-Abren
-http://localhost:8080
 ```
+URL Admin Panel:
+http://localhost:8080
+
 Le dan Click en 
 Realm settings
 Partial import
+
 ![image](https://github.com/user-attachments/assets/c8e634b5-81ad-467a-b1b4-c55c52cd8a2a)
 
 por ultimo suben el archivo 
 ![image](https://github.com/user-attachments/assets/50fea07b-bc5d-48d7-b12c-fa10ae6e5110)
 
-haora pueden generar un token JWT usando este enpoint desde postman 
+Haora pueden generar un token JWT usando este enpoint desde postman 
 
 Post http://localhost:8080/realms/App/protocol/openid-connect/token
 
