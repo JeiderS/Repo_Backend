@@ -73,44 +73,41 @@ Post http://localhost:8080/realms/App/protocol/openid-connect/token
 
 Con los siguientes parámetros (formulario x-www-form-urlencoded):
 
+```
 Clave	Valor
 grant_type	password
 client_id	admin
 username	admin
 password	password
-
+```
 🛢️ Backup de la Base de Datos
 Se incluye un archivo fleetmanager_backup.sql con la estructura y datos de ejemplo de la base de datos MySQL utilizada en el proyecto.
 
 📥 Descargar Backup
 📄 [Descargar Backup SQL](./backup/fleetmanager-backup.sql)
 
-🗂️ Estructura del Proyecto
+## 🗂️ Estructura del Proyecto
 
+```
 📦 FleetManager
-├── 📁 Api                         # Proyecto principal de la API REST
-│   ├── Controllers               # Controladores HTTP
-│   └── Program.cs               # Configuración inicial y dependencias
-│
-├── 📁 Application                # Lógica de negocio (CQRS)
-│   ├── Commands                 # Comandos (escrituras)
-│   ├── Queries                  # Consultas (lecturas)
-│   ├── Dtos                     # Objetos de transferencia de datos
-│   └── Interfaces               # Interfaces de servicios
-│
-├── 📁 Domain                     # Entidades del dominio
-│   └── Entities                 # Clases que representan las tablas
-│
-├── 📁 Infrastructure            # Capa de acceso a datos
-│   ├── Persistence              # Implementación de interfaces
-│   └── Context                  # DbContext con EF Core
-│   
-│
-├── 📁 keycloak                  # Archivo de configuración del realm
-│   └── realm-export.json       # Realm exportado de Keycloak
-│
-├── 📁 backup                    # Copia de seguridad de base de datos
-    └── fleetmanager-backup.sql # Dump SQL de la base de datos
+├── 📁 Api                       # Proyecto principal de la API REST
+│   ├── Controllers             # Controladores HTTP
+│   └── Program.cs             # Configuración inicial y dependencias
+├── 📁 Application              # Lógica de negocio (CQRS)
+│   ├── Commands                # Comandos (escrituras)
+│   ├── Queries                 # Consultas (lecturas)
+│   ├── Dtos                    # Objetos de transferencia de datos
+│   └── Interfaces              # Interfaces de servicios
+├── 📁 Domain                   # Entidades del dominio
+│   └── Entities                # Clases que representan las tablas
+├── 📁 Infrastructure           # Capa de acceso a datos
+│   ├── Persistence             # Implementación de interfaces
+│   └── Context                 # DbContext con EF Core
+├── 📁 keycloak                 # Archivo de configuración del realm
+│   └── realm-export.json      # Realm exportado de Keycloak
+├── 📁 backup                   # Copia de seguridad de base de datos
+│   └── fleetmanager-backup.sql # Dump SQL de la base de datos
+```
 
 
 
