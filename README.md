@@ -27,6 +27,10 @@
 - Keycloak (Docker o ya configurado)
 - MySQL
 
+ # Descargar
+ [Descargar realm-export.json](./keycloak/realm-export.json)
+ [Descargar Backup SQL](./backup/fleetmanager-backup.sql)
+
 ## 🚀 Instrucciones de Despliegue (Docker)
 
 ### 1. Clonar el repositorio
@@ -54,7 +58,7 @@ docker run -p 8080:8080 \
     start-dev
 Abren
 http://localhost:8080
-
+```
 Le dan Click en 
 Realm settings
 Partial import
