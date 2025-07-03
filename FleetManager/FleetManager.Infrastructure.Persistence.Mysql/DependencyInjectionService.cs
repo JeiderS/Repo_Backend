@@ -1,8 +1,12 @@
 ﻿using FleetManager.Domain.Drivers.DomainDrivers;
 using FleetManager.Domain.Routes.DomainRoutes;
+using FleetManager.Domain.Schedules.DomainSchedules;
+using FleetManager.Domain.ScheduleView.DomainScheduleView;
 using FleetManager.Domain.Vehicles.DomainVehicles;
 using FleetManager.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl;
 using FleetManager.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl;
+using FleetManager.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl;
+using FleetManager.Infrastructure.Persistence.Mysql.ScheduleView.DomainService.Impl;
 using FleetManager.Infrastructure.Persistence.Mysql.Vehicles.DomainService.Impl;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,6 +33,15 @@ namespace FleetManager.Infrastructure.Persistence.Mysql
             services.AddScoped<IVehiclesGetByIdService, VehiclesGetByIdService>();
             services.AddScoped<IVehiclesUpdateService, VehiclesUpdateService>();
             services.AddScoped<IVehiclesDeleteService, VehiclesDeleteService>();
+
+            services.AddScoped<ISchedulesCreateService, SchedulesCreateService>();
+            services.AddScoped<ISchedulesDeleteService, SchedulesDeleteService>();
+            services.AddScoped<ISchedulesGetAllService, SchedulesGetAllService>();
+            services.AddScoped<ISchedulesGetByIdService, SchedulesGetByIdService>();
+            services.AddScoped<ISchedulesUpdateService, SchedulesUpdateService>();
+
+            services.AddScoped<IScheduleViewGetAllService, ScheduleViewGetAllService>();
+
             return services;
         }
 

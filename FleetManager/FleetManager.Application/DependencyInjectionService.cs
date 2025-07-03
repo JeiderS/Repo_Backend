@@ -8,6 +8,8 @@ using FleetManager.Application.Common.Behaviors;
 using FleetManager.Application.Drivers.AutoMappers;
 using FleetManager.Application.Routes.AutoMappers;
 using FleetManager.Application.Vehicles.AutoMappers;
+using FleetManager.Application.ScheduleView.AutoMappers;
+using FleetManager.Application.Schedules.AutoMappers;
 
 namespace FleetManager.Application;
 
@@ -22,6 +24,8 @@ public static class DependencyInjectionService
             config.AddProfile(new DriversMappers());
             config.AddProfile(new RoutesMappers());
             config.AddProfile(new VehiclesMappers());
+            config.AddProfile(new ScheduleViewMappers());
+            config.AddProfile(new SchedulesMappers());
 
         });
         services.AddSingleton(mapper.CreateMapper());

@@ -3,6 +3,8 @@ using FleetManager.Infrastructure.Persistence.Mysql.EntityConfiguration;
 using FleetManager.Domain.Drivers.Entity;
 using FleetManager.Domain.Routes.Entity;
 using FleetManager.Domain.Vehicles.Entity;
+using FleetManager.Domain.Schedules.Entity;
+using FleetManager.Domain.ScheduleView.Entity;
 
 namespace FleetManager.Infrastructure.Persistence.Mysql.Context;
 public class DataBaseContext(DbContextOptions options) : DbContext(options)
@@ -10,6 +12,8 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
     public DbSet<DriversEntity> Drivers { get; set; }
     public DbSet<RoutesEntity> Routes { get; set; }
     public DbSet<VehiclesEntity> Vehicles { get; set; }
+    public DbSet<SchedulesEntity> Schedules { get; set; }
+    public DbSet<ScheduleViewEntity> ScheduleViews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,6 +28,10 @@ public class DataBaseContext(DbContextOptions options) : DbContext(options)
         new RoutesConfiguration(modelBuilder.Entity<RoutesEntity>());
 
         new VehiclesConfiguration(modelBuilder.Entity<VehiclesEntity>());
+
+        new SchedulesConfiguration(modelBuilder.Entity<SchedulesEntity>());
+
+        new ScheduleViewConfiguration(modelBuilder.Entity<ScheduleViewEntity>());
 
     }
 
