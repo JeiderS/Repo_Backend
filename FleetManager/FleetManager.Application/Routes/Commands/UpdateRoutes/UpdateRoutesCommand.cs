@@ -9,5 +9,9 @@ public record UpdateRoutesCommand(
     string? Description,
     int DriverId,
     int VehicleId,
+    string Origin,
+    string Destination,
+    TimeSpan StartTime,
+    TimeSpan EndTime,
     bool Active
 ) : IRequest<Result<VoidResult, Error>>;

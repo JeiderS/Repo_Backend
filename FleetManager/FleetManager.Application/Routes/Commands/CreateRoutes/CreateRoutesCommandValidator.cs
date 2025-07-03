@@ -15,6 +15,20 @@ public class CreateRoutesCommandValidator : AbstractValidator<CreateRoutesReques
         RuleFor(x => x.VehicleId)
             .GreaterThan(0).WithMessage("El ID del vehículo debe ser mayor a 0.");
 
+        RuleFor(x => x.Origin)
+            .NotEmpty().WithMessage("El origen es requerido.")
+            .MaximumLength(100).WithMessage("Máximo 100 caracteres.");
+
+        RuleFor(x => x.Destination)
+            .NotEmpty().WithMessage("El destino es requerido.")
+            .MaximumLength(100).WithMessage("Máximo 100 caracteres.");
+
+        RuleFor(x => x.StartTime)
+            .NotEmpty().WithMessage("La hora de inicio es requerida.");
+
+        RuleFor(x => x.EndTime)
+            .NotEmpty().WithMessage("La hora de fin es requerida.");
+
         RuleFor(x => x.Active)
             .NotNull().WithMessage("El estado activo es requerido.");
     }

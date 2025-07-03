@@ -4,9 +4,9 @@ using FleetManager.Domain.Routes.Entity;
 
 namespace FleetManager.Infrastructure.Persistence.Mysql.EntityConfiguration
 {
-    public class RoutesConfiguration 
+    public class RoutesConfiguration
     {
-        public  RoutesConfiguration(EntityTypeBuilder<RoutesEntity> builder)
+        public RoutesConfiguration(EntityTypeBuilder<RoutesEntity> builder)
         {
             builder.ToTable("routes");
 
@@ -23,6 +23,24 @@ namespace FleetManager.Infrastructure.Persistence.Mysql.EntityConfiguration
 
             builder.Property(r => r.VehicleId)
                 .HasColumnName("vehicle_id")
+                .IsRequired();
+
+            builder.Property(r => r.Origin)
+                .HasColumnName("origin")
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder.Property(r => r.Destination)
+                .HasColumnName("destination")
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder.Property(r => r.StartTime)
+                .HasColumnName("start_time")
+                .IsRequired();
+
+            builder.Property(r => r.EndTime)
+                .HasColumnName("end_time")
                 .IsRequired();
 
             builder.Property(r => r.Active)
