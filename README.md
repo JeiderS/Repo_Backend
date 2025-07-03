@@ -107,6 +107,7 @@ Se incluye un archivo fleetmanager_backup.sql con la estructura y datos de ejemp
 ├── 📁 Domain                   # Entidades del dominio
 │   └── Entities                # Clases que representan las tablas
 ├── 📁 Infrastructure           # Capa de acceso a datos
+├   ├── Migrations               #  Carpeta generada por EF Core con las migraciones
 │   ├── Persistence             # Implementación de interfaces
 │   └── Context                 # DbContext con EF Core
 ├── 📁 keycloak                 # Archivo de configuración del realm
