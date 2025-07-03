@@ -91,18 +91,18 @@ builder.Services.AddSwaggerGen(options =>
 
     options.CustomSchemaIds(type => type.FullName);
 });
+
+builder.WebHost.UseUrls("http://*:8081");
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(options =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-        options.RoutePrefix = string.Empty;
-    });
-}
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+    options.RoutePrefix = string.Empty;
+});
+
 
 app.UseHttpsRedirection();
 
