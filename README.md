@@ -1,4 +1,4 @@
-# 🧾 FleetManager - Backend (.NET 8 + Keycloak)
+# 🧾 Inventory - Backend (.NET 8 + Keycloak)
 
 # 📚 Características
 
@@ -27,13 +27,15 @@
 - Keycloak (Docker o ya configurado)
 - MySQL
 
- # Descargar
- [Descargar realm-export.json](./keycloak/realm-export.json)
- [Descargar Backup SQL](./backup/fleetmanager-backup.sql)
+# Descargar
+
+[Descargar realm-export.json](./keycloak/realm-export.json)
+[Descargar Backup SQL](./backup/fleetmanager-backup.sql)
 
 ## 🚀 Instrucciones de Despliegue (Docker)
 
 ### 1. Clonar el repositorio
+
 ```
 git clone https://github.com/jeider05/BackendFleet.git
 cd FleetManager
@@ -43,6 +45,7 @@ docker build -t fleetmanager-api .
 4. Ejecutar el contenedor
 docker run -p 8081:8081 fleetmanager-api
 ```
+
 URL API:
 http://localhost:8081
 
@@ -61,19 +64,20 @@ docker run -p 8080:8080 \
     quay.io/keycloak/keycloak:24.0.1 \
     start-dev
 ```
+
 URL Admin Panel:
 http://localhost:8080
 
-Le dan Click en 
+Le dan Click en
 Realm settings
 Partial import
 
 ![image](https://github.com/user-attachments/assets/c8e634b5-81ad-467a-b1b4-c55c52cd8a2a)
 
-por ultimo suben el archivo 
+por ultimo suben el archivo
 ![image](https://github.com/user-attachments/assets/50fea07b-bc5d-48d7-b12c-fa10ae6e5110)
 
-Haora pueden generar un token JWT usando este enpoint desde postman 
+Haora pueden generar un token JWT usando este enpoint desde postman
 
 Post http://localhost:8080/realms/App/protocol/openid-connect/token
 
@@ -86,6 +90,7 @@ client_id	admin
 username	admin
 password	password
 ```
+
 🛢️ Backup de la Base de Datos
 Se incluye un archivo fleetmanager_backup.sql con la estructura y datos de ejemplo de la base de datos MySQL utilizada en el proyecto.
 
@@ -115,12 +120,3 @@ Se incluye un archivo fleetmanager_backup.sql con la estructura y datos de ejemp
 ├── 📁 backup                   # Copia de seguridad de base de datos
 │   └── fleetmanager-backup.sql # Dump SQL de la base de datos
 ```
-
-
-
-
-
-
-
-
-
