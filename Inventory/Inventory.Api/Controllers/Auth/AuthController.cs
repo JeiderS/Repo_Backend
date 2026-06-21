@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using Inventory.Application.Auth.Commands.Login;
 using Inventory.Application.Auth.Commands.Register;
+using Inventory.Application.Auth.Queries.GetAuthorizationData;
 using Inventory.Application.Common.Features;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -41,6 +43,27 @@ namespace Inventory.Api.Controllers.Auth
                     ResponseApiService.Response(StatusCodes.Status200OK, onSuccess)),
                 onError => StatusCode((int)onError.HttpStatusCode,
                     ResponseApiService.Response((int)onError.HttpStatusCode, message: onError.Description)));
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> Me()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+
+            // Se consulta en vivo contra RoleModules: el JWT no lleva permisos,
+            // así que esta es siempre la foto real y actual de la BD.
+            var authorizationData = await mediator.Send(new GetAuthorizationDataQuery(userId));
+
+            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, new
+            {
+                Email = email,
+                Roles = authorizationData.Roles,
+                Permissions = authorizationData.Permissions
+            }));
         }
     }
 }

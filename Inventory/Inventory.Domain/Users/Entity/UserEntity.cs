@@ -1,3 +1,4 @@
+using Inventory.Domain.Roles.Entity;
 using Inventory.Domain.UserProfile.Entity;
 
 namespace Inventory.Domain.Users.Entity
@@ -11,5 +12,6 @@ namespace Inventory.Domain.Users.Entity
         public DateTime CreatedAt { get; set; }
 
         public UserProfileEntity? Profile { get; set; }
+        public ICollection<RoleEntity> Roles { get; set; } = new List<RoleEntity>();
     }
 }

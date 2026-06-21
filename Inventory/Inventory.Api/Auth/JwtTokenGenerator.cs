@@ -9,7 +9,9 @@ namespace Inventory.Api.Auth;
 
 public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerator
 {
-    public string GenerateToken(UserEntity user)
+    // El JWT solo lleva identidad + roles. Los permisos se resuelven contra
+    // RoleModules en cada request (ver HasPermissionAttribute), nunca aquí.
+    public string GenerateToken(UserEntity user, IReadOnlyList<string> roles)
     {
         var key = configuration["Jwt:Key"]!;
         var issuer = configuration["Jwt:Issuer"];
@@ -27,6 +29,11 @@ public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerato
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(ClaimTypes.Name, string.IsNullOrEmpty(fullName) ? user.Email : fullName)
         };
+
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
 
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),

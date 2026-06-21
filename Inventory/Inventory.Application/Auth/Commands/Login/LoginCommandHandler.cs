@@ -10,6 +10,7 @@ namespace Inventory.Application.Auth.Commands.Login;
 
 public class LoginCommandHandler(
     IUserGetByEmailService userGetByEmailService,
+    IUserAuthorizationService userAuthorizationService,
     IPasswordHasher passwordHasher,
     IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<LoginCommand, Result<AuthResponseDto, Error>>
 {
@@ -23,7 +24,9 @@ public class LoginCommandHandler(
         if (!user.IsActive)
             return AuthErrorBuilder.InactiveUser();
 
-        var token = jwtTokenGenerator.GenerateToken(user);
+        var roles = await userAuthorizationService.GetRolesAsync(user.Id);
+
+        var token = jwtTokenGenerator.GenerateToken(user, roles);
 
         var fullName = user.Profile is null
             ? null
@@ -33,7 +36,8 @@ public class LoginCommandHandler(
         {
             Token = token,
             Email = user.Email,
-            FullName = fullName
+            FullName = fullName,
+            Roles = roles
         };
     }
 }

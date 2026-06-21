@@ -53,13 +53,15 @@ public class RegisterCommandHandler(
         if (savedRows <= 0)
             return AuthErrorBuilder.RegistrationException();
 
-        var token = jwtTokenGenerator.GenerateToken(user);
+        // El usuario nuevo aún no tiene roles asignados (se asignan luego vía UserRoles).
+        var token = jwtTokenGenerator.GenerateToken(user, Array.Empty<string>());
 
         return new AuthResponseDto
         {
             Token = token,
             Email = user.Email,
-            FullName = $"{profile.FirstName} {profile.LastName}".Trim()
+            FullName = $"{profile.FirstName} {profile.LastName}".Trim(),
+            Roles = Array.Empty<string>()
         };
     }
 }
