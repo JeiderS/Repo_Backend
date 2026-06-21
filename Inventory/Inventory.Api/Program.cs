@@ -95,9 +95,6 @@ builder.Services.AddSwaggerGen(options =>
     options.CustomSchemaIds(type => type.FullName);
 });
 
-//comentar si se va compilar localmente
-builder.WebHost.UseUrls("http://*:8081");
-
 var app = builder.Build();
 
 app.UseSwagger();
