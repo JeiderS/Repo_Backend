@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Inventory.Domain.Users.Entity;
+using Inventory.Domain.UserProfile.Entity;
 
 namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
 {
@@ -35,7 +36,7 @@ namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
             builder.HasIndex(u => u.Email).IsUnique();
 
             builder.HasOne(u => u.Profile)
-                .WithOne()
+                .WithOne(p => p.User)
                 .HasForeignKey<UserProfileEntity>(p => p.UserId);
         }
     }

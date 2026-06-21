@@ -29,16 +29,11 @@ builder.Services.AddControllers();
 
 builder.Services.AddRouting(routing => routing.LowercaseUrls = true);
 
-builder.Services.AddApplication();
+builder.Services
+    .AddApplication()
+    .AddPersistence();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-
-    builder.Services
-        .AddApplication()
-        .AddPersistence();
-
 
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
@@ -104,14 +99,6 @@ builder.Services.AddSwaggerGen(options =>
 builder.WebHost.UseUrls("http://*:8081");
 
 var app = builder.Build();
-
-
-//configure Migration
-using (var scope = app.Services.CreateScope())
-{
-    DataBaseContext context = scope.ServiceProvider.GetRequiredService<DataBaseContext>();
-    context.Database.Migrate();
-}
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>

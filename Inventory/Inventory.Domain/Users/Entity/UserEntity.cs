@@ -1,3 +1,5 @@
+using Inventory.Domain.UserProfile.Entity;
+
 namespace Inventory.Domain.Users.Entity
 {
     public class UserEntity

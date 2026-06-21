@@ -1,8 +1,11 @@
 using Inventory.Application.Auth.Dto;
 using Inventory.Application.Auth.Errors;
 using Inventory.Application.Common.Interfaces;
+using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.UserProfile.DomainUserProfile;
+using Inventory.Domain.UserProfile.Entity;
 using Inventory.Domain.Users.DomainUsers;
 using Inventory.Domain.Users.Entity;
 using MediatR;
@@ -11,6 +14,8 @@ namespace Inventory.Application.Auth.Commands.Register;
 
 public class RegisterCommandHandler(
     IUserCreateService userCreateService,
+    IUserProfileCreateService userProfileCreateService,
+    IUnitOfWork unitOfWork,
     IPasswordHasher passwordHasher,
     IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<RegisterCommand, Result<AuthResponseDto, Error>>
 {
@@ -32,22 +37,28 @@ public class RegisterCommandHandler(
             FirstName = request.FirstName,
             LastName = request.LastName,
             Phone = request.Phone,
-            Address = request.Address
+            Address = request.Address,
+            User = user
         };
+        user.Profile = profile;
 
-        var result = await userCreateService.CreateAsync(user, profile);
-        if (!result.IsSuccess)
-            return result.Error!;
+        // Ambos Add se acumulan en el mismo DbContext (scoped); un único
+        // SaveChangesAsync los persiste en una sola transacción. EF resuelve
+        // el FK UserId del perfil con el Id generado para el usuario gracias
+        // a la navegación configurada en UserConfiguration.
+        await userCreateService.AddAsync(user);
+        await userProfileCreateService.AddAsync(profile);
 
-        var createdUser = result.Value!;
-        createdUser.Profile = profile;
+        var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
+        if (savedRows <= 0)
+            return AuthErrorBuilder.RegistrationException();
 
-        var token = jwtTokenGenerator.GenerateToken(createdUser);
+        var token = jwtTokenGenerator.GenerateToken(user);
 
         return new AuthResponseDto
         {
             Token = token,
-            Email = createdUser.Email,
+            Email = user.Email,
             FullName = $"{profile.FirstName} {profile.LastName}".Trim()
         };
     }
