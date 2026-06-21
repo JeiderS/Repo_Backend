@@ -15,13 +15,10 @@ namespace Inventory.Infrastructure.Persistence.Mysql.Context
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
-            var connectionString = config.GetConnectionString("MysqlConnection");
+            var connectionString = config.GetConnectionString("SqlServerConnection");
 
             var optionsBuilder = new DbContextOptionsBuilder<DataBaseContext>();
-            optionsBuilder.UseMySql(
-                connectionString,
-                new MySqlServerVersion(new Version(8, 0, 36))
-            );
+            optionsBuilder.UseSqlServer(connectionString);
 
             return new DataBaseContext(optionsBuilder.Options);
         }

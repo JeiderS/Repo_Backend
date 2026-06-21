@@ -3,7 +3,9 @@ using Inventory.Domain.Routes.DomainRoutes;
 using Inventory.Domain.Schedules.DomainSchedules;
 using Inventory.Domain.ScheduleView.DomainScheduleView;
 using Inventory.Domain.Vehicles.DomainVehicles;
+using Inventory.Domain.Users.DomainUsers;
 using Inventory.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl;
+using Inventory.Infrastructure.Persistence.Mysql.Users.DomainService.Impl;
 using Inventory.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl;
 using Inventory.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl;
 using Inventory.Infrastructure.Persistence.Mysql.ScheduleView.DomainService.Impl;
@@ -41,6 +43,9 @@ namespace Inventory.Infrastructure.Persistence.Mysql
             services.AddScoped<ISchedulesUpdateService, SchedulesUpdateService>();
 
             services.AddScoped<IScheduleViewGetAllService, ScheduleViewGetAllService>();
+
+            services.AddScoped<IUserGetByEmailService, UserGetByEmailService>();
+            services.AddScoped<IUserCreateService, UserCreateService>();
 
             return services;
         }

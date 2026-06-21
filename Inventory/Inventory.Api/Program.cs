@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Inventory.Api.Auth;
+using Inventory.Application.Common.Interfaces;
 
 
 
@@ -37,28 +40,33 @@ builder.Services.AddSwaggerGen();
         .AddPersistence();
 
 
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = builder.Configuration["Keycloak:KeycloakUri"];
-        options.Audience = builder.Configuration["Keycloak:ClientId"];
         options.RequireHttpsMetadata = false;
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidateAudience = false,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
             ValidateLifetime = true,
-
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)),
             ClockSkew = TimeSpan.Zero
         };
     });
 
-// configure Conexion MySQL
-var connectionString = builder.Configuration.GetConnectionString("MysqlConnection");
+// configure Conexion SQL Server
+var connectionString = builder.Configuration.GetConnectionString("SqlServerConnection");
 
 builder.Services.AddDbContext<DataBaseContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseSqlServer(connectionString));
 
 
 // Configura el AddSwaggerWithJwt
