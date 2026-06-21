@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using FleetManager.Application.Schedules.Dto;
+using Inventory.Application.Schedules.Dto;
 using MediatR;
-using FleetManager.Domain.Schedules.DomainSchedules;
+using Inventory.Domain.Schedules.DomainSchedules;
 
-namespace FleetManager.Application.Schedules.Query
+namespace Inventory.Application.Schedules.Query
 {
     public class GetAllSchedulesQueryHandler(
         IMapper mapper,

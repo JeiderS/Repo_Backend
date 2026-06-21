@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Vehicles.DomainVehicles;
-using FleetManager.Domain.Vehicles.Entity;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Vehicles.DomainVehicles;
+using Inventory.Domain.Vehicles.Entity;
 
-namespace FleetManager.Application.Vehicles.Commands.CreateVehicles;
+namespace Inventory.Application.Vehicles.Commands.CreateVehicles;
 
 public class CreateVehiclesCommandHandler(
     IVehiclesCreateService vehiclesCreateService,

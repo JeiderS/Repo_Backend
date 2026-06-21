@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using FleetManager.Application.Schedules.Dto;
-using FleetManager.Domain.Common.Pagination;
+using Inventory.Application.Schedules.Dto;
+using Inventory.Domain.Common.Pagination;
 using System.Collections.Generic;
 
-namespace FleetManager.Application.Schedules.Query;
+namespace Inventory.Application.Schedules.Query;
 
 public record GetAllSchedulesQuery(PaginationParams PaginationParams) : IRequest<IEnumerable<SchedulesDto>>;

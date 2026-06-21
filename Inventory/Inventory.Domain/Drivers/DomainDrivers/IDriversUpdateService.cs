@@ -1,8 +1,8 @@
-﻿using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Drivers.Entity;
+﻿using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Drivers.Entity;
 
-namespace FleetManager.Domain.Drivers.DomainDrivers;
+namespace Inventory.Domain.Drivers.DomainDrivers;
 
 public interface IDriversUpdateService
 {

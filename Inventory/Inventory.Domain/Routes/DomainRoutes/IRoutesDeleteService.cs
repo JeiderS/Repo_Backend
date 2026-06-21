@@ -1,8 +1,8 @@
 ﻿
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
 
-namespace FleetManager.Domain.Routes.DomainRoutes
+namespace Inventory.Domain.Routes.DomainRoutes
 {
     public interface IRoutesDeleteService
     {

@@ -1,7 +1,7 @@
 ﻿
 using System.Net;
 
-namespace FleetManager.Domain.Common.Results.Errors
+namespace Inventory.Domain.Common.Results.Errors
 {
     public class Error
     {

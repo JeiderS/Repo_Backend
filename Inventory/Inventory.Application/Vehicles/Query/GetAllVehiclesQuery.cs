@@ -1,9 +1,9 @@
 ﻿
-using FleetManager.Domain.Common.Pagination;
+using Inventory.Domain.Common.Pagination;
 using MediatR;
-using FleetManager.Application.Vehicles.Dto;
+using Inventory.Application.Vehicles.Dto;
 
-namespace FleetManager.Application.Vehicles.Query;
+namespace Inventory.Application.Vehicles.Query;
 
 public record GetAllVehiclesQuery(PaginationParams PaginationParams) : IRequest<IEnumerable<VehiclesDto>>;
 

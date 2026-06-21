@@ -1,10 +1,10 @@
 ﻿
 using AutoMapper;
-using FleetManager.Application.Routes.Dto;
+using Inventory.Application.Routes.Dto;
 using MediatR;
-using FleetManager.Domain.Routes.DomainRoutes;
+using Inventory.Domain.Routes.DomainRoutes;
 
-namespace FleetManager.Application.Routes.Query
+namespace Inventory.Application.Routes.Query
 {
     public class GetAllRoutesQueryHandler(IMapper mapper, 
         IRoutesGetAllService routesGetAllService) 

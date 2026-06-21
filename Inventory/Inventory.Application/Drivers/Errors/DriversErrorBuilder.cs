@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using FleetManager.Domain.Common.Results.Errors;
+using Inventory.Domain.Common.Results.Errors;
 
-namespace FleetManager.Application.Drivers.Errors;
+namespace Inventory.Application.Drivers.Errors;
 
 
 public class DriversErrorBuilder : IError

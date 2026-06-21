@@ -1,7 +1,7 @@
-﻿using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.ScheduleView.Entity;
+﻿using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.ScheduleView.Entity;
 
-namespace FleetManager.Domain.ScheduleView.DomainScheduleView
+namespace Inventory.Domain.ScheduleView.DomainScheduleView
 {
     public interface IScheduleViewGetAllService
     {

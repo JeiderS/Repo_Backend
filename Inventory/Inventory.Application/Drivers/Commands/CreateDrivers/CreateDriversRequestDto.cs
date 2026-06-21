@@ -1,6 +1,6 @@
 ﻿
 
-namespace FleetManager.Application.Drivers.Commands.CreateDrivers;
+namespace Inventory.Application.Drivers.Commands.CreateDrivers;
 
 public record CreateDriversRequestDto(
     string FirstName,

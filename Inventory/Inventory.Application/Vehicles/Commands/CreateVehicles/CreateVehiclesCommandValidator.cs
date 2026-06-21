@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FleetManager.Application.Vehicles.Commands.CreateVehicles;
+using Inventory.Application.Vehicles.Commands.CreateVehicles;
 
 public class CreateVehiclesCommandValidator : AbstractValidator<CreateVehiclesRequestDto>
 {

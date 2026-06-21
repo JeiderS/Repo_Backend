@@ -1,7 +1,7 @@
 ﻿
 
 
-namespace FleetManager.Domain.Routes.Entity
+namespace Inventory.Domain.Routes.Entity
 {
     public class RoutesEntity
     {

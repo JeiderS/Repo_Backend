@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Application.Drivers.Dto;
-using FleetManager.Domain.Drivers.DomainDrivers;
+using Inventory.Application.Drivers.Dto;
+using Inventory.Domain.Drivers.DomainDrivers;
 
-namespace FleetManager.Application.Drivers.Query
+namespace Inventory.Application.Drivers.Query
 {
     public class GetAllDriversQueryHandler(IMapper mapper, 
         IDriversGetAllService driversGetAllService) 

@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using FleetManager.Domain.Common.Results.Errors;
+using Inventory.Domain.Common.Results.Errors;
 
-namespace FleetManager.Application.Routes.Errors;
+namespace Inventory.Application.Routes.Errors;
 
 public class RoutesErrorBuilder : IError
 {

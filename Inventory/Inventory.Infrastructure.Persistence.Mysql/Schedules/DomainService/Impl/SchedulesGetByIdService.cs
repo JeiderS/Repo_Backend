@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
-using FleetManager.Domain.Schedules.DomainSchedules;
-using FleetManager.Domain.Schedules.Entity;
-using FleetManager.Application.Schedules.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Domain.Schedules.DomainSchedules;
+using Inventory.Domain.Schedules.Entity;
+using Inventory.Application.Schedules.Errors;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl
+namespace Inventory.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl
 {
     public class SchedulesGetByIdService(DataBaseContext context) : ISchedulesGetByIdService
     {

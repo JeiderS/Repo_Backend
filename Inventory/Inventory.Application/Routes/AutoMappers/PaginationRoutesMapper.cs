@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.Routes.Entity;
-using FleetManager.Application.Routes.Dto;
+using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.Routes.Entity;
+using Inventory.Application.Routes.Dto;
 
-namespace FleetManager.Application.Routes.AutoMappers
+namespace Inventory.Application.Routes.AutoMappers
 {
     public class PaginationRoutesMapper : Profile
     {

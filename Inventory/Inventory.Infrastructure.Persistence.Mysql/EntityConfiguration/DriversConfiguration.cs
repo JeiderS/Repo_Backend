@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using FleetManager.Domain.Drivers.Entity;
+using Inventory.Domain.Drivers.Entity;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.EntityConfiguration
+namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
 {
     public class DriversConfiguration 
     {

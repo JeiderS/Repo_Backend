@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Application.Schedules.Dto;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Schedules.DomainSchedules;
+using Inventory.Application.Schedules.Dto;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Schedules.DomainSchedules;
 
-namespace FleetManager.Application.Schedules.Query.GetSchedulesById;
+namespace Inventory.Application.Schedules.Query.GetSchedulesById;
 
 public class GetSchedulesByIdQueryHandler(
     ISchedulesGetByIdService schedulesGetByIdService,

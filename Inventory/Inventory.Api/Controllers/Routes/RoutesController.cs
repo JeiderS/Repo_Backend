@@ -1,16 +1,16 @@
-﻿using FleetManager.Application.Routes.Query;
-using FleetManager.Domain.Common.Pagination;
+﻿using Inventory.Application.Routes.Query;
+using Inventory.Domain.Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FleetManager.Application.Common.Features;
-using FleetManager.Application.Routes.Commands.CreateRoutes;
-using FleetManager.Application.Routes.Commands.UpdateRoutes;
-using FleetManager.Application.Routes.Errors;
-using FleetManager.Application.Routes.Query.GetRoutesById;
-using FleetManager.Application.Routes.Commands.DeleteRoutes;
+using Inventory.Application.Common.Features;
+using Inventory.Application.Routes.Commands.CreateRoutes;
+using Inventory.Application.Routes.Commands.UpdateRoutes;
+using Inventory.Application.Routes.Errors;
+using Inventory.Application.Routes.Query.GetRoutesById;
+using Inventory.Application.Routes.Commands.DeleteRoutes;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FleetManager.Api.Controllers.Routes
+namespace Inventory.Api.Controllers.Routes
 {
 
     [ApiController]

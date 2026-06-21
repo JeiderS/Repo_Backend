@@ -1,4 +1,4 @@
-﻿namespace FleetManager.Domain.Common.Results;
+﻿namespace Inventory.Domain.Common.Results;
 
 public class Result<TValue, TError>
 {

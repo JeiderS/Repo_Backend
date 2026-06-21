@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Application.ScheduleView.Dto;
-using FleetManager.Domain.ScheduleView.DomainScheduleView;
+using Inventory.Application.ScheduleView.Dto;
+using Inventory.Domain.ScheduleView.DomainScheduleView;
 
-namespace FleetManager.Application.ScheduleView.Query
+namespace Inventory.Application.ScheduleView.Query
 {
     public class GetAllScheduleViewQueryHandler(IMapper mapper, IScheduleViewGetAllService scheduleViewGetAllService) : IRequestHandler<GetAllScheduleViewQuery, IEnumerable<ScheduleViewDto>>
     {

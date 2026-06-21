@@ -1,10 +1,10 @@
-﻿using FleetManager.Application.Schedules.Errors;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Schedules.DomainSchedules;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
+﻿using Inventory.Application.Schedules.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Schedules.DomainSchedules;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl
+namespace Inventory.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl
 {
     public class SchedulesDeleteService(DataBaseContext context) : ISchedulesDeleteService
     {

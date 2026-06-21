@@ -1,6 +1,6 @@
 ﻿
 
-namespace FleetManager.Domain.Drivers.Entity
+namespace Inventory.Domain.Drivers.Entity
 {
     public class DriversEntity
     {

@@ -1,4 +1,4 @@
-﻿namespace FleetManager.Application.Vehicles.Commands.CreateVehicles;
+﻿namespace Inventory.Application.Vehicles.Commands.CreateVehicles;
 
 public record CreateVehiclesRequestDto(
     int Id,

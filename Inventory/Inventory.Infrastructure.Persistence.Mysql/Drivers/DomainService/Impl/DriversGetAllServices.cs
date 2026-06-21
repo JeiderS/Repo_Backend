@@ -1,10 +1,10 @@
-﻿using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.Drivers.Entity;
-using FleetManager.Domain.Drivers.DomainDrivers;
+﻿using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.Drivers.Entity;
+using Inventory.Domain.Drivers.DomainDrivers;
 using Microsoft.EntityFrameworkCore;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl
+namespace Inventory.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl
 {
     public class DriversGetAllServices(DataBaseContext context) : IDriversGetAllService
     {

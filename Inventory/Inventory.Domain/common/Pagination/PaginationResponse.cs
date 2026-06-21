@@ -1,5 +1,5 @@
 ﻿
-namespace FleetManager.Domain.Common.Pagination
+namespace Inventory.Domain.Common.Pagination
 {
     public class PaginationResponse<T>
     {

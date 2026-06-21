@@ -1,7 +1,7 @@
 ﻿using System.Net;
-using FleetManager.Domain.Common.Results.Errors;
+using Inventory.Domain.Common.Results.Errors;
 
-namespace FleetManager.Application.Schedules.Errors;
+namespace Inventory.Application.Schedules.Errors;
 
 public class SchedulesErrorBuilder : IError
 {

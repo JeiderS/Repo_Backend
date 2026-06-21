@@ -1,16 +1,16 @@
-﻿using FleetManager.Domain.Drivers.DomainDrivers;
-using FleetManager.Domain.Routes.DomainRoutes;
-using FleetManager.Domain.Schedules.DomainSchedules;
-using FleetManager.Domain.ScheduleView.DomainScheduleView;
-using FleetManager.Domain.Vehicles.DomainVehicles;
-using FleetManager.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl;
-using FleetManager.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl;
-using FleetManager.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl;
-using FleetManager.Infrastructure.Persistence.Mysql.ScheduleView.DomainService.Impl;
-using FleetManager.Infrastructure.Persistence.Mysql.Vehicles.DomainService.Impl;
+﻿using Inventory.Domain.Drivers.DomainDrivers;
+using Inventory.Domain.Routes.DomainRoutes;
+using Inventory.Domain.Schedules.DomainSchedules;
+using Inventory.Domain.ScheduleView.DomainScheduleView;
+using Inventory.Domain.Vehicles.DomainVehicles;
+using Inventory.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl;
+using Inventory.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl;
+using Inventory.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl;
+using Inventory.Infrastructure.Persistence.Mysql.ScheduleView.DomainService.Impl;
+using Inventory.Infrastructure.Persistence.Mysql.Vehicles.DomainService.Impl;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql
+namespace Inventory.Infrastructure.Persistence.Mysql
 {
     public static class DependencyInjectionService
     {

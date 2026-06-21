@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FleetManager.Application.Schedules.Commands.CreateSchedules;
+using Inventory.Application.Schedules.Commands.CreateSchedules;
 
 public class CreateSchedulesCommandValidator : AbstractValidator<CreateSchedulesRequestDto>
 {

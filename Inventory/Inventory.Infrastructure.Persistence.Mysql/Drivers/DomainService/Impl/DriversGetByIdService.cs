@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
-using FleetManager.Domain.Drivers.DomainDrivers;
-using FleetManager.Domain.Drivers.Entity;
-using FleetManager.Application.Drivers.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Domain.Drivers.DomainDrivers;
+using Inventory.Domain.Drivers.Entity;
+using Inventory.Application.Drivers.Errors;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl;
+namespace Inventory.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl;
 
 public class DriversGetByIdService(DataBaseContext context) : IDriversGetByIdService
    {

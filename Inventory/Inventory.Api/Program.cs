@@ -1,7 +1,7 @@
 
-using FleetManager.Application;
-using FleetManager.Infrastructure.Persistence.Mysql;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Application;
+using Inventory.Infrastructure.Persistence.Mysql;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,7 +25,6 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 builder.Services.AddRouting(routing => routing.LowercaseUrls = true);
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 builder.Services.AddApplication();
 

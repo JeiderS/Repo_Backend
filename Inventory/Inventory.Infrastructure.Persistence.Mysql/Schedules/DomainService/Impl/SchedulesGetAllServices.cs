@@ -1,10 +1,10 @@
-﻿using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.Schedules.Entity;
-using FleetManager.Domain.Schedules.DomainSchedules;
+﻿using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.Schedules.Entity;
+using Inventory.Domain.Schedules.DomainSchedules;
 using Microsoft.EntityFrameworkCore;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl
+namespace Inventory.Infrastructure.Persistence.Mysql.Schedules.DomainService.Impl
 {
     public class SchedulesGetAllService(DataBaseContext context) : ISchedulesGetAllService
     {

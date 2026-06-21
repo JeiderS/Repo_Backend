@@ -1,16 +1,16 @@
-﻿using FleetManager.Application.Schedules.Query;
-using FleetManager.Domain.Common.Pagination;
+﻿using Inventory.Application.Schedules.Query;
+using Inventory.Domain.Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FleetManager.Application.Common.Features;
-using FleetManager.Application.Schedules.Query.GetSchedulesById;
-using FleetManager.Application.Schedules.Errors;
-using FleetManager.Application.Schedules.Commands.UpdateSchedules;
-using FleetManager.Application.Schedules.Commands.CreateSchedules;
-using FleetManager.Application.Schedules.Commands.DeleteSchedules;
+using Inventory.Application.Common.Features;
+using Inventory.Application.Schedules.Query.GetSchedulesById;
+using Inventory.Application.Schedules.Errors;
+using Inventory.Application.Schedules.Commands.UpdateSchedules;
+using Inventory.Application.Schedules.Commands.CreateSchedules;
+using Inventory.Application.Schedules.Commands.DeleteSchedules;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FleetManager.Api.Controllers.Schedules
+namespace Inventory.Api.Controllers.Schedules
 {
     [ApiController]
     [Route("api/v1/schedules")]

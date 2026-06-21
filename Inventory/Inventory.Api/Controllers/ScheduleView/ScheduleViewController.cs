@@ -1,11 +1,11 @@
-﻿using FleetManager.Application.ScheduleView.Query;
-using FleetManager.Domain.Common.Pagination;
+﻿using Inventory.Application.ScheduleView.Query;
+using Inventory.Domain.Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using FleetManager.Application.Common.Features;
+using Inventory.Application.Common.Features;
 
-namespace FleetManager.Api.Controllers.ScheduleView
+namespace Inventory.Api.Controllers.ScheduleView
 {
     [ApiController]
     [Route("api/v1/schedule-view")]

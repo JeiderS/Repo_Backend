@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
 
-namespace FleetManager.Application.Routes.Commands.CreateRoutes;
+namespace Inventory.Application.Routes.Commands.CreateRoutes;
 
 public class CreateRoutesCommand : IRequest<Result<VoidResult, Error>>
 {

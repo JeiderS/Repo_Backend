@@ -1,10 +1,10 @@
 ﻿
 
-using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.Vehicles.Entity;
+using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.Vehicles.Entity;
 
 
-namespace FleetManager.Domain.Vehicles.DomainVehicles;
+namespace Inventory.Domain.Vehicles.DomainVehicles;
 
 public interface IVehiclesGetAllService
 {

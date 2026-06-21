@@ -1,6 +1,6 @@
 ﻿
 
-namespace FleetManager.Domain.Vehicles.Entity
+namespace Inventory.Domain.Vehicles.Entity
 {
     public class VehiclesEntity
     {

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using FleetManager.Application.Schedules.Commands.CreateSchedules;
-using FleetManager.Application.Schedules.Commands.UpdateSchedules;
-using FleetManager.Application.Schedules.Dto;
-using FleetManager.Domain.Schedules.DomainSchedules;
-using FleetManager.Domain.Schedules.Entity;
+using Inventory.Application.Schedules.Commands.CreateSchedules;
+using Inventory.Application.Schedules.Commands.UpdateSchedules;
+using Inventory.Application.Schedules.Dto;
+using Inventory.Domain.Schedules.DomainSchedules;
+using Inventory.Domain.Schedules.Entity;
 
-namespace FleetManager.Application.Schedules.AutoMappers
+namespace Inventory.Application.Schedules.AutoMappers
 {
     public class SchedulesMappers : Profile
     {

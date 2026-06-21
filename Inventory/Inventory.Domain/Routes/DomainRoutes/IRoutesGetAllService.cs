@@ -1,10 +1,10 @@
 ﻿
 
-using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.Routes.Entity;
+using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.Routes.Entity;
 
 
-namespace FleetManager.Domain.Routes.DomainRoutes;
+namespace Inventory.Domain.Routes.DomainRoutes;
 
 public interface IRoutesGetAllService
 {

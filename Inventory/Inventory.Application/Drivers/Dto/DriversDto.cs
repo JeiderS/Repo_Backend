@@ -1,5 +1,5 @@
 ﻿
-namespace FleetManager.Application.Drivers.Dto;
+namespace Inventory.Application.Drivers.Dto;
 
 public record DriversDto(
     int Id,

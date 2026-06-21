@@ -1,4 +1,4 @@
-﻿namespace FleetManager.Domain.Common.Models
+﻿namespace Inventory.Domain.Common.Models
 {
     public class BaseResponseModel
     {

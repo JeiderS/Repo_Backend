@@ -1,6 +1,6 @@
 ﻿
 
-namespace FleetManager.Application.ScheduleView.Dto
+namespace Inventory.Application.ScheduleView.Dto
 {
     public class PaginationResponseDto<T>
     {

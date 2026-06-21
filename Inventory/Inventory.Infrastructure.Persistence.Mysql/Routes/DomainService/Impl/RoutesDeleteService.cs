@@ -1,10 +1,10 @@
-﻿using FleetManager.Application.Routes.Errors;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Routes.DomainRoutes;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
+﻿using Inventory.Application.Routes.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Routes.DomainRoutes;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl;
+namespace Inventory.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl;
 
 public class RoutesDeleteService(DataBaseContext context) : IRoutesDeleteService
 {

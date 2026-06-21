@@ -11,17 +11,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{651FE7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infraestructure", "Infraestructure", "{8E8DFE4D-B082-4A76-9DAE-928CB6DCA4A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "inventory.Api", "inventory.Api\inventory.Api.csproj", "{AF5FC0AD-BB8B-4FB8-9B51-FC486F99C195}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Api", "Inventory.Api\Inventory.Api.csproj", "{AF5FC0AD-BB8B-4FB8-9B51-FC486F99C195}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "inventory.Application", "inventory.Application\inventory.Application.csproj", "{3DE232ED-F051-44D3-8CCC-9CB2317413E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Application", "Inventory.Application\Inventory.Application.csproj", "{3DE232ED-F051-44D3-8CCC-9CB2317413E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "inventory.Domain", "inventory.Domain\inventory.Domain.csproj", "{9575A877-030A-4213-A980-FEC7FFBFAC96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Domain", "Inventory.Domain\Inventory.Domain.csproj", "{9575A877-030A-4213-A980-FEC7FFBFAC96}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{FF528A92-7CFF-43E5-9496-B009809B8042}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mysql", "Mysql", "{7D116AFD-2EB2-4652-B743-EA61BA9B1B7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "inventory.Infrastructure.Persistence.Mysql", "inventory.Infrastructure.Persistence.Mysql\inventory.Infrastructure.Persistence.Mysql.csproj", "{2D52CBB8-64F8-4613-816D-B3E6D5BBB3B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Infrastructure.Persistence.Mysql", "Inventory.Infrastructure.Persistence.Mysql\Inventory.Infrastructure.Persistence.Mysql.csproj", "{2D52CBB8-64F8-4613-816D-B3E6D5BBB3B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

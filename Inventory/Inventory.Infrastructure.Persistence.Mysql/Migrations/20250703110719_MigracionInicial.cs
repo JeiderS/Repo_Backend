@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Migrations
+namespace Inventory.Infrastructure.Persistence.Mysql.Migrations
 {
     /// <inheritdoc />
     public partial class MigracionInicial : Migration

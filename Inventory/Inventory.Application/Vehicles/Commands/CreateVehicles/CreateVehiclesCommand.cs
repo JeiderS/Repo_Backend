@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
 
-namespace FleetManager.Application.Vehicles.Commands.CreateVehicles;
+namespace Inventory.Application.Vehicles.Commands.CreateVehicles;
 
 public class CreateVehiclesCommand : IRequest<Result<VoidResult, Error>>
 {

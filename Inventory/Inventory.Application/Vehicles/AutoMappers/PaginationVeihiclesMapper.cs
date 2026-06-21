@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.Vehicles.Entity;
-using FleetManager.Application.Vehicles.Dto;
+using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.Vehicles.Entity;
+using Inventory.Application.Vehicles.Dto;
 
-namespace FleetManager.Application.Vehicles.AutoMappers
+namespace Inventory.Application.Vehicles.AutoMappers
 {
     public class PaginationVeihiclesMapper : Profile
     {

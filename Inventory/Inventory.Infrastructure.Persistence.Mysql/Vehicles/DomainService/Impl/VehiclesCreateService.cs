@@ -1,11 +1,11 @@
-﻿using FleetManager.Application.Vehicles.Errors;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Vehicles.DomainVehicles;
-using FleetManager.Domain.Vehicles.Entity;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
+﻿using Inventory.Application.Vehicles.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Vehicles.DomainVehicles;
+using Inventory.Domain.Vehicles.Entity;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Vehicles.DomainService.Impl;
+namespace Inventory.Infrastructure.Persistence.Mysql.Vehicles.DomainService.Impl;
 
 public class VehiclesCreateService(DataBaseContext context) : IVehiclesCreateService
 {

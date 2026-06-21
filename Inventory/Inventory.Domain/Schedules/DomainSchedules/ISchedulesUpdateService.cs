@@ -1,8 +1,8 @@
-﻿using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Schedules.Entity;
+﻿using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Schedules.Entity;
 
-namespace FleetManager.Domain.Schedules.DomainSchedules
+namespace Inventory.Domain.Schedules.DomainSchedules
 {
     public interface ISchedulesUpdateService
     {

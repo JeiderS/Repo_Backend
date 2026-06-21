@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.Schedules.Entity;
-using FleetManager.Application.Schedules.Dto;
+using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.Schedules.Entity;
+using Inventory.Application.Schedules.Dto;
 
-namespace FleetManager.Application.Schedules.AutoMappers
+namespace Inventory.Application.Schedules.AutoMappers
 {
     public class PaginationSchedulesMapper : Profile
     {

@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
-using FleetManager.Domain.Routes.DomainRoutes;
-using FleetManager.Domain.Routes.Entity;
-using FleetManager.Application.Routes.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Domain.Routes.DomainRoutes;
+using Inventory.Domain.Routes.Entity;
+using Inventory.Application.Routes.Errors;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl;
+namespace Inventory.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl;
 
 public class RoutesGetByIdService(DataBaseContext context) : IRoutesGetByIdService
 {

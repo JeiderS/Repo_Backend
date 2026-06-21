@@ -1,17 +1,17 @@
 ﻿
-using FleetManager.Application.Drivers.Query;
-using FleetManager.Domain.Common.Pagination;
+using Inventory.Application.Drivers.Query;
+using Inventory.Domain.Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FleetManager.Application.Common.Features;
-using FleetManager.Application.Drivers.Query.GetDriversById;
-using FleetManager.Application.Drivers.Errors;
-using FleetManager.Application.Drivers.Commands.UpdateDrivers;
-using FleetManager.Application.Drivers.Commands.CreateDrivers;
-using FleetManager.Application.Drivers.Commands.DeleteDrivers;
+using Inventory.Application.Common.Features;
+using Inventory.Application.Drivers.Query.GetDriversById;
+using Inventory.Application.Drivers.Errors;
+using Inventory.Application.Drivers.Commands.UpdateDrivers;
+using Inventory.Application.Drivers.Commands.CreateDrivers;
+using Inventory.Application.Drivers.Commands.DeleteDrivers;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FleetManager.Api.Controllers.Drivers
+namespace Inventory.Api.Controllers.Drivers
 {
     [ApiController]
     [Route("api/v1/drivers")]

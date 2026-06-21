@@ -1,4 +1,4 @@
-﻿namespace FleetManager.Domain
+﻿namespace Inventory.Domain
 {
     public class DependencyInjectionService
     {

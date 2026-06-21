@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Routes.DomainRoutes;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Routes.DomainRoutes;
 
-namespace FleetManager.Application.Routes.Commands.DeleteRoutes;
+namespace Inventory.Application.Routes.Commands.DeleteRoutes;
 
 public class DeleteRoutesCommandHandler(IRoutesDeleteService routesDeleteService)
     : IRequestHandler<DeleteRoutesCommand, Result<VoidResult, Error>>

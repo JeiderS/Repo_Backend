@@ -1,6 +1,6 @@
 ﻿
 
-namespace FleetManager.Application.Routes.Dto
+namespace Inventory.Application.Routes.Dto
 {
     public class RoutesDto
     {

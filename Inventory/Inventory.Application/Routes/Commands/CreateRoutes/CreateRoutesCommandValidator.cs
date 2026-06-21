@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FleetManager.Application.Routes.Commands.CreateRoutes;
+using Inventory.Application.Routes.Commands.CreateRoutes;
 
 public class CreateRoutesCommandValidator : AbstractValidator<CreateRoutesRequestDto>
 {

@@ -1,10 +1,10 @@
 ﻿
 using MediatR;
-using FleetManager.Application.Routes.Dto;
-using FleetManager.Domain.Common.Pagination;
+using Inventory.Application.Routes.Dto;
+using Inventory.Domain.Common.Pagination;
 using System.Collections.Generic;
 
-namespace FleetManager.Application.Routes.Query;
+namespace Inventory.Application.Routes.Query;
 
 public record GetAllRoutesQuery(PaginationParams PaginationParams) : IRequest<IEnumerable<RoutesDto>>;
 

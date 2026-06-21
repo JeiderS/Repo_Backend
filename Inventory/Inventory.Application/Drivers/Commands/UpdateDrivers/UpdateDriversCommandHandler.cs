@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Drivers.DomainDrivers;
-using FleetManager.Domain.Drivers.Entity;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Drivers.DomainDrivers;
+using Inventory.Domain.Drivers.Entity;
 
-namespace FleetManager.Application.Drivers.Commands.UpdateDrivers;
+namespace Inventory.Application.Drivers.Commands.UpdateDrivers;
 
 public class UpdateDriversCommandHandler(IDriversUpdateService DriversUpdateService, IMapper mapper) : IRequestHandler<UpdateDriversCommand, Result<VoidResult, Error>>
 {

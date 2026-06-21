@@ -1,9 +1,9 @@
 ﻿
 
-using FleetManager.Domain.Drivers.Entity;
-using FleetManager.Domain.Common.Pagination;
+using Inventory.Domain.Drivers.Entity;
+using Inventory.Domain.Common.Pagination;
 
-namespace FleetManager.Domain.Drivers.DomainDrivers;
+namespace Inventory.Domain.Drivers.DomainDrivers;
 
 public interface IDriversGetAllService
 {

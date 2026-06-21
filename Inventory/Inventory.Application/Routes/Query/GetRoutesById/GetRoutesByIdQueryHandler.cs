@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Application.Routes.Dto;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Routes.DomainRoutes;
+using Inventory.Application.Routes.Dto;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Routes.DomainRoutes;
 
-namespace FleetManager.Application.Routes.Query.GetRoutesById;
+namespace Inventory.Application.Routes.Query.GetRoutesById;
 
 public class GetRoutesByIdQueryHandler(
     IRoutesGetByIdService routesGetByIdService,

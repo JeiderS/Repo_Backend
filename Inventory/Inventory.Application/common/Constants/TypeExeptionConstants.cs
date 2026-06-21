@@ -1,4 +1,4 @@
-﻿namespace FleetManager.Application.Common.Constants
+﻿namespace Inventory.Application.Common.Constants
 {
     public static class TypeExeptionConstants
     {

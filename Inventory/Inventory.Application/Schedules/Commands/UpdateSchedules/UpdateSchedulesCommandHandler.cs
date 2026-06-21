@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Schedules.DomainSchedules;
-using FleetManager.Domain.Schedules.Entity;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Schedules.DomainSchedules;
+using Inventory.Domain.Schedules.Entity;
 
-namespace FleetManager.Application.Schedules.Commands.UpdateSchedules;
+namespace Inventory.Application.Schedules.Commands.UpdateSchedules;
 
 public class UpdateSchedulesCommandHandler(ISchedulesUpdateService schedulesUpdateService, IMapper mapper)
     : IRequestHandler<UpdateSchedulesCommand, Result<VoidResult, Error>>

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Routes.DomainRoutes;
-using FleetManager.Domain.Routes.Entity;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Routes.DomainRoutes;
+using Inventory.Domain.Routes.Entity;
 
-namespace FleetManager.Application.Routes.Commands.CreateRoutes;
+namespace Inventory.Application.Routes.Commands.CreateRoutes;
 
 public class CreateRoutesCommandHandler(
     IRoutesCreateService RoutesCreateService,

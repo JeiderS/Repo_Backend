@@ -1,11 +1,11 @@
 ﻿
 using AutoMapper;
-using FleetManager.Application.Drivers.Commands.CreateDrivers;
-using FleetManager.Application.Drivers.Commands.UpdateDrivers;
-using FleetManager.Application.Drivers.Dto;
-using FleetManager.Domain.Drivers.Entity;
+using Inventory.Application.Drivers.Commands.CreateDrivers;
+using Inventory.Application.Drivers.Commands.UpdateDrivers;
+using Inventory.Application.Drivers.Dto;
+using Inventory.Domain.Drivers.Entity;
 
-namespace FleetManager.Application.Drivers.AutoMappers
+namespace Inventory.Application.Drivers.AutoMappers
 {
     public class DriversMappers : Profile
     {

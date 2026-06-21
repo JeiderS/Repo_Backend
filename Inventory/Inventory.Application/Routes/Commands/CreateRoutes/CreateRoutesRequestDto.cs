@@ -1,6 +1,6 @@
 ﻿
 
-namespace FleetManager.Application.Routes.Commands.CreateRoutes;
+namespace Inventory.Application.Routes.Commands.CreateRoutes;
 
 public record CreateRoutesRequestDto(
      int Id,

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Drivers.DomainDrivers;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Drivers.DomainDrivers;
 
-namespace FleetManager.Application.Drivers.Commands.DeleteDrivers;
+namespace Inventory.Application.Drivers.Commands.DeleteDrivers;
 
 public class DeleteDriversCommandHandler(IDriversDeleteService driversDeleteService)
     : IRequestHandler<DeleteDriversCommand, Result<VoidResult, Error>>

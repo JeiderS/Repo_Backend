@@ -1,12 +1,12 @@
 ﻿
 using AutoMapper;
-using FleetManager.Application.Vehicles.Commands.CreateVehicles;
-using FleetManager.Application.Vehicles.Commands.UpdateVehicles;
-using FleetManager.Application.Vehicles.Dto;
-using FleetManager.Domain.Vehicles.Entity;
+using Inventory.Application.Vehicles.Commands.CreateVehicles;
+using Inventory.Application.Vehicles.Commands.UpdateVehicles;
+using Inventory.Application.Vehicles.Dto;
+using Inventory.Domain.Vehicles.Entity;
 
 
-namespace FleetManager.Application.Vehicles.AutoMappers
+namespace Inventory.Application.Vehicles.AutoMappers
 {
     public class VehiclesMappers : Profile
     {

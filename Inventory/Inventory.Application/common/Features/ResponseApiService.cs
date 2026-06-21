@@ -1,6 +1,6 @@
-﻿using FleetManager.Domain.Common.Models;
+﻿using Inventory.Domain.Common.Models;
 
-namespace FleetManager.Application.Common.Features
+namespace Inventory.Application.Common.Features
 {
     public static class ResponseApiService
     {

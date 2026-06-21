@@ -1,11 +1,11 @@
-﻿using FleetManager.Application.Drivers.Errors;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Drivers.DomainDrivers;
-using FleetManager.Domain.Drivers.Entity;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
+﻿using Inventory.Application.Drivers.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Drivers.DomainDrivers;
+using Inventory.Domain.Drivers.Entity;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl;
+namespace Inventory.Infrastructure.Persistence.Mysql.Drivers.DomainService.Impl;
 
 public class DriversCreateService(DataBaseContext context) : IDriversCreateService
 {

@@ -1,11 +1,11 @@
 ﻿
 using AutoMapper;
-using FleetManager.Application.Routes.Commands.CreateRoutes;
-using FleetManager.Application.Routes.Commands.UpdateRoutes;
-using FleetManager.Application.Routes.Dto;
-using FleetManager.Domain.Routes.Entity;
+using Inventory.Application.Routes.Commands.CreateRoutes;
+using Inventory.Application.Routes.Commands.UpdateRoutes;
+using Inventory.Application.Routes.Dto;
+using Inventory.Domain.Routes.Entity;
 
-namespace FleetManager.Application.Routes.AutoMappers
+namespace Inventory.Application.Routes.AutoMappers
 {
     public class RoutesMappers : Profile
     {

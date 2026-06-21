@@ -1,4 +1,4 @@
-﻿namespace FleetManager.Domain.ScheduleView.Entity
+﻿namespace Inventory.Domain.ScheduleView.Entity
 {
     public class ScheduleViewEntity
     {

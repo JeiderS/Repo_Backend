@@ -1,8 +1,8 @@
-﻿using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Vehicles.Entity;
+﻿using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Vehicles.Entity;
 
-namespace FleetManager.Domain.Vehicles.DomainVehicles;
+namespace Inventory.Domain.Vehicles.DomainVehicles;
 
 public interface IVehiclesUpdateService
 {

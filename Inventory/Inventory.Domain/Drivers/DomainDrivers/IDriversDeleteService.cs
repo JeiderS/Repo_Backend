@@ -1,8 +1,8 @@
 ﻿
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
 
-namespace FleetManager.Domain.Drivers.DomainDrivers
+namespace Inventory.Domain.Drivers.DomainDrivers
 {
     public interface IDriversDeleteService
     {

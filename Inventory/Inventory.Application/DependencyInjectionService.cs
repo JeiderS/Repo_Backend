@@ -4,14 +4,14 @@ using AutoMapper;
 using MediatR;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-using FleetManager.Application.Common.Behaviors;
-using FleetManager.Application.Drivers.AutoMappers;
-using FleetManager.Application.Routes.AutoMappers;
-using FleetManager.Application.Vehicles.AutoMappers;
-using FleetManager.Application.ScheduleView.AutoMappers;
-using FleetManager.Application.Schedules.AutoMappers;
+using Inventory.Application.Common.Behaviors;
+using Inventory.Application.Drivers.AutoMappers;
+using Inventory.Application.Routes.AutoMappers;
+using Inventory.Application.Vehicles.AutoMappers;
+using Inventory.Application.ScheduleView.AutoMappers;
+using Inventory.Application.Schedules.AutoMappers;
 
-namespace FleetManager.Application;
+namespace Inventory.Application;
 
 public static class DependencyInjectionService
 {
@@ -19,16 +19,14 @@ public static class DependencyInjectionService
     {
 
         #region Mappers
-        var mapper = new MapperConfiguration(config =>
+        services.AddAutoMapper(config =>
         {
             config.AddProfile(new DriversMappers());
             config.AddProfile(new RoutesMappers());
             config.AddProfile(new VehiclesMappers());
             config.AddProfile(new ScheduleViewMappers());
             config.AddProfile(new SchedulesMappers());
-
         });
-        services.AddSingleton(mapper.CreateMapper());
         #endregion
 
 

@@ -2,7 +2,7 @@
 using FluentValidation.Results;
 using MediatR;
 
-namespace FleetManager.Application.Common.Behaviors;
+namespace Inventory.Application.Common.Behaviors;
 
 public class ValidationBehaviour<TRequest,
     TResponse>(IEnumerable<IValidator<TRequest>> validators)

@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Schedules.DomainSchedules;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Schedules.DomainSchedules;
 
-namespace FleetManager.Application.Schedules.Commands.DeleteSchedules
+namespace Inventory.Application.Schedules.Commands.DeleteSchedules
 {
     public class DeleteSchedulesCommandHandler(ISchedulesDeleteService schedulesDeleteService)
         : IRequestHandler<DeleteSchedulesCommand, Result<VoidResult, Error>>

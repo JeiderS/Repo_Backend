@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using MediatR;
-using FleetManager.Application.Drivers.Dto;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Drivers.DomainDrivers;
+using Inventory.Application.Drivers.Dto;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Drivers.DomainDrivers;
 
-namespace FleetManager.Application.Drivers.Query.GetDriversById;
+namespace Inventory.Application.Drivers.Query.GetDriversById;
 
 public class GetDriversByIdQueryHandler(
     IDriversGetByIdService DriversGetByIdService,

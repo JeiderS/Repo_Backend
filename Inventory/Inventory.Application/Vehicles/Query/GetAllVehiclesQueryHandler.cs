@@ -1,11 +1,11 @@
 ﻿
 using AutoMapper;
 using MediatR;
-using FleetManager.Domain.Vehicles.DomainVehicles;
-using FleetManager.Application.Vehicles.Dto;
+using Inventory.Domain.Vehicles.DomainVehicles;
+using Inventory.Application.Vehicles.Dto;
 
 
-namespace FleetManager.Application.Vehicles.Query
+namespace Inventory.Application.Vehicles.Query
 {
     public class GetAllVehiclesQueryHandler(
         IMapper mapper, 

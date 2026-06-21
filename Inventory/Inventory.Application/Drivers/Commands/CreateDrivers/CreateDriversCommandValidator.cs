@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using FleetManager.Application.Drivers.Commands.CreateDrivers;
+using Inventory.Application.Drivers.Commands.CreateDrivers;
 
 public class CreateDriversCommandValidator : AbstractValidator<CreateDriversRequestDto>
 {

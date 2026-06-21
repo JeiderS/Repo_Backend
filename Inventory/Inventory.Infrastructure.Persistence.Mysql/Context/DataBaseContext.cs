@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using FleetManager.Infrastructure.Persistence.Mysql.EntityConfiguration;
-using FleetManager.Domain.Drivers.Entity;
-using FleetManager.Domain.Routes.Entity;
-using FleetManager.Domain.Vehicles.Entity;
-using FleetManager.Domain.Schedules.Entity;
-using FleetManager.Domain.ScheduleView.Entity;
+using Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration;
+using Inventory.Domain.Drivers.Entity;
+using Inventory.Domain.Routes.Entity;
+using Inventory.Domain.Vehicles.Entity;
+using Inventory.Domain.Schedules.Entity;
+using Inventory.Domain.ScheduleView.Entity;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Context;
+namespace Inventory.Infrastructure.Persistence.Mysql.Context;
 public class DataBaseContext : DbContext
 {
     public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)

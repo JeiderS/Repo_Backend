@@ -1,6 +1,6 @@
 ﻿
 
-namespace FleetManager.Application.Vehicles.Dto
+namespace Inventory.Application.Vehicles.Dto
 {
     public class PaginationResponseDto<T>
     {

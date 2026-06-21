@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using FleetManager.Application.ScheduleView.Dto;
-using FleetManager.Domain.ScheduleView.Entity;
+using Inventory.Application.ScheduleView.Dto;
+using Inventory.Domain.ScheduleView.Entity;
 
-namespace FleetManager.Application.ScheduleView.AutoMappers
+namespace Inventory.Application.ScheduleView.AutoMappers
 {
     public class ScheduleViewMappers : Profile
     {

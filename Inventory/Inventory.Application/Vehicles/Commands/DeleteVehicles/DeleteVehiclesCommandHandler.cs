@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using FleetManager.Domain.Common.Results;
-using FleetManager.Domain.Common.Results.Errors;
-using FleetManager.Domain.Vehicles.DomainVehicles;
-using FleetManager.Application.Vehicles.Commands.DeleteVehicles;
+using Inventory.Domain.Common.Results;
+using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Vehicles.DomainVehicles;
+using Inventory.Application.Vehicles.Commands.DeleteVehicles;
 
 public class DeleteVehiclesCommandHandler(IVehiclesDeleteService vehiclesDeleteService)
     : IRequestHandler<DeleteVehiclesCommand, Result<VoidResult, Error>>

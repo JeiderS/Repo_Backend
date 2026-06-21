@@ -1,4 +1,4 @@
-﻿namespace FleetManager.Domain.Common.Results.Errors;
+﻿namespace Inventory.Domain.Common.Results.Errors;
 
 public interface IError;
 

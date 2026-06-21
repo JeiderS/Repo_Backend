@@ -1,4 +1,4 @@
-﻿namespace FleetManager.Application.Schedules.Commands.CreateSchedules;
+﻿namespace Inventory.Application.Schedules.Commands.CreateSchedules;
 
 public record CreateSchedulesRequestDto(
     int RouteId,

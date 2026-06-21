@@ -1,16 +1,16 @@
-﻿using FleetManager.Application.Vehicles.Query;
-using FleetManager.Domain.Common.Pagination;
+﻿using Inventory.Application.Vehicles.Query;
+using Inventory.Domain.Common.Pagination;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using FleetManager.Application.Common.Features;
-using FleetManager.Application.Vehicles.Commands.CreateVehicles;
-using FleetManager.Application.Vehicles.Commands.DeleteVehicles;
-using FleetManager.Application.Vehicles.Commands.UpdateVehicles;
-using FleetManager.Application.Vehicles.Errors;
-using FleetManager.Application.Vehicles.Query.GetVehiclesById;
+using Inventory.Application.Common.Features;
+using Inventory.Application.Vehicles.Commands.CreateVehicles;
+using Inventory.Application.Vehicles.Commands.DeleteVehicles;
+using Inventory.Application.Vehicles.Commands.UpdateVehicles;
+using Inventory.Application.Vehicles.Errors;
+using Inventory.Application.Vehicles.Query.GetVehiclesById;
 using Microsoft.AspNetCore.Authorization;
 
-namespace FleetManager.Api.Controllers.Vehicles
+namespace Inventory.Api.Controllers.Vehicles
 {
     [ApiController]
     [Route("api/v1/Vehicles")]

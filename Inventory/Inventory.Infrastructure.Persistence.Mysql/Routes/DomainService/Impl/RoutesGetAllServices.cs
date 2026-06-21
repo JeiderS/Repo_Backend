@@ -1,10 +1,10 @@
-﻿using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.Routes.DomainRoutes;
-using FleetManager.Domain.Routes.Entity;
-using FleetManager.Infrastructure.Persistence.Mysql.Context;
+﻿using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.Routes.DomainRoutes;
+using Inventory.Domain.Routes.Entity;
+using Inventory.Infrastructure.Persistence.Mysql.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace FleetManager.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl
+namespace Inventory.Infrastructure.Persistence.Mysql.Routes.DomainService.Impl
 {
     public class RoutesGetAllServices(DataBaseContext context) : IRoutesGetAllService
     {

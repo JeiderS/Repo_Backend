@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using FleetManager.Domain.Common.Pagination;
-using FleetManager.Domain.Drivers.Entity;
-using FleetManager.Application.Drivers.Dto;
+using Inventory.Domain.Common.Pagination;
+using Inventory.Domain.Drivers.Entity;
+using Inventory.Application.Drivers.Dto;
 
-namespace FleetManager.Application.Drivers.AutoMappers
+namespace Inventory.Application.Drivers.AutoMappers
 {
     public class PaginationDriversMapper : Profile
     {
