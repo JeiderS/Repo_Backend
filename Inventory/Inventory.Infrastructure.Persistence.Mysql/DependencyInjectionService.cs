@@ -21,6 +21,10 @@ namespace Inventory.Infrastructure.Persistence.Mysql
             services.AddScoped<IUserProfileCreateService, UserProfileCreateService>();
             services.AddScoped<IUserAuthorizationService, UserAuthorizationService>();
             services.AddScoped<IModuleMenuService, ModuleMenuService>();
+            services.AddScoped<IModuleListService, ModuleListService>();
+            services.AddScoped<IModuleCreateService, ModuleCreateService>();
+            services.AddScoped<IModuleGetByIdService, ModuleGetByIdService>();
+            services.AddScoped<IModuleUpdateService, ModuleUpdateService>();
 
             return services;
         }
