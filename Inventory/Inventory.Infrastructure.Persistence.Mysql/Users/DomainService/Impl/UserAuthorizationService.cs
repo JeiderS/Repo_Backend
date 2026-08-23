@@ -27,44 +27,27 @@ public class UserAuthorizationService(DataBaseContext context) : IUserAuthorizat
             .Select(r => r.Name)
             .ToListAsync();
 
-        var roleModules = await context.RoleModules
-            .Where(rm => roleIds.Contains(rm.RoleId))
-            .Include(rm => rm.Module)
+        // RoleActions es la fuente única desde Checkpoint B (design.md D5/D9);
+        // RoleModules ya no se lee aquí. ModulePermission se reconstruye a
+        // partir del sufijo de verbo de Action.Code (Module.Name + verbo, ver
+        // 03_Actions_Seed.sql), no de columnas Can* por fila.
+        var roleActions = await context.RoleActions
+            .Where(ra => roleIds.Contains(ra.RoleId))
+            .Include(ra => ra.Action)
+                .ThenInclude(a => a!.Module)
             .ToListAsync();
 
-        var permissions = roleModules
-            .GroupBy(rm => rm.Module!.Name)
+        var permissions = roleActions
+            .GroupBy(ra => ra.Action!.Module!.Name)
             .Select(g => new ModulePermission(
                 Module: g.Key,
-                CanView: g.Any(x => x.CanView),
-                CanCreate: g.Any(x => x.CanCreate),
-                CanEdit: g.Any(x => x.CanEdit),
-                CanDelete: g.Any(x => x.CanDelete)))
+                CanView: g.Any(x => x.Action!.Code.EndsWith(PermissionAction.View, StringComparison.Ordinal)),
+                CanCreate: g.Any(x => x.Action!.Code.EndsWith(PermissionAction.Create, StringComparison.Ordinal)),
+                CanEdit: g.Any(x => x.Action!.Code.EndsWith(PermissionAction.Edit, StringComparison.Ordinal)),
+                CanDelete: g.Any(x => x.Action!.Code.EndsWith(PermissionAction.Delete, StringComparison.Ordinal))))
             .ToList();
 
         return new UserAuthorizationData(roleNames, permissions);
-    }
-
-    public async Task<bool> HasPermissionAsync(int userId, string module, string action)
-    {
-        var roleIds = await GetRoleIdsAsync(userId);
-        if (roleIds.Count == 0)
-            return false;
-
-        var roleModules = await context.RoleModules
-            .Where(rm => roleIds.Contains(rm.RoleId))
-            .Include(rm => rm.Module)
-            .Where(rm => rm.Module!.Name == module)
-            .ToListAsync();
-
-        return action switch
-        {
-            PermissionAction.View => roleModules.Any(rm => rm.CanView),
-            PermissionAction.Create => roleModules.Any(rm => rm.CanCreate),
-            PermissionAction.Edit => roleModules.Any(rm => rm.CanEdit),
-            PermissionAction.Delete => roleModules.Any(rm => rm.CanDelete),
-            _ => false
-        };
     }
 
     private async Task<List<int>> GetRoleIdsAsync(int userId)

@@ -38,6 +38,9 @@ namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
             builder.Property(m => m.SortOrder)
                 .HasColumnName("SortOrder");
 
+            builder.Property(m => m.RequiresSystemAdmin)
+                .HasColumnName("RequiresSystemAdmin");
+
             builder.HasIndex(m => m.Name).IsUnique();
 
             builder.HasOne(m => m.Parent)

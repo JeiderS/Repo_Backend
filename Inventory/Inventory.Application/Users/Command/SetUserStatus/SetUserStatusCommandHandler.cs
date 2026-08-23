@@ -12,6 +12,7 @@ namespace Inventory.Application.Users.Command.SetUserStatus;
 public class SetUserStatusCommandHandler(
     IUserStatusService userStatusService,
     IActiveUserCache activeUserCache,
+    IPermissionCache permissionCache,
     IUnitOfWork unitOfWork) : IRequestHandler<SetUserStatusCommand, Result<UserDto, Error>>
 {
     public async Task<Result<UserDto, Error>> Handle(SetUserStatusCommand request, CancellationToken cancellationToken)
@@ -33,6 +34,14 @@ public class SetUserStatusCommandHandler(
         // (design.md decision), así ActiveUserValidationMiddleware ve el nuevo
         // estado de inmediato en lugar de esperar el TTL de 60s.
         activeUserCache.Invalidate(user.Id);
+
+        // Purga también el permission cache, incondicionalmente en ambas
+        // direcciones (design.md D7): al desactivar no tiene efecto inmediato
+        // (ActiveUserValidationMiddleware ya rechaza la request antes), pero
+        // evita que una entrada userId->roleId quede obsoleta si el usuario es
+        // reactivado más tarde. Spec: action-code-authorization "Permission
+        // Cache Purge on Deactivation".
+        permissionCache.InvalidateUser(user.Id);
 
         return UserDto.FromEntity(user);
     }

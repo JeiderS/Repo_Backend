@@ -295,7 +295,7 @@ public class UserManagementTests : IClassFixture<TenantApiFactory>
         var userId = data.GetProperty("id").GetInt32();
         var email = data.GetProperty("email").GetString()!;
 
-        var token = IssueTokenForUser(userId, email, roles: Array.Empty<string>());
+        var token = IssueTokenForUser(userId, email);
         return (userId, token);
     }
 
@@ -315,7 +315,7 @@ public class UserManagementTests : IClassFixture<TenantApiFactory>
             .Where(u => u.RoleId == adminRoleId && u.IsActive)
             .FirstAsync();
 
-        return IssueTokenForUser(adminUser.Id, adminUser.Email, roles: new[] { "Admin" });
+        return IssueTokenForUser(adminUser.Id, adminUser.Email);
     }
 
     private static async Task<int> GetAdminRoleIdAsync(string connectionString)
@@ -325,7 +325,17 @@ public class UserManagementTests : IClassFixture<TenantApiFactory>
         return await db.Roles.Where(r => r.Name == "Admin").Select(r => r.Id).FirstAsync();
     }
 
-    private string IssueTokenForUser(int userId, string email, IReadOnlyList<string> roles)
+    /// <summary>
+    /// Mints a JWT carrying only identity claims (sub/email/tenant) — no
+    /// ClaimTypes.Role claims. Task 4.4: the previous per-role claim-building
+    /// loop was dead code since Checkpoint B — PermissionClaimsMiddleware
+    /// strips and replaces any role claims a presented token carries
+    /// (design.md D2), so tests that need a specific grant must seed a real
+    /// role + RoleActions rows in the DB instead (see
+    /// ClaimsAuthorizationTests for the permission-dependent scenarios that
+    /// exercise this directly).
+    /// </summary>
+    private string IssueTokenForUser(int userId, string email)
     {
         var configuration = _factory.Services.GetRequiredService<IConfiguration>();
         var key = configuration["Jwt:Key"]!;
@@ -339,8 +349,6 @@ public class UserManagementTests : IClassFixture<TenantApiFactory>
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new("tenant", DefaultTenantKey),
         };
-        foreach (var role in roles)
-            claims.Add(new Claim(ClaimTypes.Role, role));
 
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),

@@ -1,3 +1,4 @@
+using Inventory.Application.Common.Interfaces;
 using Inventory.Application.Roles.Dto;
 using Inventory.Application.Roles.Errors;
 using Inventory.Domain.Common.Persistence;
@@ -11,6 +12,7 @@ namespace Inventory.Application.Roles.Command.AssignRoleActions;
 public class AssignRoleActionsCommandHandler(
     IRoleGetByIdService roleGetByIdService,
     IRoleActionAssignService roleActionAssignService,
+    IPermissionCache permissionCache,
     IUnitOfWork unitOfWork) : IRequestHandler<AssignRoleActionsCommand, Result<RoleDto, Error>>
 {
     public async Task<Result<RoleDto, Error>> Handle(AssignRoleActionsCommand request, CancellationToken cancellationToken)
@@ -31,6 +33,11 @@ public class AssignRoleActionsCommandHandler(
         // vacío-a-vacío es un no-op válido, no un error.
         await roleActionAssignService.ReplaceActionsAsync(role.Id, requestedIds);
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Invalida el permission cache de este rol para que quede
+        // runtime-effective en la próxima request, sujeto al TTL de la cache
+        // (spec: role-permission-management, "Role Action Assignment").
+        permissionCache.InvalidateRole(role.Id);
 
         return RoleDto.FromEntity(role, requestedIds);
     }

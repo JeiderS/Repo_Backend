@@ -4,7 +4,6 @@ using Inventory.Domain.Users.Entity;
 using Inventory.Domain.UserProfile.Entity;
 using Inventory.Domain.Roles.Entity;
 using Inventory.Domain.Modules.Entity;
-using Inventory.Domain.RoleModules.Entity;
 using Inventory.Domain.Actions.Entity;
 using Inventory.Domain.RoleActions.Entity;
 
@@ -18,7 +17,6 @@ public class DataBaseContext : DbContext
     public DbSet<UserProfileEntity> UserProfiles { get; set; }
     public DbSet<RoleEntity> Roles { get; set; }
     public DbSet<ModuleEntity> Modules { get; set; }
-    public DbSet<RoleModuleEntity> RoleModules { get; set; }
     public DbSet<ActionEntity> Actions { get; set; }
     public DbSet<RoleActionEntity> RoleActions { get; set; }
 
@@ -34,7 +32,6 @@ public class DataBaseContext : DbContext
         new UserProfileConfiguration(modelBuilder.Entity<UserProfileEntity>());
         new RoleConfiguration(modelBuilder.Entity<RoleEntity>());
         new ModuleConfiguration(modelBuilder.Entity<ModuleEntity>());
-        new RoleModuleConfiguration(modelBuilder.Entity<RoleModuleEntity>());
         new ActionConfiguration(modelBuilder.Entity<ActionEntity>());
         new RoleActionConfiguration(modelBuilder.Entity<RoleActionEntity>());
 
@@ -42,5 +39,11 @@ public class DataBaseContext : DbContext
         // tiene un unico Users.RoleId (ver UserConfiguration). La tabla en si
         // sigue existiendo en SQL Server hasta Checkpoint C (03_Drop_UserRoles.sql),
         // pero EF ya no la conoce.
+        //
+        // RoleModules (Checkpoint B2, esta misma release) tampoco se mapea
+        // más: RoleActions es la única fuente de permisos enforced (design.md,
+        // action-code-authorization). La tabla RoleModules sigue existiendo en
+        // SQL Server hasta Checkpoint C (02_Drop_RoleModules.sql, gated, per
+        // tenant), pero EF ya no la conoce.
     }
 }

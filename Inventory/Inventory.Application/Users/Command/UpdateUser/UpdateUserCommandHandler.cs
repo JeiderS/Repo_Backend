@@ -1,3 +1,4 @@
+using Inventory.Application.Common.Interfaces;
 using Inventory.Application.Users.Dto;
 using Inventory.Application.Users.Errors;
 using Inventory.Domain.Common.Persistence;
@@ -14,6 +15,7 @@ public class UpdateUserCommandHandler(
     IUserGetByIdService userGetByIdService,
     IUserUpdateService userUpdateService,
     IRoleGetByIdService roleGetByIdService,
+    IPermissionCache permissionCache,
     IUnitOfWork unitOfWork) : IRequestHandler<UpdateUserCommand, Result<UserDto, Error>>
 {
     public async Task<Result<UserDto, Error>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
@@ -32,6 +34,8 @@ public class UpdateUserCommandHandler(
             if (role is null)
                 return UserErrorBuilder.RoleNotFound();
         }
+
+        var roleChanged = user.RoleId != request.RoleId;
 
         user.Email = request.Email;
         // Asignar un nuevo RoleId reemplaza el anterior: es un FK simple, no una
@@ -52,6 +56,12 @@ public class UpdateUserCommandHandler(
         var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
         if (savedRows <= 0)
             return UserErrorBuilder.UpdateException();
+
+        // Purga el userId->roleId cacheado en PermissionCache cuando el RoleId
+        // cambia (design.md D3): de lo contrario el usuario seguiría
+        // autorizando contra el rol anterior hasta que el TTL de 60s expire.
+        if (roleChanged)
+            permissionCache.InvalidateUser(user.Id);
 
         return UserDto.FromEntity(user);
     }

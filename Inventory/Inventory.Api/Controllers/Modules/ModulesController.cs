@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Inventory.Api.Auth;
 using Inventory.Application.Common.Features;
 using Inventory.Application.Modules.Command.CreateModule;
 using Inventory.Application.Modules.Command.DeactivateModule;
@@ -30,7 +31,8 @@ namespace Inventory.Api.Controllers.Modules
 
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -42,7 +44,8 @@ namespace Inventory.Api.Controllers.Modules
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateModuleCommand command)
         {
@@ -57,7 +60,8 @@ namespace Inventory.Api.Controllers.Modules
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateModuleCommand command)
         {
@@ -72,7 +76,8 @@ namespace Inventory.Api.Controllers.Modules
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [Authorize]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
         [HttpPatch("{id:int}/deactivate")]
         public async Task<IActionResult> Deactivate(int id)
         {

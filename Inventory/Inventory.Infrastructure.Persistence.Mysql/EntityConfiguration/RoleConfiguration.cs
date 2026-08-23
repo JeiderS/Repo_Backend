@@ -21,6 +21,9 @@ namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
                 .IsRequired()
                 .HasMaxLength(50);
 
+            builder.Property(r => r.IsSystemAdmin)
+                .HasColumnName("IsSystemAdmin");
+
             builder.HasIndex(r => r.Name).IsUnique();
         }
     }

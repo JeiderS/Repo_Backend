@@ -15,11 +15,11 @@ public interface IUserAuthorizationService
     /// permisos sea efectivo de inmediato. Pensado para endpoints de consulta
     /// como /auth/me, no para validarse en cada request individual.
     /// </summary>
+    /// <remarks>
+    /// HasPermissionAsync fue eliminado en Checkpoint B: su único caller era
+    /// HasPermissionAttribute, ya eliminado (dead desde Phase 1). La
+    /// autorización por request ahora pasa por PermissionClaimsMiddleware +
+    /// [Authorize], no por un filtro que consulta BD por acción.
+    /// </remarks>
     Task<UserAuthorizationData> GetAuthorizationDataAsync(int userId);
-
-    /// <summary>
-    /// Verificación puntual y barata de un permiso concreto contra la BD.
-    /// Es la que debe usar cualquier filtro de autorización por petición.
-    /// </summary>
-    Task<bool> HasPermissionAsync(int userId, string module, string action);
 }

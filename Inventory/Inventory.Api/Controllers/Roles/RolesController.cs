@@ -11,12 +11,12 @@ namespace Inventory.Api.Controllers.Roles
 {
     [ApiController]
     [Route("api/v1/roles")]
-    [Authorize(Roles = "Admin")]
     public class RolesController(IMediator mediator) : ControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "RolesView")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -29,6 +29,7 @@ namespace Inventory.Api.Controllers.Roles
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "RolesCreate")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateRoleCommand command)
         {
@@ -44,6 +45,7 @@ namespace Inventory.Api.Controllers.Roles
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "RolesEdit")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateRoleCommand command)
         {
@@ -60,6 +62,7 @@ namespace Inventory.Api.Controllers.Roles
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Roles = "RolesEdit")]
         [HttpPut("{id:int}/actions")]
         public async Task<IActionResult> AssignActions(int id, [FromBody] AssignRoleActionsCommand command)
         {

@@ -24,13 +24,31 @@ public class ModuleMenuService(DataBaseContext context) : IModuleMenuService
             .OrderBy(m => m.SortOrder)
             .ToListAsync();
 
-        var permittedModuleIds = roleIds.Count == 0
+        var isSystemAdmin = roleIds.Count > 0 && await context.Roles
+            .AnyAsync(r => roleIds.Contains(r.Id) && r.IsSystemAdmin);
+
+        // Módulos con al menos una de sus cuatro Actions concedida vía
+        // RoleActions (design.md D5 — reemplaza el antiguo CanView de
+        // RoleModules: "cualquiera de las 4 Actions" concede visibilidad,
+        // no View específicamente).
+        var actionGrantedModuleIds = roleIds.Count == 0
             ? new HashSet<int>()
-            : (await context.RoleModules
-                .Where(rm => roleIds.Contains(rm.RoleId) && rm.CanView)
-                .Select(rm => rm.ModuleId)
+            : (await context.RoleActions
+                .Where(ra => roleIds.Contains(ra.RoleId))
+                .Select(ra => ra.Action!.ModuleId)
+                .Distinct()
                 .ToListAsync())
               .ToHashSet();
+
+        // Un módulo con RequiresSystemAdmin sólo es visible si el rol es
+        // IsSystemAdmin, sin importar cuántas de sus Actions tenga concedidas
+        // (design.md D5; spec: action-code-authorization "Menu Visibility by
+        // Any Granted Action" — el ítem Modules no debe aparecer salvo que
+        // IsSystemAdmin sea true).
+        var permittedModuleIds = allModules
+            .Where(m => actionGrantedModuleIds.Contains(m.Id) && (!m.RequiresSystemAdmin || isSystemAdmin))
+            .Select(m => m.Id)
+            .ToHashSet();
 
         var modulesByParent = allModules
             .GroupBy(m => m.ParentId ?? RootKey)

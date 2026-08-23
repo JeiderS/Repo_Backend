@@ -9,8 +9,13 @@ namespace Inventory.Api.Auth;
 
 public class JwtTokenGenerator(IConfiguration configuration, ITenantContext tenantContext) : IJwtTokenGenerator
 {
-    // El JWT solo lleva identidad + roles. Los permisos se resuelven contra
-    // RoleModules en cada request (ver HasPermissionAttribute), nunca aquí.
+    // El JWT solo lleva identidad, nunca nombres de rol ni permisos. Desde
+    // Checkpoint B, PermissionClaimsMiddleware deriva los claims de Action
+    // code (y system_admin) en cada request contra RoleActions/Roles — el JWT
+    // no es fuente de autorización (design.md D2, spec: action-code-authorization
+    // "Role-Name Claims Removed from Issued Tokens"). El parámetro roles se
+    // conserva sin uso: la firma de IJwtTokenGenerator y LoginCommandHandler
+    // no cambian (design.md File Changes).
     public string GenerateToken(UserEntity user, IReadOnlyList<string> roles)
     {
         var key = configuration["Jwt:Key"]!;
@@ -34,11 +39,6 @@ public class JwtTokenGenerator(IConfiguration configuration, ITenantContext tena
             // middleware — see Program.cs Checkpoint B.
             new("tenant", tenantContext.Key)
         };
-
-        foreach (var role in roles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
 
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),

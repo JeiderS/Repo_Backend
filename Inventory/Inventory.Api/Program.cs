@@ -62,6 +62,14 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 
+// SystemAdminOnly gates Module management independently of any Action-code
+// grant (design.md D1): holding every Modules* Action MUST NOT itself
+// satisfy this policy, only Roles.IsSystemAdmin does, via the distinct
+// system_admin claim PermissionClaimsMiddleware adds below.
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy(AuthorizationPolicies.SystemAdminOnly,
+        p => p.RequireClaim(PermissionClaimTypes.SystemAdmin, "true")));
+
 builder.Services.AddRouting(routing => routing.LowercaseUrls = true);
 
 builder.Services
@@ -77,6 +85,10 @@ builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 // use of a cache in this codebase (design.md "Cache" decision).
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IActiveUserCache, ActiveUserCache>();
+
+// IPermissionCache backs PermissionClaimsMiddleware (design.md D3/D9) —
+// same IMemoryCache + ITenantContext composition as IActiveUserCache above.
+builder.Services.AddScoped<IPermissionCache, PermissionCache>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -171,6 +183,13 @@ app.UseTenantClaimValidationMiddleware();
 // "ActiveUserValidationMiddleware runs after TenantClaimValidationMiddleware"
 // decision (avoids a cross-tenant user-status oracle).
 app.UseActiveUserValidationMiddleware();
+
+// Derives Action-code (+ system_admin) claims from live RoleActions/Roles
+// state and replaces the identity's role-claim set with them (design.md D2).
+// Must run after UseActiveUserValidationMiddleware and before
+// UseAuthorization, which materializes the [Authorize] evaluation
+// (design.md D8 — verified against the real pipeline order above).
+app.UsePermissionClaimsMiddleware();
 
 app.UseAuthorization();
 

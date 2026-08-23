@@ -8,7 +8,7 @@ namespace Inventory.Api.Controllers.Actions
 {
     [ApiController]
     [Route("api/v1/actions")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "RolesView")]
     public class ActionsController(IMediator mediator) : ControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]

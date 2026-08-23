@@ -37,8 +37,9 @@ namespace Inventory.Api.Controllers.Auth
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             var email = User.FindFirstValue(ClaimTypes.Email);
 
-            // Se consulta en vivo contra RoleModules: el JWT no lleva permisos,
-            // así que esta es siempre la foto real y actual de la BD.
+            // Se consulta en vivo contra RoleActions (Checkpoint B — antes
+            // RoleModules): el JWT no lleva permisos, así que esta es siempre
+            // la foto real y actual de la BD.
             var authorizationData = await mediator.Send(new GetAuthorizationDataQuery(userId));
 
             return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, new
