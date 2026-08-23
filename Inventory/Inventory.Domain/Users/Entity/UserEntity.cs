@@ -10,8 +10,10 @@ namespace Inventory.Domain.Users.Entity
         public required string PasswordHash { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
+        public int? RoleId { get; set; }
+        public bool MustChangePassword { get; set; }
 
         public UserProfileEntity? Profile { get; set; }
-        public ICollection<RoleEntity> Roles { get; set; } = new List<RoleEntity>();
+        public RoleEntity? Role { get; set; }
     }
 }

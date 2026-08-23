@@ -10,8 +10,8 @@ public class UserAuthorizationService(DataBaseContext context) : IUserAuthorizat
     public async Task<IReadOnlyList<string>> GetRolesAsync(int userId)
     {
         return await context.Users
-            .Where(u => u.Id == userId)
-            .SelectMany(u => u.Roles.Select(r => r.Name))
+            .Where(u => u.Id == userId && u.RoleId != null)
+            .Select(u => u.Role!.Name)
             .ToListAsync();
     }
 
@@ -70,8 +70,8 @@ public class UserAuthorizationService(DataBaseContext context) : IUserAuthorizat
     private async Task<List<int>> GetRoleIdsAsync(int userId)
     {
         return await context.Users
-            .Where(u => u.Id == userId)
-            .SelectMany(u => u.Roles.Select(r => r.Id))
+            .Where(u => u.Id == userId && u.RoleId != null)
+            .Select(u => u.RoleId!.Value)
             .ToListAsync();
     }
 }

@@ -5,6 +5,8 @@ using Inventory.Domain.UserProfile.Entity;
 using Inventory.Domain.Roles.Entity;
 using Inventory.Domain.Modules.Entity;
 using Inventory.Domain.RoleModules.Entity;
+using Inventory.Domain.Actions.Entity;
+using Inventory.Domain.RoleActions.Entity;
 
 namespace Inventory.Infrastructure.Persistence.Mysql.Context;
 public class DataBaseContext : DbContext
@@ -17,6 +19,8 @@ public class DataBaseContext : DbContext
     public DbSet<RoleEntity> Roles { get; set; }
     public DbSet<ModuleEntity> Modules { get; set; }
     public DbSet<RoleModuleEntity> RoleModules { get; set; }
+    public DbSet<ActionEntity> Actions { get; set; }
+    public DbSet<RoleActionEntity> RoleActions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -31,21 +35,12 @@ public class DataBaseContext : DbContext
         new RoleConfiguration(modelBuilder.Entity<RoleEntity>());
         new ModuleConfiguration(modelBuilder.Entity<ModuleEntity>());
         new RoleModuleConfiguration(modelBuilder.Entity<RoleModuleEntity>());
+        new ActionConfiguration(modelBuilder.Entity<ActionEntity>());
+        new RoleActionConfiguration(modelBuilder.Entity<RoleActionEntity>());
 
-        // Tabla puente UserRoles creada manualmente en SQL Server (UserId, RoleId).
-        modelBuilder.Entity<UserEntity>()
-            .HasMany(u => u.Roles)
-            .WithMany(r => r.Users)
-            .UsingEntity<Dictionary<string, object>>(
-                "UserRoles",
-                j => j.HasOne<RoleEntity>().WithMany().HasForeignKey("RoleId"),
-                j => j.HasOne<UserEntity>().WithMany().HasForeignKey("UserId"),
-                j =>
-                {
-                    j.ToTable("UserRoles", t => t.ExcludeFromMigrations());
-                    j.Property<int>("UserId");
-                    j.Property<int>("RoleId");
-                    j.HasKey("UserId", "RoleId");
-                });
+        // UserRoles (N:M legacy) ya no se mapea desde Checkpoint B: el usuario
+        // tiene un unico Users.RoleId (ver UserConfiguration). La tabla en si
+        // sigue existiendo en SQL Server hasta Checkpoint C (03_Drop_UserRoles.sql),
+        // pero EF ya no la conoce.
     }
 }

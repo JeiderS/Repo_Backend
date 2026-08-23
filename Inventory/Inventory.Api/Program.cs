@@ -73,6 +73,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
+// IMemoryCache backs IActiveUserCache (ActiveUserValidationMiddleware) — first
+// use of a cache in this codebase (design.md "Cache" decision).
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IActiveUserCache, ActiveUserCache>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -159,6 +164,13 @@ app.UseAuthentication();
 // between this middleware going live and the claim shipping would 401 every
 // login, not just stale sessions.
 app.UseTenantClaimValidationMiddleware();
+
+// Rejects a deactivated user's still-valid JWT before it reaches any
+// controller (spec: user-administration, "Immediate Deactivation Enforcement").
+// Must run after UseTenantClaimValidationMiddleware — see design.md
+// "ActiveUserValidationMiddleware runs after TenantClaimValidationMiddleware"
+// decision (avoids a cross-tenant user-status oracle).
+app.UseActiveUserValidationMiddleware();
 
 app.UseAuthorization();
 

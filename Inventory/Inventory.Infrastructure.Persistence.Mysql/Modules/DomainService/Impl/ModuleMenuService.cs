@@ -15,8 +15,8 @@ public class ModuleMenuService(DataBaseContext context) : IModuleMenuService
     public async Task<IReadOnlyList<ModuleMenuItem>> GetMenuForUserAsync(int userId)
     {
         var roleIds = await context.Users
-            .Where(u => u.Id == userId)
-            .SelectMany(u => u.Roles.Select(r => r.Id))
+            .Where(u => u.Id == userId && u.RoleId != null)
+            .Select(u => u.RoleId!.Value)
             .ToListAsync();
 
         var allModules = await context.Modules

@@ -149,34 +149,11 @@ public class TenantLoginTests : IClassFixture<TenantApiFactory>
         Assert.Equal(HttpStatusCode.OK, globexResponse.StatusCode);
     }
 
-    [Fact]
-    public async Task RegisterOnAcmeHost_CreatesUserInAcmeDatabase_WithAcmeTenantClaim()
-    {
-        SkipUnlessRealDatabasesConfigured();
-
-        var client = _factory.CreateClient();
-        var request = new HttpRequestMessage(HttpMethod.Post, "/api/v1/auth/register")
-        {
-            Content = JsonBody(new
-            {
-                email = $"new-{Guid.NewGuid():N}@example.com",
-                password = "Password123!",
-                firstName = "Test",
-                lastName = "User",
-            }),
-        };
-        request.Headers.Host = "acme.localhost";
-
-        var response = await client.SendAsync(request);
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var token = doc.RootElement.GetProperty("data").GetProperty("token").GetString();
-        Assert.NotNull(token);
-
-        var claims = new JwtSecurityTokenHandler().ReadJwtToken(token).Claims;
-        Assert.Contains(claims, c => c.Type == "tenant" && c.Value == "acme");
-    }
+    // RegisterOnAcmeHost_CreatesUserInAcmeDatabase_WithAcmeTenantClaim removed:
+    // public self-registration (POST /api/v1/auth/register) was closed by the
+    // user-management change (Checkpoint B). Its replacement coverage is
+    // UserManagementTests.PostAuthRegister_NoLongerExists_Returns404 (asserts
+    // 404, not 200).
 
     private static void SkipUnlessRealDatabasesConfigured()
     {
