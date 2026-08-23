@@ -9,19 +9,54 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Inventory.Api.Auth;
 using Inventory.Application.Common.Interfaces;
-
-
-
+using Inventory.Api.Middleware;
+using Inventory.Api.Tenancy;
+using Microsoft.Extensions.Options;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Tenant registry: bound once at startup, restart required to add a tenant
+// (design.md "IOptions bound once" decision). ValidateOnStart fails fast on
+// typos/missing connection strings; the validator also runs the shim that
+// fills the default tenant's connection string from the legacy
+// ConnectionStrings:SqlServerConnection key before validating.
+builder.Services.AddOptions<TenantRegistryOptions>()
+    .Bind(builder.Configuration.GetSection(TenantRegistryOptions.SectionName))
+    .ValidateOnStart();
+
+builder.Services.AddSingleton<IValidateOptions<TenantRegistryOptions>, TenantRegistryOptionsValidator>();
+
+// ITenantContext is the request-scoped ambient tenant, populated by
+// TenantResolutionMiddleware. TenantContext is registered directly so the
+// middleware (which cannot use constructor injection for scoped services) can
+// resolve and mutate the same scoped instance other consumers read through
+// ITenantContext (JwtTokenGenerator, the DbContext options factory below).
+builder.Services.AddScoped<TenantContext>();
+builder.Services.AddScoped<ITenantContext>(sp => sp.GetRequiredService<TenantContext>());
+
 builder.Services.AddCors(options =>
 {
+    // SPA CORS ports are configurable, not hardcoded (design.md decision): an
+    // origin is allowed when its host passes the same dot-anchored
+    // DomainMatcher.MatchesRoot check used for tenant resolution, on a port
+    // listed in Cors:SpaPorts.
     options.AddPolicy("AllowLocalhost",
-          policy => policy.WithOrigins("http://localhost:4200")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
+        policy => policy.SetIsOriginAllowed(origin =>
+            {
+                if (!Uri.TryCreate(origin, UriKind.Absolute, out var originUri))
+                    return false;
+
+                var spaPorts = builder.Configuration.GetSection("Cors:SpaPorts").Get<int[]>()
+                    ?? Array.Empty<int>();
+                var rootDomains = builder.Configuration.GetSection("Tenants:RootDomains").Get<string[]>()
+                    ?? Array.Empty<string>();
+
+                return spaPorts.Contains(originUri.Port)
+                    && rootDomains.Any(root => DomainMatcher.MatchesRoot(originUri.Host, root));
+            })
+            .AllowAnyHeader()
+            .AllowAnyMethod());
 });
 
 
@@ -57,11 +92,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// configure Conexion SQL Server
-var connectionString = builder.Configuration.GetConnectionString("SqlServerConnection");
-
-builder.Services.AddDbContext<DataBaseContext>(options =>
-    options.UseSqlServer(connectionString));
+// Per-tenant DbContext: built per request from the scoped ITenantContext
+// resolved by TenantResolutionMiddleware, instead of one static connection
+// string bound at startup (design.md "AddDbContext with the IServiceProvider
+// overload" decision). DbContextOptions default optionsLifetime is already
+// Scoped, so this correctly re-resolves ITenantContext on every request.
+builder.Services.AddDbContext<DataBaseContext>((sp, options) =>
+    options.UseSqlServer(sp.GetRequiredService<ITenantContext>().ConnectionString));
 
 
 // Configura el AddSwaggerWithJwt
@@ -109,10 +146,26 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowLocalhost");
 
+// Tenant resolution precedes authentication: an unknown/unsupported host
+// fails fast (404/400) before any auth logic runs (spec: tenant-resolution,
+// design.md "middleware placement and fail-fast response" decision).
+app.UseTenantResolutionMiddleware();
 
 app.UseAuthentication();
+
+// Cross-validates the JWT tenant claim against the resolved tenant. Ships in
+// the exact same deploy as the JWT claim change below — Checkpoint B is one
+// atomic unit (Judgment Day round 2, CONFIRMED CRITICAL, fix-caused): a gap
+// between this middleware going live and the claim shipping would 401 every
+// login, not just stale sessions.
+app.UseTenantClaimValidationMiddleware();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+// Exposes the top-level-statement Program for WebApplicationFactory<Program>
+// in Inventory.Tests (Checkpoint B integration tests).
+public partial class Program { }

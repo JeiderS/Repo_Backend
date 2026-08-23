@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Inventory.Api.Auth;
 
-public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerator
+public class JwtTokenGenerator(IConfiguration configuration, ITenantContext tenantContext) : IJwtTokenGenerator
 {
     // El JWT solo lleva identidad + roles. Los permisos se resuelven contra
     // RoleModules en cada request (ver HasPermissionAttribute), nunca aquí.
@@ -27,7 +27,12 @@ public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerato
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(ClaimTypes.Name, string.IsNullOrEmpty(fullName) ? user.Email : fullName)
+            new(ClaimTypes.Name, string.IsNullOrEmpty(fullName) ? user.Email : fullName),
+            // Defense-in-depth: enforced by TenantClaimValidationMiddleware on
+            // every subsequent authenticated request (spec: tenant-scoped-login,
+            // JWT Tenant Claim requirement). Ships atomically with that
+            // middleware — see Program.cs Checkpoint B.
+            new("tenant", tenantContext.Key)
         };
 
         foreach (var role in roles)
