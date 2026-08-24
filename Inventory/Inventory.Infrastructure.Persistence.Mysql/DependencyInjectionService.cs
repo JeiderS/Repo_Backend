@@ -42,6 +42,7 @@ namespace Inventory.Infrastructure.Persistence.Mysql
             services.AddScoped<IRoleActionAssignService, RoleActionAssignService>();
 
             services.AddScoped<IActionListService, ActionListService>();
+            services.AddScoped<IActionCreateService, ActionCreateService>();
 
             return services;
         }

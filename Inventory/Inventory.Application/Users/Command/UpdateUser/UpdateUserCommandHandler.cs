@@ -53,9 +53,12 @@ public class UpdateUserCommandHandler(
             user.Profile.Address = request.Address;
         }
 
-        var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
-        if (savedRows <= 0)
-            return UserErrorBuilder.UpdateException();
+        // No usamos las filas afectadas como señal de exito/fracaso: si los
+        // valores enviados son identicos a los ya guardados, EF Core no
+        // detecta cambios y SaveChangesAsync devuelve 0 filas legitimamente
+        // (edicion sin cambios), no un fallo. Una excepcion real de EF/DB
+        // sigue propagandose y siendo manejada por el pipeline de errores.
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Purga el userId->roleId cacheado en PermissionCache cuando el RoleId
         // cambia (design.md D3): de lo contrario el usuario seguiría
