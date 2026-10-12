@@ -1,5 +1,6 @@
 
 using Inventory.Application;
+using Inventory.Infrastructure;
 using Inventory.Infrastructure.Persistence.Mysql;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -81,21 +82,10 @@ builder.Services.AddRouting(routing => routing.LowercaseUrls = true);
 // composición": el único lugar que conoce a todas las capas y las conecta.
 builder.Services
     .AddApplication()
+    .AddInfrastructure(builder.Configuration)
     .AddPersistence(sp => sp.GetRequiredService<ITenantContext>().ConnectionString);
 
 builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
-
-// IMemoryCache backs IActiveUserCache (ActiveUserValidationMiddleware) — first
-// use of a cache in this codebase (design.md "Cache" decision).
-builder.Services.AddMemoryCache();
-builder.Services.AddScoped<IActiveUserCache, ActiveUserCache>();
-
-// IPermissionCache backs PermissionClaimsMiddleware (design.md D3/D9) —
-// same IMemoryCache + ITenantContext composition as IActiveUserCache above.
-builder.Services.AddScoped<IPermissionCache, PermissionCache>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

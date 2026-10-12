@@ -1,4 +1,4 @@
-using Inventory.Api.Auth;
+using Inventory.Infrastructure.Caching;
 using Inventory.Application.Common.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Internal;

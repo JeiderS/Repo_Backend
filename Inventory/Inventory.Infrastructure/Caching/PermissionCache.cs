@@ -1,7 +1,7 @@
 using Inventory.Application.Common.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Inventory.Api.Auth;
+namespace Inventory.Infrastructure.Caching;
 
 /// <summary>
 /// IMemoryCache-backed IPermissionCache, mirroring ActiveUserCache's shape

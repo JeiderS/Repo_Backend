@@ -3,25 +3,22 @@ using System.Security.Claims;
 using System.Text;
 using Inventory.Application.Common.Interfaces;
 using Inventory.Domain.Users.Entity;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Inventory.Api.Auth;
+namespace Inventory.Infrastructure.Security;
 
-public class JwtTokenGenerator(IConfiguration configuration, ITenantContext tenantContext) : IJwtTokenGenerator
+public class JwtTokenGenerator(IOptions<JwtOptions> options, ITenantContext tenantContext) : IJwtTokenGenerator
 {
-    // El JWT solo lleva identidad, nunca nombres de rol ni permisos. Desde
-    // Checkpoint B, PermissionClaimsMiddleware deriva los claims de Action
-    // code (y system_admin) en cada request contra RoleActions/Roles — el JWT
-    // no es fuente de autorización (design.md D2, spec: action-code-authorization
+    // El JWT solo lleva identidad, nunca nombres de rol ni permisos.
+    // PermissionClaimsMiddleware deriva los claims de Action code (y
+    // system_admin) en cada request contra RoleActions/Roles — el JWT no es
+    // fuente de autorización (design.md D2, spec: action-code-authorization
     // "Role-Name Claims Removed from Issued Tokens"). El parámetro roles se
-    // conserva sin uso: la firma de IJwtTokenGenerator y LoginCommandHandler
-    // no cambian (design.md File Changes).
+    // conserva sin uso para no cambiar la firma de IJwtTokenGenerator.
     public string GenerateToken(UserEntity user, IReadOnlyList<string> roles)
     {
-        var key = configuration["Jwt:Key"]!;
-        var issuer = configuration["Jwt:Issuer"];
-        var audience = configuration["Jwt:Audience"];
-        var expiresMinutes = int.TryParse(configuration["Jwt:ExpiresMinutes"], out var m) ? m : 120;
+        var jwt = options.Value;
 
         // La regla de cómo se arma el nombre completo vive en la entidad.
         var fullName = user.FullName;
@@ -34,20 +31,19 @@ public class JwtTokenGenerator(IConfiguration configuration, ITenantContext tena
             new(ClaimTypes.Name, string.IsNullOrEmpty(fullName) ? user.Email : fullName),
             // Defense-in-depth: enforced by TenantClaimValidationMiddleware on
             // every subsequent authenticated request (spec: tenant-scoped-login,
-            // JWT Tenant Claim requirement). Ships atomically with that
-            // middleware — see Program.cs Checkpoint B.
+            // JWT Tenant Claim requirement).
             new("tenant", tenantContext.Key)
         };
 
         var credentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
             SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
+            issuer: jwt.Issuer,
+            audience: jwt.Audience,
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(expiresMinutes),
+            expires: DateTime.UtcNow.AddMinutes(jwt.ExpiresMinutes),
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
