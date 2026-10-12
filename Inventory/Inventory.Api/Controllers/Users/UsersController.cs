@@ -1,4 +1,3 @@
-using Inventory.Api.Common.Responses;
 using Inventory.Api.Controllers.Common;
 using Inventory.Application.Users.Command.CreateUser;
 using Inventory.Application.Users.Command.SetUserStatus;
@@ -33,13 +32,8 @@ namespace Inventory.Api.Controllers.Users
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var user = await mediator.Send(new GetUserByIdQuery(id));
-
-            if (user is null)
-                return StatusCode(StatusCodes.Status404NotFound,
-                    ResponseApiService.Response(StatusCodes.Status404NotFound, message: "El usuario indicado no existe."));
-
-            return Success(user);
+            var result = await mediator.Send(new GetUserByIdQuery(id));
+            return FromResult(result);
         }
 
         [ProducesResponseType(StatusCodes.Status201Created)]

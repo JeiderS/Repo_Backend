@@ -60,6 +60,11 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddControllers();
 
+// Manejo global de errores: convierte cualquier excepción en una respuesta
+// con el sobre estándar (400 validación, 409 duplicado, 500 inesperado).
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 // SystemAdminOnly gates Module management independently of any Action-code
 // grant (design.md D1): holding every Modules* Action MUST NOT itself
 // satisfy this policy, only Roles.IsSystemAdmin does, via the distinct
@@ -143,6 +148,9 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+// Primero en el pipeline, para atrapar excepciones de todo lo que viene después.
+app.UseExceptionHandler();
 
 app.UseSwagger();
 app.UseSwaggerUI(options =>
