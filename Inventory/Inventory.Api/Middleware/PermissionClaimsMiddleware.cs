@@ -1,10 +1,10 @@
 using System.Security.Claims;
 using Inventory.Api.Auth;
 using Inventory.Application.Common.Interfaces;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Domain.Roles.Repositories;
+using Inventory.Domain.Users.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Inventory.Api.Middleware;
 
@@ -25,7 +25,11 @@ public class PermissionClaimsMiddleware(RequestDelegate next)
 {
     private const int NoRoleSentinel = 0;
 
-    public async Task InvokeAsync(HttpContext context, DataBaseContext dbContext, IPermissionCache permissionCache)
+    public async Task InvokeAsync(
+        HttpContext context,
+        IUserRepository userRepository,
+        IRoleRepository roleRepository,
+        IPermissionCache permissionCache)
     {
         if (context.User.Identity is ClaimsIdentity identity && identity.IsAuthenticated)
         {
@@ -34,11 +38,11 @@ public class PermissionClaimsMiddleware(RequestDelegate next)
             var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim is not null && int.TryParse(userIdClaim.Value, out var userId))
             {
-                var roleId = await ResolveRoleIdAsync(userId, dbContext, permissionCache);
+                var roleId = await ResolveRoleIdAsync(userId, userRepository, permissionCache);
 
                 if (roleId != NoRoleSentinel)
                 {
-                    var permissions = await ResolveRolePermissionsAsync(roleId, dbContext, permissionCache);
+                    var permissions = await ResolveRolePermissionsAsync(roleId, roleRepository, permissionCache);
                     ApplyDerivedClaims(identity, permissions);
                 }
             }
@@ -61,15 +65,12 @@ public class PermissionClaimsMiddleware(RequestDelegate next)
     }
 
     private static async Task<int> ResolveRoleIdAsync(
-        int userId, DataBaseContext dbContext, IPermissionCache permissionCache)
+        int userId, IUserRepository userRepository, IPermissionCache permissionCache)
     {
         if (permissionCache.TryGetRoleId(userId, out var cachedRoleId))
             return cachedRoleId;
 
-        var roleId = await dbContext.Users
-            .Where(u => u.Id == userId && u.RoleId != null)
-            .Select(u => (int?)u.RoleId!.Value)
-            .FirstOrDefaultAsync() ?? NoRoleSentinel;
+        var roleId = await userRepository.GetRoleIdAsync(userId) ?? NoRoleSentinel;
 
         permissionCache.SetRoleId(userId, roleId);
 
@@ -77,20 +78,13 @@ public class PermissionClaimsMiddleware(RequestDelegate next)
     }
 
     private static async Task<RolePermissions> ResolveRolePermissionsAsync(
-        int roleId, DataBaseContext dbContext, IPermissionCache permissionCache)
+        int roleId, IRoleRepository roleRepository, IPermissionCache permissionCache)
     {
         if (permissionCache.TryGetRolePermissions(roleId, out var cachedPermissions))
             return cachedPermissions;
 
-        var isSystemAdmin = await dbContext.Roles
-            .Where(r => r.Id == roleId)
-            .Select(r => (bool?)r.IsSystemAdmin)
-            .FirstOrDefaultAsync() ?? false;
-
-        var actionCodes = await dbContext.RoleActions
-            .Where(ra => ra.RoleId == roleId)
-            .Select(ra => ra.Action!.Code)
-            .ToListAsync();
+        var isSystemAdmin = await roleRepository.IsSystemAdminAsync(roleId);
+        var actionCodes = await roleRepository.GetActionCodesAsync(roleId);
 
         var permissions = new RolePermissions(roleId, isSystemAdmin, actionCodes);
         permissionCache.SetRolePermissions(permissions);

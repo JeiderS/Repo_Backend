@@ -4,33 +4,32 @@ using Inventory.Application.Users.Errors;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Roles.DomainRoles;
+using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.Roles.Entity;
-using Inventory.Domain.Users.DomainUsers;
+using Inventory.Domain.Users.Repositories;
 using MediatR;
 
 namespace Inventory.Application.Users.Command.UpdateUser;
 
 public class UpdateUserCommandHandler(
-    IUserGetByIdService userGetByIdService,
-    IUserUpdateService userUpdateService,
-    IRoleGetByIdService roleGetByIdService,
+    IUserRepository userRepository,
+    IRoleRepository roleRepository,
     IPermissionCache permissionCache,
     IUnitOfWork unitOfWork) : IRequestHandler<UpdateUserCommand, Result<UserDto, Error>>
 {
     public async Task<Result<UserDto, Error>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await userGetByIdService.GetByIdAsync(request.Id);
+        var user = await userRepository.GetByIdAsync(request.Id);
         if (user is null)
             return UserErrorBuilder.UserNotFound();
 
-        if (await userUpdateService.EmailExistsForOtherAsync(request.Email, request.Id))
+        if (await userRepository.EmailExistsAsync(request.Email, excludeUserId: request.Id))
             return UserErrorBuilder.EmailAlreadyExists();
 
         RoleEntity? role = null;
         if (request.RoleId is not null)
         {
-            role = await roleGetByIdService.GetByIdAsync(request.RoleId.Value);
+            role = await roleRepository.GetByIdAsync(request.RoleId.Value);
             if (role is null)
                 return UserErrorBuilder.RoleNotFound();
         }

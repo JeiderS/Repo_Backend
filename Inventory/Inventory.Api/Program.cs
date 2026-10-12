@@ -1,8 +1,6 @@
 
 using Inventory.Application;
 using Inventory.Infrastructure.Persistence.Mysql;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -72,9 +70,13 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddRouting(routing => routing.LowercaseUrls = true);
 
+// Per-tenant DbContext: la cadena de conexión se toma, en cada request, del
+// ITenantContext que llenó TenantResolutionMiddleware (design.md "AddDbContext
+// with the IServiceProvider overload" decision). Program.cs es la "raíz de
+// composición": el único lugar que conoce a todas las capas y las conecta.
 builder.Services
     .AddApplication()
-    .AddPersistence();
+    .AddPersistence(sp => sp.GetRequiredService<ITenantContext>().ConnectionString);
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -108,15 +110,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
-
-// Per-tenant DbContext: built per request from the scoped ITenantContext
-// resolved by TenantResolutionMiddleware, instead of one static connection
-// string bound at startup (design.md "AddDbContext with the IServiceProvider
-// overload" decision). DbContextOptions default optionsLifetime is already
-// Scoped, so this correctly re-resolves ITenantContext on every request.
-builder.Services.AddDbContext<DataBaseContext>((sp, options) =>
-    options.UseSqlServer(sp.GetRequiredService<ITenantContext>().ConnectionString));
-
 
 // Configura el AddSwaggerWithJwt
 builder.Services.AddSwaggerGen(options =>

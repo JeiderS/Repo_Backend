@@ -1,24 +1,24 @@
 using System.Text;
 using Inventory.Application.Actions.Dto;
 using Inventory.Application.Actions.Errors;
-using Inventory.Domain.Actions.DomainActions;
+using Inventory.Domain.Actions.Repositories;
 using Inventory.Domain.Actions.Entity;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Modules.DomainModules;
+using Inventory.Domain.Modules.Repositories;
 using MediatR;
 
 namespace Inventory.Application.Actions.Command.CreateAction;
 
 public class CreateActionCommandHandler(
-    IModuleGetByIdService moduleGetByIdService,
-    IActionCreateService actionCreateService,
+    IModuleRepository moduleRepository,
+    IActionRepository actionRepository,
     IUnitOfWork unitOfWork) : IRequestHandler<CreateActionCommand, Result<ActionDto, Error>>
 {
     public async Task<Result<ActionDto, Error>> Handle(CreateActionCommand request, CancellationToken cancellationToken)
     {
-        var module = await moduleGetByIdService.GetByIdAsync(request.ModuleId);
+        var module = await moduleRepository.GetByIdAsync(request.ModuleId);
         if (module is null)
             return ActionErrorBuilder.ModuleNotFound();
 
@@ -29,7 +29,7 @@ public class CreateActionCommandHandler(
         var modulePascal = module.Name.Replace(" ", string.Empty);
         var code = modulePascal + namePascal;
 
-        if (await actionCreateService.CodeExistsAsync(code))
+        if (await actionRepository.CodeExistsAsync(code))
             return ActionErrorBuilder.CodeAlreadyExists();
 
         var action = new ActionEntity
@@ -40,7 +40,7 @@ public class CreateActionCommandHandler(
             IsActive = true
         };
 
-        await actionCreateService.AddAsync(action);
+        await actionRepository.AddAsync(action);
 
         var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
         if (savedRows <= 0)

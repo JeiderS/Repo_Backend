@@ -3,18 +3,18 @@ using Inventory.Application.Modules.Errors;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Modules.DomainModules;
+using Inventory.Domain.Modules.Repositories;
 using MediatR;
 
 namespace Inventory.Application.Modules.Command.DeactivateModule;
 
 public class DeactivateModuleCommandHandler(
-    IModuleGetByIdService moduleGetByIdService,
+    IModuleRepository moduleRepository,
     IUnitOfWork unitOfWork) : IRequestHandler<DeactivateModuleCommand, Result<ModuleDto, Error>>
 {
     public async Task<Result<ModuleDto, Error>> Handle(DeactivateModuleCommand request, CancellationToken cancellationToken)
     {
-        var module = await moduleGetByIdService.GetByIdAsync(request.Id);
+        var module = await moduleRepository.GetByIdAsync(request.Id);
         if (module is null)
             return ModuleErrorBuilder.ModuleNotFound();
 

@@ -4,19 +4,20 @@ using Inventory.Application.Common.Interfaces;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
 using Inventory.Domain.Users.DomainUsers;
+using Inventory.Domain.Users.Repositories;
 using MediatR;
 
 namespace Inventory.Application.Auth.Commands.Login;
 
 public class LoginCommandHandler(
-    IUserGetByEmailService userGetByEmailService,
+    IUserRepository userRepository,
     IUserAuthorizationService userAuthorizationService,
     IPasswordHasher passwordHasher,
     IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<LoginCommand, Result<AuthResponseDto, Error>>
 {
     public async Task<Result<AuthResponseDto, Error>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var user = await userGetByEmailService.GetByEmailAsync(request.Email);
+        var user = await userRepository.GetByEmailAsync(request.Email);
 
         if (user is null || !passwordHasher.Verify(request.Password, user.PasswordHash))
             return AuthErrorBuilder.InvalidCredentials();

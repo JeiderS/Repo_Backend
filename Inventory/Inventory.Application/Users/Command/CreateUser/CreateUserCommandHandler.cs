@@ -4,32 +4,30 @@ using Inventory.Application.Users.Errors;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Roles.DomainRoles;
+using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.Roles.Entity;
-using Inventory.Domain.UserProfile.DomainUserProfile;
 using Inventory.Domain.UserProfile.Entity;
-using Inventory.Domain.Users.DomainUsers;
+using Inventory.Domain.Users.Repositories;
 using Inventory.Domain.Users.Entity;
 using MediatR;
 
 namespace Inventory.Application.Users.Command.CreateUser;
 
 public class CreateUserCommandHandler(
-    IUserCreateService userCreateService,
-    IUserProfileCreateService userProfileCreateService,
-    IRoleGetByIdService roleGetByIdService,
+    IUserRepository userRepository,
+    IRoleRepository roleRepository,
     IPasswordHasher passwordHasher,
     IUnitOfWork unitOfWork) : IRequestHandler<CreateUserCommand, Result<UserDto, Error>>
 {
     public async Task<Result<UserDto, Error>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
-        if (await userCreateService.EmailExistsAsync(request.Email))
+        if (await userRepository.EmailExistsAsync(request.Email))
             return UserErrorBuilder.EmailAlreadyExists();
 
         RoleEntity? role = null;
         if (request.RoleId is not null)
         {
-            role = await roleGetByIdService.GetByIdAsync(request.RoleId.Value);
+            role = await roleRepository.GetByIdAsync(request.RoleId.Value);
             if (role is null)
                 return UserErrorBuilder.RoleNotFound();
         }
@@ -57,8 +55,8 @@ public class CreateUserCommandHandler(
         };
         user.Profile = profile;
 
-        await userCreateService.AddAsync(user);
-        await userProfileCreateService.AddAsync(profile);
+        // Al agregar el usuario, EF agrega también su perfil (user.Profile).
+        await userRepository.AddAsync(user);
 
         var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
         if (savedRows <= 0)

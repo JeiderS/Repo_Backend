@@ -1,9 +1,8 @@
 using System.Security.Claims;
 using Inventory.Application.Common.Interfaces;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Domain.Users.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace Inventory.Api.Middleware;
 
@@ -22,7 +21,7 @@ public class ActiveUserValidationMiddleware(
 {
     private const string InactiveUserMessage = "Usuario inactivo. Contacte a soporte.";
 
-    public async Task InvokeAsync(HttpContext context, DataBaseContext dbContext, IActiveUserCache activeUserCache)
+    public async Task InvokeAsync(HttpContext context, IUserRepository userRepository, IActiveUserCache activeUserCache)
     {
         if (context.User.Identity?.IsAuthenticated == true)
         {
@@ -37,10 +36,9 @@ public class ActiveUserValidationMiddleware(
 
             if (!activeUserCache.TryGet(userId, out var isActive))
             {
-                isActive = await dbContext.Users
-                    .Where(u => u.Id == userId)
-                    .Select(u => (bool?)u.IsActive)
-                    .FirstOrDefaultAsync() ?? false;
+                // La consulta vive en el repositorio: la capa Api ya no
+                // conoce EF Core ni el DbContext.
+                isActive = await userRepository.IsActiveAsync(userId);
 
                 activeUserCache.Set(userId, isActive);
             }

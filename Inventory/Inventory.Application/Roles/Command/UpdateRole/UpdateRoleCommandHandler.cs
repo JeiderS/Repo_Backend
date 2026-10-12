@@ -3,24 +3,22 @@ using Inventory.Application.Roles.Errors;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Roles.DomainRoles;
+using Inventory.Domain.Roles.Repositories;
 using MediatR;
 
 namespace Inventory.Application.Roles.Command.UpdateRole;
 
 public class UpdateRoleCommandHandler(
-    IRoleGetByIdService roleGetByIdService,
-    IRoleUpdateService roleUpdateService,
-    IRoleActionAssignService roleActionAssignService,
+    IRoleRepository roleRepository,
     IUnitOfWork unitOfWork) : IRequestHandler<UpdateRoleCommand, Result<RoleDto, Error>>
 {
     public async Task<Result<RoleDto, Error>> Handle(UpdateRoleCommand request, CancellationToken cancellationToken)
     {
-        var role = await roleGetByIdService.GetByIdAsync(request.Id);
+        var role = await roleRepository.GetByIdAsync(request.Id);
         if (role is null)
             return RoleErrorBuilder.RoleNotFound();
 
-        if (await roleUpdateService.NameExistsForOtherAsync(request.Name, request.Id))
+        if (await roleRepository.NameExistsAsync(request.Name, excludeRoleId: request.Id))
             return RoleErrorBuilder.NameAlreadyExists();
 
         role.Name = request.Name;
@@ -29,7 +27,7 @@ public class UpdateRoleCommandHandler(
         if (savedRows <= 0)
             return RoleErrorBuilder.UpdateException();
 
-        var actionIds = await roleActionAssignService.GetActionIdsAsync(role.Id);
+        var actionIds = await roleRepository.GetActionIdsAsync(role.Id);
         return RoleDto.FromEntity(role, actionIds);
     }
 }

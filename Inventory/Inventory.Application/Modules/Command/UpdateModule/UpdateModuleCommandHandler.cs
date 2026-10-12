@@ -3,23 +3,22 @@ using Inventory.Application.Modules.Errors;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Modules.DomainModules;
+using Inventory.Domain.Modules.Repositories;
 using MediatR;
 
 namespace Inventory.Application.Modules.Command.UpdateModule;
 
 public class UpdateModuleCommandHandler(
-    IModuleGetByIdService moduleGetByIdService,
-    IModuleUpdateService moduleUpdateService,
+    IModuleRepository moduleRepository,
     IUnitOfWork unitOfWork) : IRequestHandler<UpdateModuleCommand, Result<ModuleDto, Error>>
 {
     public async Task<Result<ModuleDto, Error>> Handle(UpdateModuleCommand request, CancellationToken cancellationToken)
     {
-        var module = await moduleGetByIdService.GetByIdAsync(request.Id);
+        var module = await moduleRepository.GetByIdAsync(request.Id);
         if (module is null)
             return ModuleErrorBuilder.ModuleNotFound();
 
-        if (await moduleUpdateService.NameExistsForOtherAsync(request.Name, request.Id))
+        if (await moduleRepository.NameExistsAsync(request.Name, excludeModuleId: request.Id))
             return ModuleErrorBuilder.NameAlreadyExists();
 
         if (request.ParentId is not null)
@@ -27,7 +26,7 @@ public class UpdateModuleCommandHandler(
             if (request.ParentId == request.Id)
                 return ModuleErrorBuilder.InvalidParent();
 
-            if (await moduleGetByIdService.GetByIdAsync(request.ParentId.Value) is null)
+            if (!await moduleRepository.ExistsAsync(request.ParentId.Value))
                 return ModuleErrorBuilder.ParentNotFound();
         }
 
