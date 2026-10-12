@@ -1,4 +1,5 @@
-using Inventory.Application.Common.Features;
+using Inventory.Api.Common.Responses;
+using Inventory.Api.Controllers.Common;
 using Inventory.Application.Users.Command.CreateUser;
 using Inventory.Application.Users.Command.SetUserStatus;
 using Inventory.Application.Users.Command.UpdateUser;
@@ -10,9 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory.Api.Controllers.Users
 {
-    [ApiController]
     [Route("api/v1/users")]
-    public class UsersController(IMediator mediator) : ControllerBase
+    public class UsersController(IMediator mediator) : ApiControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -22,8 +22,7 @@ namespace Inventory.Api.Controllers.Users
         public async Task<IActionResult> GetAll()
         {
             var users = await mediator.Send(new GetUsersQuery());
-
-            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, users));
+            return Success(users);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -40,7 +39,7 @@ namespace Inventory.Api.Controllers.Users
                 return StatusCode(StatusCodes.Status404NotFound,
                     ResponseApiService.Response(StatusCodes.Status404NotFound, message: "El usuario indicado no existe."));
 
-            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, user));
+            return Success(user);
         }
 
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -52,11 +51,8 @@ namespace Inventory.Api.Controllers.Users
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
-            var createdUser = await mediator.Send(command);
-
-            return createdUser.Match(
-                onSuccess => StatusCode(StatusCodes.Status201Created, ResponseApiService.Response(StatusCodes.Status201Created, onSuccess)),
-                onError => StatusCode((int)onError.HttpStatusCode, ResponseApiService.Response((int)onError.HttpStatusCode, message: onError.Description)));
+            var result = await mediator.Send(command);
+            return FromResult(result, StatusCodes.Status201Created);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -69,11 +65,8 @@ namespace Inventory.Api.Controllers.Users
         public async Task<IActionResult> Update(int id, [FromBody] UpdateUserCommand command)
         {
             command.Id = id;
-            var updatedUser = await mediator.Send(command);
-
-            return updatedUser.Match(
-                onSuccess => StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, onSuccess)),
-                onError => StatusCode((int)onError.HttpStatusCode, ResponseApiService.Response((int)onError.HttpStatusCode, message: onError.Description)));
+            var result = await mediator.Send(command);
+            return FromResult(result);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -85,11 +78,8 @@ namespace Inventory.Api.Controllers.Users
         public async Task<IActionResult> SetStatus(int id, [FromBody] SetUserStatusCommand command)
         {
             command.Id = id;
-            var updatedUser = await mediator.Send(command);
-
-            return updatedUser.Match(
-                onSuccess => StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, onSuccess)),
-                onError => StatusCode((int)onError.HttpStatusCode, ResponseApiService.Response((int)onError.HttpStatusCode, message: onError.Description)));
+            var result = await mediator.Send(command);
+            return FromResult(result);
         }
     }
 }

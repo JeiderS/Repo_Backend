@@ -1,4 +1,4 @@
-using Inventory.Application.Common.Features;
+using Inventory.Api.Controllers.Common;
 using Inventory.Application.Roles.Command.AssignRoleActions;
 using Inventory.Application.Roles.Command.CreateRole;
 using Inventory.Application.Roles.Command.UpdateRole;
@@ -9,9 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Inventory.Api.Controllers.Roles
 {
-    [ApiController]
     [Route("api/v1/roles")]
-    public class RolesController(IMediator mediator) : ControllerBase
+    public class RolesController(IMediator mediator) : ApiControllerBase
     {
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -21,8 +20,7 @@ namespace Inventory.Api.Controllers.Roles
         public async Task<IActionResult> GetAll()
         {
             var roles = await mediator.Send(new GetRolesQuery());
-
-            return StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, roles));
+            return Success(roles);
         }
 
         [ProducesResponseType(StatusCodes.Status201Created)]
@@ -33,11 +31,8 @@ namespace Inventory.Api.Controllers.Roles
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateRoleCommand command)
         {
-            var createdRole = await mediator.Send(command);
-
-            return createdRole.Match(
-                onSuccess => StatusCode(StatusCodes.Status201Created, ResponseApiService.Response(StatusCodes.Status201Created, onSuccess)),
-                onError => StatusCode((int)onError.HttpStatusCode, ResponseApiService.Response((int)onError.HttpStatusCode, message: onError.Description)));
+            var result = await mediator.Send(command);
+            return FromResult(result, StatusCodes.Status201Created);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -50,11 +45,8 @@ namespace Inventory.Api.Controllers.Roles
         public async Task<IActionResult> Update(int id, [FromBody] UpdateRoleCommand command)
         {
             command.Id = id;
-            var updatedRole = await mediator.Send(command);
-
-            return updatedRole.Match(
-                onSuccess => StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, onSuccess)),
-                onError => StatusCode((int)onError.HttpStatusCode, ResponseApiService.Response((int)onError.HttpStatusCode, message: onError.Description)));
+            var result = await mediator.Send(command);
+            return FromResult(result);
         }
 
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -67,11 +59,8 @@ namespace Inventory.Api.Controllers.Roles
         public async Task<IActionResult> AssignActions(int id, [FromBody] AssignRoleActionsCommand command)
         {
             command.RoleId = id;
-            var updatedRole = await mediator.Send(command);
-
-            return updatedRole.Match(
-                onSuccess => StatusCode(StatusCodes.Status200OK, ResponseApiService.Response(StatusCodes.Status200OK, onSuccess)),
-                onError => StatusCode((int)onError.HttpStatusCode, ResponseApiService.Response((int)onError.HttpStatusCode, message: onError.Description)));
+            var result = await mediator.Send(command);
+            return FromResult(result);
         }
     }
 }

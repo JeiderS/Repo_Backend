@@ -1,5 +1,5 @@
 using System.Text.Json;
-using Inventory.Application.Common.Features;
+using Inventory.Api.Common.Responses;
 using Microsoft.AspNetCore.Http;
 
 namespace Inventory.Api.Middleware;
