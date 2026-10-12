@@ -4,8 +4,8 @@ using Inventory.Application.Users.Errors;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.Roles.Entity;
+using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.Users.Repositories;
 using MediatR;
 
@@ -34,34 +34,24 @@ public class UpdateUserCommandHandler(
                 return UserErrorBuilder.RoleNotFound();
         }
 
-        var roleChanged = user.RoleId != request.RoleId;
+        user.ChangeEmail(request.Email);
 
-        user.Email = request.Email;
-        // Asignar un nuevo RoleId reemplaza el anterior: es un FK simple, no una
-        // colección (spec: user-administration, "Reassigning a role replaces the
-        // previous one"). Pasar RoleId = null también es válido: deja al usuario
-        // sin rol.
-        user.RoleId = request.RoleId;
-        user.Role = role;
+        // La entidad sabe que asignar un rol REEMPLAZA el anterior, y nos
+        // avisa si cambió.
+        var roleChanged = user.AssignRole(role);
 
-        if (user.Profile is not null)
-        {
-            user.Profile.FirstName = request.FirstName;
-            user.Profile.LastName = request.LastName;
-            user.Profile.Phone = request.Phone;
-            user.Profile.Address = request.Address;
-        }
+        user.Profile?.Update(request.FirstName, request.LastName, request.Phone, request.Address);
 
-        // No usamos las filas afectadas como señal de exito/fracaso: si los
-        // valores enviados son identicos a los ya guardados, EF Core no
-        // detecta cambios y SaveChangesAsync devuelve 0 filas legitimamente
-        // (edicion sin cambios), no un fallo. Una excepcion real de EF/DB
-        // sigue propagandose y siendo manejada por el pipeline de errores.
+        // No usamos las filas afectadas como señal de éxito/fracaso: si los
+        // valores enviados son idénticos a los ya guardados, EF Core no
+        // detecta cambios y SaveChangesAsync devuelve 0 filas legítimamente
+        // (edición sin cambios), no un fallo. Una excepción real de EF/DB
+        // sigue propagándose y la maneja el GlobalExceptionHandler.
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        // Purga el userId->roleId cacheado en PermissionCache cuando el RoleId
-        // cambia (design.md D3): de lo contrario el usuario seguiría
-        // autorizando contra el rol anterior hasta que el TTL de 60s expire.
+        // Purga el userId->roleId cacheado cuando el rol cambia (design.md D3):
+        // de lo contrario el usuario seguiría autorizando contra el rol
+        // anterior hasta que el TTL de 60s expire.
         if (roleChanged)
             permissionCache.InvalidateUser(user.Id);
 

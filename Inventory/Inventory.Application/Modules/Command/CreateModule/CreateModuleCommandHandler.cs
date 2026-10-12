@@ -3,8 +3,8 @@ using Inventory.Application.Modules.Errors;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Modules.Repositories;
 using Inventory.Domain.Modules.Entity;
+using Inventory.Domain.Modules.Repositories;
 using MediatR;
 
 namespace Inventory.Application.Modules.Command.CreateModule;
@@ -21,15 +21,8 @@ public class CreateModuleCommandHandler(
         if (request.ParentId is not null && !await moduleRepository.ExistsAsync(request.ParentId.Value))
             return ModuleErrorBuilder.ParentNotFound();
 
-        var module = new ModuleEntity
-        {
-            Name = request.Name,
-            Icon = request.Icon,
-            Route = request.Route,
-            ParentId = request.ParentId,
-            SortOrder = request.SortOrder,
-            IsActive = true
-        };
+        // ModuleEntity.Create garantiza que el módulo nace activo.
+        var module = ModuleEntity.Create(request.Name, request.Icon, request.Route, request.ParentId, request.SortOrder);
 
         await moduleRepository.AddAsync(module);
 

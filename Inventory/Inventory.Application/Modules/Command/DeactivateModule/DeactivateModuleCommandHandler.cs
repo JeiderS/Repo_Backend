@@ -18,14 +18,9 @@ public class DeactivateModuleCommandHandler(
         if (module is null)
             return ModuleErrorBuilder.ModuleNotFound();
 
-        if (!module.IsActive)
-            return ModuleDto.FromEntity(module);
-
-        module.IsActive = false;
-
-        var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
-        if (savedRows <= 0)
-            return ModuleErrorBuilder.UpdateException();
+        // La entidad decide: si ya estaba inactivo, no hay nada que guardar.
+        if (module.Deactivate())
+            await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return ModuleDto.FromEntity(module);
     }

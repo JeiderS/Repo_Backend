@@ -3,8 +3,8 @@ using Inventory.Application.Roles.Errors;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.Roles.Entity;
+using Inventory.Domain.Roles.Repositories;
 using MediatR;
 
 namespace Inventory.Application.Roles.Command.CreateRole;
@@ -18,7 +18,8 @@ public class CreateRoleCommandHandler(
         if (await roleRepository.NameExistsAsync(request.Name))
             return RoleErrorBuilder.NameAlreadyExists();
 
-        var role = new RoleEntity { Name = request.Name };
+        // RoleEntity.Create garantiza que el rol NO es System Admin.
+        var role = RoleEntity.Create(request.Name);
 
         await roleRepository.AddAsync(role);
 

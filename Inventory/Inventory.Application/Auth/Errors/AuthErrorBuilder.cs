@@ -15,16 +15,4 @@ public static class AuthErrorBuilder
             "AUTH_INACTIVE_USER",
             "El usuario se encuentra inactivo.",
             ErrorType.Unauthorized);
-
-    public static Error EmailAlreadyExists() =>
-        Error.CreateInstance(
-            "AUTH_EMAIL_EXISTS",
-            "El correo ya se encuentra registrado.",
-            ErrorType.Conflict);
-
-    public static Error RegistrationException() =>
-        Error.CreateInstance(
-            "AUTH_REGISTRATION_ERROR",
-            "No se pudo registrar el usuario.",
-            ErrorType.Failure);
 }

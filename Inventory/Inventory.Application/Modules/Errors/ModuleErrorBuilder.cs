@@ -22,21 +22,9 @@ public static class ModuleErrorBuilder
             "El módulo padre indicado no existe.",
             ErrorType.NotFound);
 
-    public static Error InvalidParent() =>
-        Error.CreateInstance(
-            "MODULE_INVALID_PARENT",
-            "Un módulo no puede ser padre de sí mismo.",
-            ErrorType.Validation);
-
     public static Error CreationException() =>
         Error.CreateInstance(
             "MODULE_CREATION_ERROR",
             "No se pudo registrar el módulo.",
-            ErrorType.Failure);
-
-    public static Error UpdateException() =>
-        Error.CreateInstance(
-            "MODULE_UPDATE_ERROR",
-            "No se pudo actualizar el módulo.",
             ErrorType.Failure);
 }

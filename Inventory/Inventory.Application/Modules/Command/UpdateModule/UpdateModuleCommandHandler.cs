@@ -18,27 +18,22 @@ public class UpdateModuleCommandHandler(
         if (module is null)
             return ModuleErrorBuilder.ModuleNotFound();
 
+        // Reglas que necesitan la base de datos: se comprueban aquí.
         if (await moduleRepository.NameExistsAsync(request.Name, excludeModuleId: request.Id))
             return ModuleErrorBuilder.NameAlreadyExists();
 
-        if (request.ParentId is not null)
-        {
-            if (request.ParentId == request.Id)
-                return ModuleErrorBuilder.InvalidParent();
+        if (request.ParentId is not null && !await moduleRepository.ExistsAsync(request.ParentId.Value))
+            return ModuleErrorBuilder.ParentNotFound();
 
-            if (!await moduleRepository.ExistsAsync(request.ParentId.Value))
-                return ModuleErrorBuilder.ParentNotFound();
-        }
+        // Reglas propias del módulo (ej. "no puede ser su propio padre"): las
+        // aplica la entidad.
+        var update = module.Update(request.Name, request.Icon, request.Route, request.ParentId, request.SortOrder);
+        if (!update.IsSuccess)
+            return update.Error!;
 
-        module.Name = request.Name;
-        module.Icon = request.Icon;
-        module.Route = request.Route;
-        module.ParentId = request.ParentId;
-        module.SortOrder = request.SortOrder;
-
-        var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
-        if (savedRows <= 0)
-            return ModuleErrorBuilder.UpdateException();
+        // 0 filas guardadas NO es un error: si los datos no cambiaron, EF no
+        // actualiza nada. Un fallo real llega como excepción.
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         return ModuleDto.FromEntity(module);
     }

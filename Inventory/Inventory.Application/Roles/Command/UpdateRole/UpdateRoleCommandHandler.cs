@@ -21,11 +21,11 @@ public class UpdateRoleCommandHandler(
         if (await roleRepository.NameExistsAsync(request.Name, excludeRoleId: request.Id))
             return RoleErrorBuilder.NameAlreadyExists();
 
-        role.Name = request.Name;
+        role.Rename(request.Name);
 
-        var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
-        if (savedRows <= 0)
-            return RoleErrorBuilder.UpdateException();
+        // 0 filas guardadas NO es un error: si los datos no cambiaron, EF no
+        // actualiza nada. Un fallo real llega como excepción.
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         var actionIds = await roleRepository.GetActionIdsAsync(role.Id);
         return RoleDto.FromEntity(role, actionIds);

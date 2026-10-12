@@ -23,9 +23,8 @@ public class JwtTokenGenerator(IConfiguration configuration, ITenantContext tena
         var audience = configuration["Jwt:Audience"];
         var expiresMinutes = int.TryParse(configuration["Jwt:ExpiresMinutes"], out var m) ? m : 120;
 
-        var fullName = user.Profile is null
-            ? string.Empty
-            : $"{user.Profile.FirstName} {user.Profile.LastName}".Trim();
+        // La regla de cómo se arma el nombre completo vive en la entidad.
+        var fullName = user.FullName;
 
         var claims = new List<Claim>
         {

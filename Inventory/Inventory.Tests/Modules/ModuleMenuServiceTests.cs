@@ -135,28 +135,25 @@ public class ModuleMenuServiceTests
     private static async Task<(ModuleEntity Module, Dictionary<string, ActionEntity> Actions)> CreateModuleWithActionsAsync(
         DataBaseContext context, string name, bool requiresSystemAdmin, int? parentId = null)
     {
-        var module = new ModuleEntity
-        {
-            Name = name,
-            Route = name.ToLowerInvariant(),
-            ParentId = parentId,
-            IsActive = true,
-            SortOrder = 999,
-            RequiresSystemAdmin = requiresSystemAdmin,
-        };
+        var module = ModuleEntity.Create(name, icon: null, route: name.ToLowerInvariant(), parentId, sortOrder: 999);
         context.Modules.Add(module);
         await context.SaveChangesAsync();
+
+        // RequiresSystemAdmin es SQL-only (design.md D1): la entidad no expone
+        // ningún método para activarlo, así que el test lo hace igual que en
+        // producción, por SQL, y recarga la entidad.
+        if (requiresSystemAdmin)
+        {
+            await context.Database.ExecuteSqlInterpolatedAsync(
+                $"UPDATE Modules SET RequiresSystemAdmin = 1 WHERE ModuleId = {module.Id}");
+            await context.Entry(module).ReloadAsync();
+        }
 
         var actions = new Dictionary<string, ActionEntity>();
         foreach (var verb in new[] { "View", "Create", "Edit", "Delete" })
         {
-            var action = new ActionEntity
-            {
-                ModuleId = module.Id,
-                Code = $"{name}{verb}",
-                Name = $"{name} - {verb}",
-                IsActive = true,
-            };
+            // ActionEntity.Create arma el código "{Módulo}{Verbo}" = $"{name}{verb}".
+            var action = ActionEntity.Create(module, verb).Value!;
             context.Actions.Add(action);
             actions[verb] = action;
         }
@@ -169,7 +166,7 @@ public class ModuleMenuServiceTests
     {
         // IsSystemAdmin is intentionally left false (default) — SQL-only per
         // design.md D1, never set from application code.
-        var role = new RoleEntity { Name = name };
+        var role = RoleEntity.Create(name);
         context.Roles.Add(role);
         await context.SaveChangesAsync();
         return role;
@@ -185,14 +182,14 @@ public class ModuleMenuServiceTests
 
     private static async Task<UserEntity> CreateUserAsync(DataBaseContext context, string email, int roleId)
     {
-        var user = new UserEntity
-        {
-            Email = email,
-            PasswordHash = "not-a-real-hash",
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow,
-            RoleId = roleId,
-        };
+        var role = await context.Roles.FirstAsync(r => r.Id == roleId);
+        var user = UserEntity.Create(
+            email,
+            passwordHash: "not-a-real-hash",
+            profile: null,
+            role,
+            mustChangePassword: false,
+            createdAtUtc: DateTime.UtcNow);
         context.Users.Add(user);
         await context.SaveChangesAsync();
         return user;

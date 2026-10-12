@@ -1,8 +1,7 @@
-using System.Text;
 using Inventory.Application.Actions.Dto;
 using Inventory.Application.Actions.Errors;
-using Inventory.Domain.Actions.Repositories;
 using Inventory.Domain.Actions.Entity;
+using Inventory.Domain.Actions.Repositories;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
@@ -22,23 +21,16 @@ public class CreateActionCommandHandler(
         if (module is null)
             return ActionErrorBuilder.ModuleNotFound();
 
-        var namePascal = ToPascalSegment(request.Name);
-        if (namePascal.Length == 0)
-            return ActionErrorBuilder.InvalidName();
+        // La regla "el código es {Módulo}{Nombre} en PascalCase" vive en la entidad.
+        var created = ActionEntity.Create(module, request.Name);
+        if (!created.IsSuccess)
+            return created.Error!;
 
-        var modulePascal = module.Name.Replace(" ", string.Empty);
-        var code = modulePascal + namePascal;
+        var action = created.Value!;
 
-        if (await actionRepository.CodeExistsAsync(code))
+        // "El código no se repite" necesita ver todas las acciones: va aquí.
+        if (await actionRepository.CodeExistsAsync(action.Code))
             return ActionErrorBuilder.CodeAlreadyExists();
-
-        var action = new ActionEntity
-        {
-            ModuleId = module.Id,
-            Code = code,
-            Name = request.Name,
-            IsActive = true
-        };
 
         await actionRepository.AddAsync(action);
 
@@ -46,34 +38,6 @@ public class CreateActionCommandHandler(
         if (savedRows <= 0)
             return ActionErrorBuilder.CreationException();
 
-        action.Module = module;
-
         return ActionDto.FromEntity(action);
-    }
-
-    /// <summary>
-    /// Mirrors the '{Module}{Verb}' convention from Sql/TenantBootstrap/03_Actions_Seed.sql:
-    /// strips spaces/non-alphanumeric separators and capitalizes each remaining word,
-    /// e.g. "Export Report" -> "ExportReport".
-    /// </summary>
-    private static string ToPascalSegment(string value)
-    {
-        var words = value.Split(
-            new[] { ' ', '-', '_', '.', ',' },
-            StringSplitOptions.RemoveEmptyEntries);
-
-        var builder = new StringBuilder();
-        foreach (var word in words)
-        {
-            var cleaned = new string(word.Where(char.IsLetterOrDigit).ToArray());
-            if (cleaned.Length == 0)
-                continue;
-
-            builder.Append(char.ToUpperInvariant(cleaned[0]));
-            if (cleaned.Length > 1)
-                builder.Append(cleaned[1..]);
-        }
-
-        return builder.ToString();
     }
 }

@@ -27,10 +27,4 @@ public static class RoleErrorBuilder
             "ROLE_CREATION_ERROR",
             "No se pudo registrar el rol.",
             ErrorType.Failure);
-
-    public static Error UpdateException() =>
-        Error.CreateInstance(
-            "ROLE_UPDATE_ERROR",
-            "No se pudo actualizar el rol.",
-            ErrorType.Failure);
 }

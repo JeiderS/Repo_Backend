@@ -4,15 +4,20 @@ using Inventory.Application.Users.Errors;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.Roles.Entity;
+using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.UserProfile.Entity;
-using Inventory.Domain.Users.Repositories;
 using Inventory.Domain.Users.Entity;
+using Inventory.Domain.Users.Repositories;
 using MediatR;
 
 namespace Inventory.Application.Users.Command.CreateUser;
 
+/// <summary>
+/// Caso de uso "crear usuario". Solo ORQUESTA: comprueba lo que necesita la
+/// base de datos (email repetido, rol existente) y deja que la entidad aplique
+/// sus propias reglas (empieza activo, debe cambiar la contraseña...).
+/// </summary>
 public class CreateUserCommandHandler(
     IUserRepository userRepository,
     IRoleRepository roleRepository,
@@ -21,6 +26,8 @@ public class CreateUserCommandHandler(
 {
     public async Task<Result<UserDto, Error>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
+        // Regla de negocio que necesita ver a TODOS los usuarios: se comprueba
+        // aquí. El índice único de la BD es la garantía final.
         if (await userRepository.EmailExistsAsync(request.Email))
             return UserErrorBuilder.EmailAlreadyExists();
 
@@ -32,28 +39,15 @@ public class CreateUserCommandHandler(
                 return UserErrorBuilder.RoleNotFound();
         }
 
-        var user = new UserEntity
-        {
-            Email = request.Email,
-            PasswordHash = passwordHasher.Hash(request.Password),
-            IsActive = true,
-            CreatedAt = DateTime.UtcNow,
-            RoleId = request.RoleId,
-            Role = role,
-            // Por defecto true a menos que el request lo desactive explícitamente
-            // (spec: user-administration, "Admin User Creation").
-            MustChangePassword = request.MustChangePassword ?? true
-        };
+        var profile = UserProfileEntity.Create(request.FirstName, request.LastName, request.Phone, request.Address);
 
-        var profile = new UserProfileEntity
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Phone = request.Phone,
-            Address = request.Address,
-            User = user
-        };
-        user.Profile = profile;
+        var user = UserEntity.Create(
+            request.Email,
+            passwordHasher.Hash(request.Password),
+            profile,
+            role,
+            request.MustChangePassword,
+            DateTime.UtcNow);
 
         // Al agregar el usuario, EF agrega también su perfil (user.Profile).
         await userRepository.AddAsync(user);

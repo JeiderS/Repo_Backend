@@ -27,10 +27,4 @@ public static class UserErrorBuilder
             "USER_CREATION_ERROR",
             "No se pudo registrar el usuario.",
             ErrorType.Failure);
-
-    public static Error UpdateException() =>
-        Error.CreateInstance(
-            "USER_UPDATE_ERROR",
-            "No se pudo actualizar el usuario.",
-            ErrorType.Failure);
 }

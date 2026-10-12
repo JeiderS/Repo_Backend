@@ -16,12 +16,6 @@ public static class ActionErrorBuilder
             "Ya existe una acción con ese código para el módulo indicado.",
             ErrorType.Conflict);
 
-    public static Error InvalidName() =>
-        Error.CreateInstance(
-            "ACTION_INVALID_NAME",
-            "El nombre de la acción no es válido.",
-            ErrorType.Validation);
-
     public static Error CreationException() =>
         Error.CreateInstance(
             "ACTION_CREATION_ERROR",

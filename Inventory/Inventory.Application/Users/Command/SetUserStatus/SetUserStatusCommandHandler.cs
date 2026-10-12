@@ -21,23 +21,21 @@ public class SetUserStatusCommandHandler(
         if (user is null)
             return UserErrorBuilder.UserNotFound();
 
-        // Sin auto-protección (spec: role-permission-management, "No Self-Protection
-        // on Role Removal" aplica el mismo principio aquí): un admin puede
-        // desactivar su propia cuenta, no se bloquea por id.
-        user.IsActive = request.IsActive;
+        if (request.IsActive)
+            user.Activate();
+        else
+            user.Deactivate();
 
-        var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
-        if (savedRows <= 0)
-            return UserErrorBuilder.UpdateException();
+        // 0 filas guardadas NO es un error: desactivar a alguien que ya estaba
+        // inactivo no cambia nada. Un fallo real llega como excepción.
+        await unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Invalida el cache en la misma unidad de trabajo que cambia IsActive
         // (design.md decision), así ActiveUserValidationMiddleware ve el nuevo
         // estado de inmediato en lugar de esperar el TTL de 60s.
         activeUserCache.Invalidate(user.Id);
 
-        // Purga también el permission cache, incondicionalmente en ambas
-        // direcciones (design.md D7): al desactivar no tiene efecto inmediato
-        // (ActiveUserValidationMiddleware ya rechaza la request antes), pero
+        // Purga también el permission cache, en ambas direcciones (design.md D7):
         // evita que una entrada userId->roleId quede obsoleta si el usuario es
         // reactivado más tarde. Spec: action-code-authorization "Permission
         // Cache Purge on Deactivation".
