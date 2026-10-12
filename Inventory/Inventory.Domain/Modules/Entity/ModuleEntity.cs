@@ -54,6 +54,15 @@ namespace Inventory.Domain.Modules.Entity
         }
 
         /// <summary>
+        /// Regla de negocio (design.md D5): un módulo es visible para un rol si
+        /// el rol tiene AL MENOS UNA de sus acciones concedida y, cuando el
+        /// módulo requiere System Admin, el rol además es System Admin.
+        /// Tener todas las acciones NO alcanza para un módulo de System Admin.
+        /// </summary>
+        public bool IsVisibleTo(bool roleHasAnyActionOfThisModule, bool roleIsSystemAdmin) =>
+            roleHasAnyActionOfThisModule && (!RequiresSystemAdmin || roleIsSystemAdmin);
+
+        /// <summary>
         /// Regla de negocio: desactivar un módulo ya inactivo no hace nada.
         /// </summary>
         /// <returns>true si el estado cambió; false si ya estaba inactivo.</returns>

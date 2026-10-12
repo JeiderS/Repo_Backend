@@ -1,15 +1,11 @@
 using Inventory.Domain.Actions.Repositories;
 using Inventory.Domain.Common.Persistence;
-using Inventory.Domain.Modules.DomainModules;
 using Inventory.Domain.Modules.Repositories;
 using Inventory.Domain.Roles.Repositories;
-using Inventory.Domain.Users.DomainUsers;
 using Inventory.Domain.Users.Repositories;
 using Inventory.Infrastructure.Persistence.Mysql.Common.Persistence;
 using Inventory.Infrastructure.Persistence.Mysql.Context;
-using Inventory.Infrastructure.Persistence.Mysql.Modules.DomainService.Impl;
 using Inventory.Infrastructure.Persistence.Mysql.Repositories;
-using Inventory.Infrastructure.Persistence.Mysql.Users.DomainService.Impl;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,9 +37,6 @@ namespace Inventory.Infrastructure.Persistence.Mysql
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IActionRepository, ActionRepository>();
-
-            services.AddScoped<IUserAuthorizationService, UserAuthorizationService>();
-            services.AddScoped<IModuleMenuService, ModuleMenuService>();
 
             return services;
         }

@@ -24,6 +24,14 @@ public class ModuleRepository(DataBaseContext context) : IModuleRepository
             .ToListAsync();
     }
 
+    public async Task<IReadOnlyList<ModuleEntity>> GetActiveAsync()
+    {
+        return await context.Modules
+            .Where(m => m.IsActive)
+            .OrderBy(m => m.SortOrder)
+            .ToListAsync();
+    }
+
     public async Task<bool> NameExistsAsync(string name, int? excludeModuleId = null)
     {
         return await context.Modules

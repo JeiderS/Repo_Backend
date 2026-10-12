@@ -5,7 +5,8 @@ using Inventory.Domain.RoleActions.Entity;
 using Inventory.Domain.Roles.Entity;
 using Inventory.Domain.Users.Entity;
 using Inventory.Infrastructure.Persistence.Mysql.Context;
-using Inventory.Infrastructure.Persistence.Mysql.Modules.DomainService.Impl;
+using Inventory.Application.Modules.Query.GetModuleMenu;
+using Inventory.Infrastructure.Persistence.Mysql.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -13,7 +14,8 @@ namespace Inventory.Tests.Modules;
 
 /// <summary>
 /// Task 4.2 (Phase 4, Checkpoint B tests) — real-DB service test for
-/// <see cref="ModuleMenuService"/>'s D5 rule (design.md): a module is
+/// the menu D5 rule (design.md), end to end: <see cref="GetModuleMenuQueryHandler"/>
+/// + real repositories + ModuleMenuBuilder (Domain). A module is
 /// visible only when the role holds &gt;= 1 of its 4 Actions AND
 /// (!Module.RequiresSystemAdmin || Role.IsSystemAdmin); the pre-existing
 /// "container with a visible descendant" rule must still hold.
@@ -30,7 +32,7 @@ namespace Inventory.Tests.Modules;
 /// re-runs never collide and nothing durable is left in the shared local
 /// dev DB.
 /// </summary>
-public class ModuleMenuServiceTests
+public class ModuleMenuTests
 {
     [Fact]
     public async Task ModuleWithOneOfFourGrantedActions_IsVisible()
@@ -46,7 +48,7 @@ public class ModuleMenuServiceTests
 
         try
         {
-            var menu = await new ModuleMenuService(context).GetMenuForUserAsync(user.Id);
+            var menu = await GetMenuAsync(context, user.Id);
 
             Assert.NotNull(FindByName(menu, module.Module.Name));
         }
@@ -70,7 +72,7 @@ public class ModuleMenuServiceTests
 
         try
         {
-            var menu = await new ModuleMenuService(context).GetMenuForUserAsync(user.Id);
+            var menu = await GetMenuAsync(context, user.Id);
 
             // Holding every Action the module has is not enough — only
             // Roles.IsSystemAdmin (SQL-only, D1) clears RequiresSystemAdmin.
@@ -99,7 +101,7 @@ public class ModuleMenuServiceTests
 
         try
         {
-            var menu = await new ModuleMenuService(context).GetMenuForUserAsync(user.Id);
+            var menu = await GetMenuAsync(context, user.Id);
 
             var parentItem = FindByName(menu, parent.Module.Name);
             Assert.NotNull(parentItem);
@@ -109,6 +111,17 @@ public class ModuleMenuServiceTests
         {
             await CleanupAsync(role.Id, new[] { child.Module.Id, parent.Module.Id }, user.Id);
         }
+    }
+
+    /// <summary>Arma el handler real con repositorios reales sobre el mismo contexto.</summary>
+    private static Task<IReadOnlyList<ModuleMenuItem>> GetMenuAsync(DataBaseContext context, int userId)
+    {
+        var handler = new GetModuleMenuQueryHandler(
+            new UserRepository(context),
+            new RoleRepository(context),
+            new ModuleRepository(context));
+
+        return handler.Handle(new GetModuleMenuQuery(userId), CancellationToken.None);
     }
 
     private static ModuleMenuItem? FindByName(IReadOnlyList<ModuleMenuItem> items, string name)

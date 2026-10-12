@@ -1,3 +1,4 @@
+using Inventory.Domain.Common.Authorization;
 using Inventory.Domain.Roles.Entity;
 
 namespace Inventory.Domain.Roles.Repositories;
@@ -30,6 +31,12 @@ public interface IRoleRepository
 
     /// <summary>Códigos de acción (ej. "UsersView") concedidos al rol.</summary>
     Task<IReadOnlyList<string>> GetActionCodesAsync(int roleId);
+
+    /// <summary>Acciones concedidas al rol, cada una con el nombre de su módulo.</summary>
+    Task<IReadOnlyList<GrantedAction>> GetGrantedActionsAsync(int roleId);
+
+    /// <summary>Ids de los módulos en los que el rol tiene al menos una acción.</summary>
+    Task<IReadOnlySet<int>> GetModuleIdsWithGrantedActionsAsync(int roleId);
 
     /// <summary>Reemplazo total: borra las acciones actuales del rol y pone las nuevas.</summary>
     Task ReplaceActionsAsync(int roleId, IEnumerable<int> actionIds);

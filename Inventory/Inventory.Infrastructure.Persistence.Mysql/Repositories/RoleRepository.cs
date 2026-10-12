@@ -1,3 +1,4 @@
+using Inventory.Domain.Common.Authorization;
 using Inventory.Domain.RoleActions.Entity;
 using Inventory.Domain.Roles.Entity;
 using Inventory.Domain.Roles.Repositories;
@@ -66,6 +67,25 @@ public class RoleRepository(DataBaseContext context) : IRoleRepository
             .Where(ra => ra.RoleId == roleId)
             .Select(ra => ra.Action!.Code)
             .ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<GrantedAction>> GetGrantedActionsAsync(int roleId)
+    {
+        return await context.RoleActions
+            .Where(ra => ra.RoleId == roleId)
+            .Select(ra => new GrantedAction(ra.Action!.Module!.Name, ra.Action.Code))
+            .ToListAsync();
+    }
+
+    public async Task<IReadOnlySet<int>> GetModuleIdsWithGrantedActionsAsync(int roleId)
+    {
+        var moduleIds = await context.RoleActions
+            .Where(ra => ra.RoleId == roleId)
+            .Select(ra => ra.Action!.ModuleId)
+            .Distinct()
+            .ToListAsync();
+
+        return moduleIds.ToHashSet();
     }
 
     public async Task ReplaceActionsAsync(int roleId, IEnumerable<int> actionIds)

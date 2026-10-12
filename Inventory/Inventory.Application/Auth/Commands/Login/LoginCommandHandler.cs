@@ -3,7 +3,6 @@ using Inventory.Application.Auth.Errors;
 using Inventory.Application.Common.Interfaces;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
-using Inventory.Domain.Users.DomainUsers;
 using Inventory.Domain.Users.Repositories;
 using MediatR;
 
@@ -16,7 +15,6 @@ namespace Inventory.Application.Auth.Commands.Login;
 /// </summary>
 public class LoginCommandHandler(
     IUserRepository userRepository,
-    IUserAuthorizationService userAuthorizationService,
     IPasswordHasher passwordHasher,
     IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<LoginCommand, Result<AuthResponseDto, Error>>
 {
@@ -32,7 +30,10 @@ public class LoginCommandHandler(
         if (!user.CanLogin())
             return AuthErrorBuilder.InactiveUser();
 
-        var roles = await userAuthorizationService.GetRolesAsync(user.Id);
+        // Un usuario tiene un único rol; GetByEmailAsync ya lo trae cargado.
+        IReadOnlyList<string> roles = user.Role is null
+            ? Array.Empty<string>()
+            : new[] { user.Role.Name };
 
         var token = jwtTokenGenerator.GenerateToken(user, roles);
 

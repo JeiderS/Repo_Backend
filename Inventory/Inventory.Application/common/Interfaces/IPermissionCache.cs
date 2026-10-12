@@ -9,7 +9,7 @@ public sealed record RolePermissions(int RoleId, bool IsSystemAdmin, IReadOnlyLi
 /// <summary>
 /// Two-level, tenant-scoped cache backing PermissionClaimsMiddleware:
 /// userId -> roleId ("perm-user:{tenantKey}:{userId}", 0 = no role — RoleId is
-/// IDENTITY, never 0, same sentinel ModuleMenuService.RootKey already uses),
+/// IDENTITY, never 0, same sentinel ModuleMenuBuilder.RootKey already uses),
 /// and roleId -> RolePermissions ("perm-role:{tenantKey}:{roleId}"). Locked on
 /// roleId for the permission set because RoleActions mutation is the real
 /// invalidation trigger, and a userId-keyed set would need fan-out

@@ -15,6 +15,9 @@ public interface IModuleRepository
     /// <summary>Todos los módulos, ordenados por SortOrder.</summary>
     Task<IReadOnlyList<ModuleEntity>> GetAllAsync();
 
+    /// <summary>Solo los módulos activos, ordenados por SortOrder.</summary>
+    Task<IReadOnlyList<ModuleEntity>> GetActiveAsync();
+
     /// <summary>¿Ya hay un módulo con ese nombre? (ignorando <paramref name="excludeModuleId"/>).</summary>
     Task<bool> NameExistsAsync(string name, int? excludeModuleId = null);
 
