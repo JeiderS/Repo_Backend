@@ -11,8 +11,11 @@ public class ModuleDto
     public int? ParentId { get; set; }
     public bool IsActive { get; set; }
     public int SortOrder { get; set; }
+    public IReadOnlyList<int> ActionIds { get; set; } = Array.Empty<int>();
 
-    public static ModuleDto FromEntity(ModuleEntity module) => new()
+    public static ModuleDto FromEntity(ModuleEntity module) => FromEntity(module, Array.Empty<int>());
+
+    public static ModuleDto FromEntity(ModuleEntity module, IReadOnlyList<int> actionIds) => new()
     {
         Id = module.Id,
         Name = module.Name,
@@ -20,6 +23,7 @@ public class ModuleDto
         Route = module.Route,
         ParentId = module.ParentId,
         IsActive = module.IsActive,
-        SortOrder = module.SortOrder
+        SortOrder = module.SortOrder,
+        ActionIds = actionIds
     };
 }

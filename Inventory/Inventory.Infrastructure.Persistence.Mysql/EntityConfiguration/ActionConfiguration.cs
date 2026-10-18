@@ -16,9 +16,6 @@ namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
             builder.Property(a => a.Id)
                 .HasColumnName("ActionId");
 
-            builder.Property(a => a.ModuleId)
-                .HasColumnName("ModuleId");
-
             builder.Property(a => a.Code)
                 .HasColumnName("Code")
                 .IsRequired()
@@ -34,9 +31,6 @@ namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
 
             builder.HasIndex(a => a.Code).IsUnique();
 
-            builder.HasOne(a => a.Module)
-                .WithMany()
-                .HasForeignKey(a => a.ModuleId);
         }
     }
 }

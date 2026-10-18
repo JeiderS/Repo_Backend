@@ -6,12 +6,12 @@ public class RoleDto
 {
     public int Id { get; set; }
     public string Name { get; set; } = default!;
-    public IReadOnlyList<int> ActionIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyList<RoleModuleActionGrant> Grants { get; set; } = Array.Empty<RoleModuleActionGrant>();
 
-    public static RoleDto FromEntity(RoleEntity role, IReadOnlyList<int> actionIds) => new()
+    public static RoleDto FromEntity(RoleEntity role, IReadOnlyList<RoleModuleActionGrant> grants) => new()
     {
         Id = role.Id,
         Name = role.Name,
-        ActionIds = actionIds
+        Grants = grants
     };
 }

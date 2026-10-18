@@ -53,7 +53,8 @@ public class ClaimsAuthorizationTests : IClassFixture<TenantApiFactory>
 
         var roleId = await CreateRoleAsync(client, adminToken, $"Test-UsersViewOnly-{ShortSuffix()}");
         var usersViewActionId = await GetActionIdByCodeAsync(client, adminToken, "UsersView");
-        await AssignRoleActionsAsync(client, adminToken, roleId, new[] { usersViewActionId });
+        var usersModuleId = await GetModuleIdForActionAsync(client, adminToken, usersViewActionId);
+        await AssignRoleActionsAsync(client, adminToken, roleId, new[] { (usersModuleId, usersViewActionId) });
 
         var (_, userToken) = await CreateActiveUserAndIssueTokenAsync(adminToken, roleId);
 
@@ -114,7 +115,8 @@ public class ClaimsAuthorizationTests : IClassFixture<TenantApiFactory>
 
         var roleId = await CreateRoleAsync(client, adminToken, $"Test-Revocable-{ShortSuffix()}");
         var usersViewActionId = await GetActionIdByCodeAsync(client, adminToken, "UsersView");
-        await AssignRoleActionsAsync(client, adminToken, roleId, new[] { usersViewActionId });
+        var usersModuleId = await GetModuleIdForActionAsync(client, adminToken, usersViewActionId);
+        await AssignRoleActionsAsync(client, adminToken, roleId, new[] { (usersModuleId, usersViewActionId) });
 
         var (_, userToken) = await CreateActiveUserAndIssueTokenAsync(adminToken, roleId);
 
@@ -123,7 +125,7 @@ public class ClaimsAuthorizationTests : IClassFixture<TenantApiFactory>
 
         // Revoke every Action from the role (same endpoint, same admin token
         // — no SQL, this is the shipped role-actions-assignment surface).
-        await AssignRoleActionsAsync(client, adminToken, roleId, Array.Empty<int>());
+        await AssignRoleActionsAsync(client, adminToken, roleId, Array.Empty<(int ModuleId, int ActionId)>());
 
         // Same JWT, still cryptographically valid and unexpired.
         var afterRevoke = await SendWithTokenAsync(client, HttpMethod.Get, "/api/v1/users", userToken, hasBody: false);
@@ -153,10 +155,14 @@ public class ClaimsAuthorizationTests : IClassFixture<TenantApiFactory>
             await GetActionIdByCodeAsync(client, adminToken, "ModulesEdit"),
             await GetActionIdByCodeAsync(client, adminToken, "ModulesDelete"),
         };
+        var moduleGrants = new List<(int ModuleId, int ActionId)>();
+        foreach (var actionId in moduleActionIds)
+            moduleGrants.Add((await GetModuleIdForActionAsync(client, adminToken, actionId), actionId));
+
         // CreateRoleCommandHandler never sets IsSystemAdmin (design.md D1:
         // SQL-only, no command/DTO/controller may ever set it), so this role
         // holds every Modules* Action code yet Roles.IsSystemAdmin is false.
-        await AssignRoleActionsAsync(client, adminToken, roleId, moduleActionIds);
+        await AssignRoleActionsAsync(client, adminToken, roleId, moduleGrants);
 
         var (_, userToken) = await CreateActiveUserAndIssueTokenAsync(adminToken, roleId);
 
@@ -272,16 +278,40 @@ public class ClaimsAuthorizationTests : IClassFixture<TenantApiFactory>
         return match.GetProperty("id").GetInt32();
     }
 
-    private async Task AssignRoleActionsAsync(HttpClient client, string adminToken, int roleId, IReadOnlyList<int> actionIds)
+    private async Task AssignRoleActionsAsync(HttpClient client, string adminToken, int roleId, IReadOnlyList<(int ModuleId, int ActionId)> grants)
     {
         var request = new HttpRequestMessage(HttpMethod.Put, $"/api/v1/roles/{roleId}/actions")
         {
-            Content = JsonBody(new { roleId, actionIds }),
+            Content = JsonBody(new
+            {
+                roleId,
+                grants = grants.Select(g => new { moduleId = g.ModuleId, actionId = g.ActionId }),
+            }),
         };
         request.Headers.Host = DefaultTenantHost;
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
         var response = await client.SendAsync(request);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    /// <summary>
+    /// Actions are now a global catalog reusable across modules via
+    /// ModuleActions, so a bare ActionId no longer identifies which module's
+    /// grant is being assigned. Resolves the owning ModuleId by scanning
+    /// GET /api/v1/modules (ModuleDto.ActionIds) for the module that lists
+    /// this actionId.
+    /// </summary>
+    private async Task<int> GetModuleIdForActionAsync(HttpClient client, string adminToken, int actionId)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get, "/api/v1/modules");
+        request.Headers.Host = DefaultTenantHost;
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
+        var response = await client.SendAsync(request);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        using var body = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+        var match = body.RootElement.GetProperty("data").EnumerateArray()
+            .First(m => m.GetProperty("actionIds").EnumerateArray().Any(a => a.GetInt32() == actionId));
+        return match.GetProperty("id").GetInt32();
     }
 
     private async Task<(int UserId, string Token)> CreateActiveUserAndIssueTokenAsync(

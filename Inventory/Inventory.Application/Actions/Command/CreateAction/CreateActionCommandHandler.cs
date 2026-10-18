@@ -15,26 +15,22 @@ public class CreateActionCommandHandler(
     IActionRepository actionRepository,
     IUnitOfWork unitOfWork) : IRequestHandler<CreateActionCommand, Result<ActionDto, Error>>
 {
-    public async Task<Result<ActionDto, Error>> Handle(CreateActionCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ActionDto, Error>> Handle(
+        CreateActionCommand request,
+        CancellationToken cancellationToken)
     {
-        var module = await moduleRepository.GetByIdAsync(request.ModuleId);
-        if (module is null)
-            return ActionErrorBuilder.ModuleNotFound();
+        var code = request.Code.Trim();
+        var name = request.Name.Trim();
 
-        // La regla "el código es {Módulo}{Nombre} en PascalCase" vive en la entidad.
-        var created = ActionEntity.Create(module, request.Name);
-        if (!created.IsSuccess)
-            return created.Error!;
-
-        var action = created.Value!;
-
-        // "El código no se repite" necesita ver todas las acciones: va aquí.
-        if (await actionRepository.CodeExistsAsync(action.Code))
+        if (await actionRepository.CodeExistsAsync(code))
             return ActionErrorBuilder.CodeAlreadyExists();
+
+        var action = ActionEntity.Create(code, name);
 
         await actionRepository.AddAsync(action);
 
         var savedRows = await unitOfWork.SaveChangesAsync(cancellationToken);
+
         if (savedRows <= 0)
             return ActionErrorBuilder.CreationException();
 

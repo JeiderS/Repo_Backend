@@ -23,12 +23,6 @@ public interface IRoleRepository
 
     Task<IReadOnlyList<int>> GetActionIdsAsync(int roleId);
 
-    /// <summary>
-    /// Ids de acciones de TODOS los roles en una sola consulta (roleId -> actionIds).
-    /// Evita el problema "N+1": antes se hacía una consulta por cada rol.
-    /// </summary>
-    Task<IReadOnlyDictionary<int, IReadOnlyList<int>>> GetActionIdsByRoleAsync();
-
     /// <summary>Códigos de acción (ej. "UsersView") concedidos al rol.</summary>
     Task<IReadOnlyList<string>> GetActionCodesAsync(int roleId);
 
@@ -38,6 +32,14 @@ public interface IRoleRepository
     /// <summary>Ids de los módulos en los que el rol tiene al menos una acción.</summary>
     Task<IReadOnlySet<int>> GetModuleIdsWithGrantedActionsAsync(int roleId);
 
-    /// <summary>Reemplazo total: borra las acciones actuales del rol y pone las nuevas.</summary>
-    Task ReplaceActionsAsync(int roleId, IEnumerable<int> actionIds);
+    /// <summary>Reemplazo total: borra las concesiones actuales del rol y pone las
+    /// nuevas. Se usa la tupla (ModuleId, ActionId) en vez del record
+    /// RoleModuleActionGrant de Application.Roles.Dto porque Domain no puede
+    /// referenciar Application (evitaría una dependencia circular de
+    /// proyectos: Application ya referencia Domain).</summary>
+    Task ReplaceActionsAsync(int roleId, IEnumerable<(int ModuleId, int ActionId)> grants);
+
+    /// <summary>Concesiones (ModuleId, ActionId) de TODOS los roles en una sola
+    /// consulta (roleId -> grants). Evita el problema "N+1".</summary>
+    Task<IReadOnlyDictionary<int, IReadOnlyList<(int ModuleId, int ActionId)>>> GetGrantedModuleActionsByRoleAsync();
 }

@@ -3,6 +3,7 @@ using Inventory.Api.Auth;
 using Inventory.Api.Controllers.Common;
 using Inventory.Application.Modules.Command.CreateModule;
 using Inventory.Application.Modules.Command.DeactivateModule;
+using Inventory.Application.Modules.Command.SyncModuleActions;
 using Inventory.Application.Modules.Command.UpdateModule;
 using Inventory.Application.Modules.Query.GetModuleMenu;
 using Inventory.Application.Modules.Query.GetModules;
@@ -72,6 +73,21 @@ namespace Inventory.Api.Controllers.Modules
         public async Task<IActionResult> Deactivate(int id)
         {
             var result = await mediator.Send(new DeactivateModuleCommand(id));
+            return FromResult(result);
+        }
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
+        [HttpPut("{id:int}/actions")]
+        public async Task<IActionResult> SyncActions(int id, [FromBody] SyncModuleActionsCommand command)
+        {
+            command.ModuleId = id;
+            var result = await mediator.Send(command);
             return FromResult(result);
         }
     }

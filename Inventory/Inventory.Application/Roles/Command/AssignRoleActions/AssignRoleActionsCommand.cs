@@ -8,5 +8,5 @@ namespace Inventory.Application.Roles.Command.AssignRoleActions;
 public class AssignRoleActionsCommand : IRequest<Result<RoleDto, Error>>
 {
     public int RoleId { get; set; }
-    public IReadOnlyList<int> ActionIds { get; set; } = Array.Empty<int>();
+    public IReadOnlyList<RoleModuleActionGrant> Grants { get; set; } = Array.Empty<RoleModuleActionGrant>();
 }

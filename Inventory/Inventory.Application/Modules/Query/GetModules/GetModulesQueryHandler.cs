@@ -10,6 +10,14 @@ public class GetModulesQueryHandler(IModuleRepository moduleRepository)
     public async Task<IReadOnlyList<ModuleDto>> Handle(GetModulesQuery request, CancellationToken cancellationToken)
     {
         var modules = await moduleRepository.GetAllAsync();
-        return modules.Select(ModuleDto.FromEntity).ToList();
+
+        // Una sola consulta para las acciones de todos los módulos (evita N+1).
+        var actionIdsByModule = await moduleRepository.GetActionIdsByModuleAsync();
+
+        return modules
+            .Select(module => ModuleDto.FromEntity(
+                module,
+                actionIdsByModule.TryGetValue(module.Id, out var actionIds) ? actionIds : Array.Empty<int>()))
+            .ToList();
     }
 }

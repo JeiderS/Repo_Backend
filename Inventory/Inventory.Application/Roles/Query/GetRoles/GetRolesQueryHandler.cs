@@ -11,14 +11,18 @@ public class GetRolesQueryHandler(IRoleRepository roleRepository)
     {
         var roles = await roleRepository.GetAllAsync();
 
-        // Una sola consulta para las acciones de todos los roles (antes era
-        // una consulta por rol: el clásico problema "N+1").
-        var actionIdsByRole = await roleRepository.GetActionIdsByRoleAsync();
+        // Una sola consulta para las concesiones de todos los roles (antes era
+        // una consulta por rol: el clásico problema "N+1"). El repositorio
+        // devuelve tuplas (ModuleId, ActionId); se mapean a RoleModuleActionGrant
+        // aquí en Application.
+        var grantsByRole = await roleRepository.GetGrantedModuleActionsByRoleAsync();
 
         return roles
             .Select(role => RoleDto.FromEntity(
                 role,
-                actionIdsByRole.TryGetValue(role.Id, out var actionIds) ? actionIds : Array.Empty<int>()))
+                grantsByRole.TryGetValue(role.Id, out var grants)
+                    ? grants.Select(g => new RoleModuleActionGrant(g.ModuleId, g.ActionId)).ToList()
+                    : Array.Empty<RoleModuleActionGrant>()))
             .ToList();
     }
 }

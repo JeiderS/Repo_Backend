@@ -27,6 +27,6 @@ public class CreateRoleCommandHandler(
         if (savedRows <= 0)
             return RoleErrorBuilder.CreationException();
 
-        return RoleDto.FromEntity(role, Array.Empty<int>());
+        return RoleDto.FromEntity(role, Array.Empty<RoleModuleActionGrant>());
     }
 }

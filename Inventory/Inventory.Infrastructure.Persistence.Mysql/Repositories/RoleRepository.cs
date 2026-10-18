@@ -48,24 +48,19 @@ public class RoleRepository(DataBaseContext context) : IRoleRepository
             .ToListAsync();
     }
 
-    public async Task<IReadOnlyDictionary<int, IReadOnlyList<int>>> GetActionIdsByRoleAsync()
-    {
-        var rows = await context.RoleActions
-            .Select(ra => new { ra.RoleId, ra.ActionId })
-            .ToListAsync();
-
-        return rows
-            .GroupBy(r => r.RoleId)
-            .ToDictionary(
-                g => g.Key,
-                g => (IReadOnlyList<int>)g.Select(r => r.ActionId).ToList());
-    }
-
     public async Task<IReadOnlyList<string>> GetActionCodesAsync(int roleId)
     {
+        // El claim de autorización es "{ModuleName sin espacios}{Action.Code}"
+        // (ej. "Acciones" + "View" = "AccionesView"), calculado acá y no
+        // guardado en Actions.Code, para que Actions siga siendo un catálogo
+        // genérico reutilizable (p.ej. "View" se crea una sola vez y se
+        // asocia a cualquier módulo vía ModuleActions) sin romper los
+        // [Authorize(Roles = "...")] existentes, que esperan el string
+        // compuesto. Misma convención que Sql/TenantBootstrap/03_Actions_Seed.sql
+        // (REPLACE(ModuleName, ' ', '') + Verb).
         return await context.RoleActions
             .Where(ra => ra.RoleId == roleId)
-            .Select(ra => ra.Action!.Code)
+            .Select(ra => ra.ModuleAction.Module.Name.Replace(" ", "") + ra.ModuleAction.Action.Code)
             .ToListAsync();
     }
 
@@ -73,7 +68,9 @@ public class RoleRepository(DataBaseContext context) : IRoleRepository
     {
         return await context.RoleActions
             .Where(ra => ra.RoleId == roleId)
-            .Select(ra => new GrantedAction(ra.Action!.Module!.Name, ra.Action.Code))
+            .Select(ra => new GrantedAction(
+                ra.ModuleAction.Module.Name,
+                ra.ModuleAction.Action.Code))
             .ToListAsync();
     }
 
@@ -81,14 +78,13 @@ public class RoleRepository(DataBaseContext context) : IRoleRepository
     {
         var moduleIds = await context.RoleActions
             .Where(ra => ra.RoleId == roleId)
-            .Select(ra => ra.Action!.ModuleId)
-            .Distinct()
-            .ToListAsync();
-
+             .Select(ra => ra.ModuleId)
+             .Distinct()
+             .ToListAsync();
         return moduleIds.ToHashSet();
     }
 
-    public async Task ReplaceActionsAsync(int roleId, IEnumerable<int> actionIds)
+    public async Task ReplaceActionsAsync(int roleId, IEnumerable<(int ModuleId, int ActionId)> grants)
     {
         var current = await context.RoleActions
             .Where(ra => ra.RoleId == roleId)
@@ -96,13 +92,29 @@ public class RoleRepository(DataBaseContext context) : IRoleRepository
 
         context.RoleActions.RemoveRange(current);
 
-        foreach (var actionId in actionIds.Distinct())
+        foreach (var grant in grants.Distinct())
         {
             await context.RoleActions.AddAsync(new RoleActionEntity
             {
                 RoleId = roleId,
-                ActionId = actionId
+                ModuleId = grant.ModuleId,
+                ActionId = grant.ActionId
             });
         }
+    }
+
+    public async Task<IReadOnlyDictionary<int, IReadOnlyList<(int ModuleId, int ActionId)>>> GetGrantedModuleActionsByRoleAsync()
+    {
+        var rows = await context.RoleActions
+            .Select(ra => new { ra.RoleId, ra.ModuleId, ra.ActionId })
+            .ToListAsync();
+
+        return rows
+            .GroupBy(r => r.RoleId)
+            .ToDictionary(
+                g => g.Key,
+                g => (IReadOnlyList<(int ModuleId, int ActionId)>)g
+                    .Select(r => (r.ModuleId, r.ActionId))
+                    .ToList());
     }
 }

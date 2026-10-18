@@ -27,4 +27,16 @@ public static class ModuleErrorBuilder
             "MODULE_CREATION_ERROR",
             "No se pudo registrar el módulo.",
             ErrorType.Failure);
+
+    public static Error ActionNotFound() =>
+        Error.CreateInstance(
+            "MODULE_ACTION_NOT_FOUND",
+            "Una o más acciones indicadas no existen en el catálogo.",
+            ErrorType.Validation);
+
+    public static Error ActionsInUseByRoles() =>
+        Error.CreateInstance(
+            "MODULE_ACTION_IN_USE",
+            "No se pueden quitar una o más acciones porque están asignadas a uno o más roles.",
+            ErrorType.Conflict);
 }

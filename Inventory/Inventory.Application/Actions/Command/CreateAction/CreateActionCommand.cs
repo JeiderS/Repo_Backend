@@ -5,8 +5,7 @@ using MediatR;
 
 namespace Inventory.Application.Actions.Command.CreateAction;
 
-public class CreateActionCommand : IRequest<Result<ActionDto, Error>>
-{
-    public int ModuleId { get; set; }
-    public string Name { get; set; } = default!;
-}
+public sealed record CreateActionCommand(
+    string Code,
+    string Name
+) : IRequest<Result<ActionDto, Error>>;

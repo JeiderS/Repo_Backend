@@ -6,23 +6,40 @@ namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
 {
     public class RoleActionConfiguration
     {
-        public RoleActionConfiguration(EntityTypeBuilder<RoleActionEntity> builder)
+        public RoleActionConfiguration(
+            EntityTypeBuilder<RoleActionEntity> builder)
         {
-            // La tabla fue creada manualmente en SQL Server, EF no la gestiona en migraciones.
-            builder.ToTable("RoleActions", t => t.ExcludeFromMigrations());
+            builder.ToTable(
+                "RoleActions",
+                t => t.ExcludeFromMigrations());
 
-            builder.HasKey(ra => new { ra.RoleId, ra.ActionId });
+            builder.HasKey(ra => new
+            {
+                ra.RoleId,
+                ra.ModuleId,
+                ra.ActionId
+            });
 
-            builder.Property(ra => ra.RoleId).HasColumnName("RoleId");
-            builder.Property(ra => ra.ActionId).HasColumnName("ActionId");
+            builder.Property(ra => ra.RoleId)
+                .HasColumnName("RoleId");
+
+            builder.Property(ra => ra.ModuleId)
+                .HasColumnName("ModuleId");
+
+            builder.Property(ra => ra.ActionId)
+                .HasColumnName("ActionId");
 
             builder.HasOne(ra => ra.Role)
                 .WithMany()
                 .HasForeignKey(ra => ra.RoleId);
 
-            builder.HasOne(ra => ra.Action)
+            builder.HasOne(ra => ra.ModuleAction)
                 .WithMany()
-                .HasForeignKey(ra => ra.ActionId);
+                .HasForeignKey(ra => new
+                {
+                    ra.ModuleId,
+                    ra.ActionId
+                });
         }
     }
 }

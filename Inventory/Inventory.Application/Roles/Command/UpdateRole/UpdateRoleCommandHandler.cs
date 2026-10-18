@@ -27,7 +27,13 @@ public class UpdateRoleCommandHandler(
         // actualiza nada. Un fallo real llega como excepción.
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
-        var actionIds = await roleRepository.GetActionIdsAsync(role.Id);
-        return RoleDto.FromEntity(role, actionIds);
+        // No hay método de un solo rol para esto; se reutiliza el dict de
+        // todos los roles y se filtra, igual que en GetRolesQueryHandler.
+        var grantsByRole = await roleRepository.GetGrantedModuleActionsByRoleAsync();
+        var grants = grantsByRole.TryGetValue(role.Id, out var roleGrants)
+            ? roleGrants.Select(g => new RoleModuleActionGrant(g.ModuleId, g.ActionId)).ToList()
+            : (IReadOnlyList<RoleModuleActionGrant>)Array.Empty<RoleModuleActionGrant>();
+
+        return RoleDto.FromEntity(role, grants);
     }
 }

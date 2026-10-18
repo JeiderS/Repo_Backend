@@ -16,7 +16,8 @@ namespace Inventory.Api.Controllers.Users
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "UsersView")]
+        [AllowAnonymous]
+        //[Authorize(Roles = "UsersView")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -41,7 +42,7 @@ namespace Inventory.Api.Controllers.Users
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "UsersCreate")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateUserCommand command)
         {
