@@ -19,7 +19,8 @@ Sql/
 │   ├── 02c_Core_Modules_Seed.sql              <- Users/Roles Modules rows, CRITICAL, see runbook
 │   ├── 03_Actions_Seed.sql
 │   ├── 04_Admin_Role.sql
-│   └── 05_Admin_User_Assign.sql               <- order-sensitive, see below
+│   ├── 05_Admin_User_Assign.sql               <- order-sensitive, see below
+│   └── 06_RefreshTokens_Schema.sql            <- no ordering dependency, just needs Users to exist
 ├── Migrations/2026-08-user-management/        <- one-shot; a brand-new tenant DB
 │   │                                              skips this folder entirely
 │   ├── 01_Backfill_RoleId.sql

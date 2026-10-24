@@ -26,5 +26,12 @@ public class UnitOfWork(DataBaseContext context) : IUnitOfWork
             // resto del sistema. La Api lo convierte en un 409 Conflict.
             throw new DuplicateRecordException("Ya existe un registro con esos datos.", ex);
         }
+        catch (DbUpdateConcurrencyException ex)
+        {
+            // Alguien más ya guardó cambios sobre la misma fila (ej. el mismo
+            // refresh token rotado por dos requests a la vez). Quien llamó
+            // decide qué significa eso para su caso de uso.
+            throw new ConcurrencyConflictException("El registro fue modificado por otra operación.", ex);
+        }
     }
 }

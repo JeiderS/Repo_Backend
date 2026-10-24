@@ -11,6 +11,17 @@ namespace Inventory.Domain.Users.Entity
     /// </summary>
     public class UserEntity
     {
+        /// <summary>
+        /// Intentos fallidos consecutivos que disparan el bloqueo. Pública
+        /// porque IUserRepository.RegisterFailedLoginAtomicAsync la necesita
+        /// para armar el UPDATE atómico — es la única fuente de verdad del
+        /// umbral, nadie debe hardcodear el número de nuevo.
+        /// </summary>
+        public const int MaxFailedLoginAttempts = 5;
+
+        /// <summary>Duración fija del bloqueo por intentos fallidos.</summary>
+        public static readonly TimeSpan LockoutDuration = TimeSpan.FromMinutes(15);
+
         // Constructor vacío y privado: solo lo usa EF Core para leer de la BD.
         private UserEntity() { }
 
@@ -21,6 +32,8 @@ namespace Inventory.Domain.Users.Entity
         public DateTime CreatedAt { get; private set; }
         public int? RoleId { get; private set; }
         public bool MustChangePassword { get; private set; }
+        public int FailedLoginAttempts { get; private set; }
+        public DateTime? LockedUntil { get; private set; }
 
         public UserProfileEntity? Profile { get; private set; }
         public RoleEntity? Role { get; private set; }
@@ -58,6 +71,32 @@ namespace Inventory.Domain.Users.Entity
 
         /// <summary>Regla de negocio: solo un usuario activo puede iniciar sesión.</summary>
         public bool CanLogin() => IsActive;
+
+        /// <summary>¿Sigue bloqueado por intentos fallidos a esta hora?</summary>
+        public bool IsLockedOut(DateTime nowUtc) => LockedUntil is not null && LockedUntil > nowUtc;
+
+        /// <summary>
+        /// Cuenta un intento fallido. Al llegar a <see cref="MaxFailedLoginAttempts"/>
+        /// bloquea la cuenta por <see cref="LockoutDuration"/> y reinicia el contador,
+        /// para que al desbloquearse el usuario tenga de nuevo los intentos completos.
+        /// </summary>
+        public void RegisterFailedLogin(DateTime nowUtc)
+        {
+            FailedLoginAttempts++;
+
+            if (FailedLoginAttempts >= MaxFailedLoginAttempts)
+            {
+                LockedUntil = nowUtc.Add(LockoutDuration);
+                FailedLoginAttempts = 0;
+            }
+        }
+
+        /// <summary>Un login exitoso borra cualquier historial de intentos fallidos.</summary>
+        public void RegisterSuccessfulLogin()
+        {
+            FailedLoginAttempts = 0;
+            LockedUntil = null;
+        }
 
         public void Activate() => IsActive = true;
 

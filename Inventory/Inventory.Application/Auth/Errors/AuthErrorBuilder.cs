@@ -15,4 +15,13 @@ public static class AuthErrorBuilder
             "AUTH_INACTIVE_USER",
             "El usuario se encuentra inactivo.",
             ErrorType.Unauthorized);
+
+    // Deliberadamente genérico: no distingue "no existe", "expiró", "ya fue
+    // usado" o "el usuario fue desactivado" — esa distinción es información
+    // útil para quien intenta reusar un refresh token robado.
+    public static Error InvalidRefreshToken() =>
+        Error.CreateInstance(
+            "AUTH_INVALID_REFRESH_TOKEN",
+            "La sesión no es válida. Inicia sesión nuevamente.",
+            ErrorType.Unauthorized);
 }

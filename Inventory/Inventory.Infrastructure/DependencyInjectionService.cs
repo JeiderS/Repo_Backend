@@ -14,6 +14,7 @@ public static class DependencyInjectionService
 
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IRefreshTokenGenerator, RefreshTokenGenerator>();
 
         // IMemoryCache respalda IActiveUserCache y IPermissionCache. Los dos
         // son Scoped porque combinan el IMemoryCache (singleton) con el

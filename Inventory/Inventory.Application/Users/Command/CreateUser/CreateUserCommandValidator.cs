@@ -12,7 +12,13 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     public CreateUserCommandValidator()
     {
         RuleFor(x => x.Email).NotEmpty().EmailAddress().MaximumLength(100);
-        RuleFor(x => x.Password).NotEmpty().MinimumLength(8).MaximumLength(100);
+        RuleFor(x => x.Password)
+            .NotEmpty()
+            .MinimumLength(8)
+            .MaximumLength(100)
+            .Matches("[A-Z]").WithMessage("La contraseña debe tener al menos una mayúscula.")
+            .Matches("[a-z]").WithMessage("La contraseña debe tener al menos una minúscula.")
+            .Matches("[0-9]").WithMessage("La contraseña debe tener al menos un número.");
         RuleFor(x => x.FirstName).NotEmpty().MaximumLength(100);
         RuleFor(x => x.LastName).NotEmpty().MaximumLength(100);
         RuleFor(x => x.Phone).MaximumLength(30);

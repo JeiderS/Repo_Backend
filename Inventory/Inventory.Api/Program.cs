@@ -11,6 +11,8 @@ using Inventory.Application.Common.Interfaces;
 using Inventory.Api.Middleware;
 using Inventory.Api.Tenancy;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,7 +57,12 @@ builder.Services.AddCors(options =>
                     && rootDomains.Any(root => DomainMatcher.MatchesRoot(originUri.Host, root));
             })
             .AllowAnyHeader()
-            .AllowAnyMethod());
+            .AllowAnyMethod()
+            // Necesario para que el navegador mande/reciba la cookie httpOnly
+            // del refresh token. Seguro acá porque el origin NUNCA se valida
+            // con AllowAnyOrigin (arriba usa SetIsOriginAllowed de lista
+            // cerrada) — AllowCredentials + AllowAnyOrigin sí sería un hueco.
+            .AllowCredentials());
 });
 
 
@@ -75,6 +82,32 @@ builder.Services.AddAuthorization(options =>
         p => p.RequireClaim(PermissionClaimTypes.SystemAdmin, "true")));
 
 builder.Services.AddRouting(routing => routing.LowercaseUrls = true);
+
+// HSTS: le dice al navegador "no vuelvas a intentar HTTP con este host"
+// durante 1 año, evitando el downgrade en la primera visita. Solo tiene
+// sentido fuera de Development (en dev normalmente no hay HTTPS real).
+builder.Services.AddHsts(options =>
+{
+    options.MaxAge = TimeSpan.FromDays(365);
+    options.IncludeSubDomains = true;
+});
+
+// Rate limiting por IP sobre el login: defensa a nivel de infraestructura,
+// independiente del account lockout por email (UserEntity), que defiende
+// una cuenta puntual aunque el atacante rote de IP.
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    options.AddPolicy("login", httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 10,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            }));
+});
 
 // Per-tenant DbContext: la cadena de conexión se toma, en cada request, del
 // ITenantContext que llenó TenantResolutionMiddleware (design.md "AddDbContext
@@ -150,9 +183,16 @@ app.UseSwaggerUI(options =>
 });
 
 
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
+
 app.UseHttpsRedirection();
 
 app.UseCors("AllowLocalhost");
+
+app.UseRateLimiter();
 
 // Tenant resolution precedes authentication: an unknown/unsupported host
 // fails fast (404/400) before any auth logic runs (spec: tenant-resolution,

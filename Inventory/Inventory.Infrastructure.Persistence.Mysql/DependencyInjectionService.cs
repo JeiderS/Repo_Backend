@@ -1,6 +1,7 @@
 using Inventory.Domain.Actions.Repositories;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Modules.Repositories;
+using Inventory.Domain.RefreshTokens.Repositories;
 using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.Users.Repositories;
 using Inventory.Infrastructure.Persistence.Mysql.Common.Persistence;
@@ -37,6 +38,7 @@ namespace Inventory.Infrastructure.Persistence.Mysql
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IActionRepository, ActionRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             return services;
         }

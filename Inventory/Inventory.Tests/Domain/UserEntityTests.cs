@@ -64,4 +64,59 @@ public class UserEntityTests
         Assert.False(user.AssignRole(role));  // Ventas -> Ventas: no cambió
         Assert.Same(role, user.Role);
     }
+
+    [Fact]
+    public void RegisterFailedLogin_FiveConsecutiveTimes_LocksTheAccount()
+    {
+        var user = NewUser();
+        var nowUtc = DateTime.UtcNow;
+
+        for (var i = 0; i < 5; i++)
+            user.RegisterFailedLogin(nowUtc);
+
+        Assert.True(user.IsLockedOut(nowUtc));
+        Assert.Equal(0, user.FailedLoginAttempts); // se reinicia al bloquear
+    }
+
+    [Fact]
+    public void RegisterFailedLogin_FewerThanFiveTimes_DoesNotLockTheAccount()
+    {
+        var user = NewUser();
+        var nowUtc = DateTime.UtcNow;
+
+        for (var i = 0; i < 4; i++)
+            user.RegisterFailedLogin(nowUtc);
+
+        Assert.False(user.IsLockedOut(nowUtc));
+        Assert.Equal(4, user.FailedLoginAttempts);
+    }
+
+    [Fact]
+    public void RegisterSuccessfulLogin_ResetsFailedAttempts_AndLiftsAnyLockout()
+    {
+        var user = NewUser();
+        var nowUtc = DateTime.UtcNow;
+
+        for (var i = 0; i < 5; i++)
+            user.RegisterFailedLogin(nowUtc);
+        Assert.True(user.IsLockedOut(nowUtc));
+
+        user.RegisterSuccessfulLogin();
+
+        Assert.False(user.IsLockedOut(nowUtc));
+        Assert.Equal(0, user.FailedLoginAttempts);
+    }
+
+    [Fact]
+    public void IsLockedOut_AfterLockoutWindowPasses_ReturnsFalse()
+    {
+        var user = NewUser();
+        var lockedAt = DateTime.UtcNow;
+
+        for (var i = 0; i < 5; i++)
+            user.RegisterFailedLogin(lockedAt);
+
+        Assert.True(user.IsLockedOut(lockedAt.AddMinutes(14)));
+        Assert.False(user.IsLockedOut(lockedAt.AddMinutes(15).AddSeconds(1)));
+    }
 }

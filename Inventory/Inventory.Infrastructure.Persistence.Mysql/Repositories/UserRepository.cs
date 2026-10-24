@@ -65,4 +65,30 @@ public class UserRepository(DataBaseContext context) : IUserRepository
             .Select(u => u.RoleId)
             .FirstOrDefaultAsync();
     }
+
+    public async Task RegisterFailedLoginAtomicAsync(
+        int userId,
+        DateTime lockedUntilIfThresholdReached,
+        CancellationToken cancellationToken = default)
+    {
+        // ExecuteUpdateAsync traduce esto a un solo UPDATE con un CASE
+        // evaluado en el servidor de BD, no en memoria — por eso dos
+        // llamadas concurrentes no pueden "pisarse" leyendo el mismo valor
+        // viejo (a diferencia de user.RegisterFailedLogin() + SaveChanges,
+        // que sí es un read-modify-write en memoria).
+        await context.Users
+            .Where(u => u.Id == userId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(
+                    u => u.FailedLoginAttempts,
+                    u => u.FailedLoginAttempts + 1 >= UserEntity.MaxFailedLoginAttempts
+                        ? 0
+                        : u.FailedLoginAttempts + 1)
+                .SetProperty(
+                    u => u.LockedUntil,
+                    u => u.FailedLoginAttempts + 1 >= UserEntity.MaxFailedLoginAttempts
+                        ? lockedUntilIfThresholdReached
+                        : u.LockedUntil),
+                cancellationToken);
+    }
 }

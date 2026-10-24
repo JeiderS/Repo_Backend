@@ -39,6 +39,13 @@ namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
             builder.Property(u => u.MustChangePassword)
                 .HasColumnName("MustChangePassword");
 
+            builder.Property(u => u.FailedLoginAttempts)
+                .HasColumnName("FailedLoginAttempts")
+                .IsRequired();
+
+            builder.Property(u => u.LockedUntil)
+                .HasColumnName("LockedUntil");
+
             builder.HasIndex(u => u.Email).IsUnique();
 
             builder.HasOne(u => u.Profile)

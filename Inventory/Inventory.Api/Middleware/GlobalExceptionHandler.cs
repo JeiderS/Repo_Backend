@@ -42,6 +42,12 @@ public sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logge
                 logger.LogWarning(exception, "Duplicate record rejected by the database");
                 break;
 
+            case ConcurrencyConflictException:
+                statusCode = StatusCodes.Status409Conflict;
+                message = exception.Message;
+                logger.LogWarning(exception, "Concurrency conflict detected by the database");
+                break;
+
             default:
                 statusCode = StatusCodes.Status500InternalServerError;
                 // Nunca se devuelve el detalle interno al cliente; queda en el log.
