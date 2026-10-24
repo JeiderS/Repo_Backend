@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using Inventory.Api.Auth;
 using Inventory.Api.Controllers.Common;
 using Inventory.Application.Modules.Command.CreateModule;
 using Inventory.Application.Modules.Command.DeactivateModule;
@@ -30,7 +29,7 @@ namespace Inventory.Api.Controllers.Modules
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
+        [Authorize(Roles = "MódulosView, RolesView")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -42,7 +41,7 @@ namespace Inventory.Api.Controllers.Modules
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
+        [Authorize(Roles = "MódulosCreate")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateModuleCommand command)
         {
@@ -55,7 +54,7 @@ namespace Inventory.Api.Controllers.Modules
         [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
+        [Authorize(Roles = "MódulosEdit")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateModuleCommand command)
         {
@@ -68,7 +67,7 @@ namespace Inventory.Api.Controllers.Modules
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
+        [Authorize(Roles = "MódulosEdit")]
         [HttpPatch("{id:int}/deactivate")]
         public async Task<IActionResult> Deactivate(int id)
         {
@@ -82,7 +81,7 @@ namespace Inventory.Api.Controllers.Modules
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Policy = AuthorizationPolicies.SystemAdminOnly)]
+        [Authorize(Roles = "MódulosEdit")]
         [HttpPut("{id:int}/actions")]
         public async Task<IActionResult> SyncActions(int id, [FromBody] SyncModuleActionsCommand command)
         {

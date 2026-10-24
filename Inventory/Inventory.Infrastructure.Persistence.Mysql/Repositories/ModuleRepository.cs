@@ -13,6 +13,11 @@ public class ModuleRepository(DataBaseContext context) : IModuleRepository
         return await context.Modules.FirstOrDefaultAsync(m => m.Id == id);
     }
 
+    public async Task<ModuleEntity?> GetByRouteAsync(string route)
+    {
+        return await context.Modules.FirstOrDefaultAsync(m => m.Route == route);
+    }
+
     public async Task<bool> ExistsAsync(int id)
     {
         return await context.Modules.AnyAsync(m => m.Id == id);

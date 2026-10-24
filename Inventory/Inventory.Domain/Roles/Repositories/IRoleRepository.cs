@@ -26,6 +26,10 @@ public interface IRoleRepository
     /// <summary>Códigos de acción (ej. "UsersView") concedidos al rol.</summary>
     Task<IReadOnlyList<string>> GetActionCodesAsync(int roleId);
 
+    /// <summary>Códigos de acción concedidos al rol, pero solo del módulo indicado
+    /// (contexto dinámico vía header X-Module-Code).</summary>
+    Task<IReadOnlyList<string>> GetActionCodesByModuleAsync(int roleId, int moduleId);
+
     /// <summary>Acciones concedidas al rol, cada una con el nombre de su módulo.</summary>
     Task<IReadOnlyList<GrantedAction>> GetGrantedActionsAsync(int roleId);
 

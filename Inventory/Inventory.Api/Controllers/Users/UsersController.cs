@@ -16,8 +16,7 @@ namespace Inventory.Api.Controllers.Users
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [AllowAnonymous]
-        //[Authorize(Roles = "UsersView")]
+        [Authorize(Roles = "UsersView")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

@@ -10,6 +10,9 @@ public interface IModuleRepository
 {
     Task<ModuleEntity?> GetByIdAsync(int id);
 
+    /// <summary>Busca un módulo por su Route (slug estable), o null si no existe.</summary>
+    Task<ModuleEntity?> GetByRouteAsync(string route);
+
     Task<bool> ExistsAsync(int id);
 
     /// <summary>Todos los módulos, ordenados por SortOrder.</summary>

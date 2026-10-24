@@ -51,15 +51,31 @@ public class RoleRepository(DataBaseContext context) : IRoleRepository
     public async Task<IReadOnlyList<string>> GetActionCodesAsync(int roleId)
     {
         // El claim de autorización es "{ModuleName sin espacios}{Action.Code}"
-        // (ej. "Acciones" + "View" = "AccionesView"), calculado acá y no
+        // (ej. "Módulos" + "View" = "MódulosView" — Module.Name se guarda en
+        // español, Action.Code en inglés), calculado acá y no
         // guardado en Actions.Code, para que Actions siga siendo un catálogo
         // genérico reutilizable (p.ej. "View" se crea una sola vez y se
         // asocia a cualquier módulo vía ModuleActions) sin romper los
         // [Authorize(Roles = "...")] existentes, que esperan el string
         // compuesto. Misma convención que Sql/TenantBootstrap/03_Actions_Seed.sql
-        // (REPLACE(ModuleName, ' ', '') + Verb).
+        // (REPLACE(ModuleName, ' ', '') + Verb). Filtra por Module.IsActive y
+        // Action.IsActive: un módulo o acción desactivados nunca deben seguir
+        // otorgando permiso solo porque el RoleAction sigue existiendo.
         return await context.RoleActions
-            .Where(ra => ra.RoleId == roleId)
+            .Where(ra => ra.RoleId == roleId
+                && ra.ModuleAction.Module.IsActive
+                && ra.ModuleAction.Action.IsActive)
+            .Select(ra => ra.ModuleAction.Module.Name.Replace(" ", "") + ra.ModuleAction.Action.Code)
+            .ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<string>> GetActionCodesByModuleAsync(int roleId, int moduleId)
+    {
+        return await context.RoleActions
+            .Where(ra => ra.RoleId == roleId
+                && ra.ModuleAction.ModuleId == moduleId
+                && ra.ModuleAction.Module.IsActive
+                && ra.ModuleAction.Action.IsActive)
             .Select(ra => ra.ModuleAction.Module.Name.Replace(" ", "") + ra.ModuleAction.Action.Code)
             .ToListAsync();
     }

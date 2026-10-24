@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Inventory.Api.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Inventory.Application.Common.Interfaces;
 using Inventory.Api.Middleware;
 using Inventory.Api.Tenancy;

@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Inventory.Api.Auth;
 using Inventory.Application.Common.Interfaces;
+using Inventory.Domain.Modules.Repositories;
 using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.Users.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -25,10 +26,22 @@ public class PermissionClaimsMiddleware(RequestDelegate next)
 {
     private const int NoRoleSentinel = 0;
 
+    /// <summary>
+    /// El cliente declara desde qué módulo necesita el dato (ej. la pantalla
+    /// de Roles pidiendo el catálogo de Actions para armar su picker de
+    /// permisos). Cuando está presente y resuelve a un módulo activo, los
+    /// claims de este request se acotan a SOLO ese módulo — no es un OR fijo
+    /// de permisos alternativos, el permiso exigido depende de ESE módulo
+    /// puntual. Si el header no está (la mayoría de los endpoints no lo
+    /// necesitan) se sigue usando el set completo del rol, sin acotar.
+    /// </summary>
+    public const string ModuleContextHeaderName = "X-Module-Code";
+
     public async Task InvokeAsync(
         HttpContext context,
         IUserRepository userRepository,
         IRoleRepository roleRepository,
+        IModuleRepository moduleRepository,
         IPermissionCache permissionCache)
     {
         if (context.User.Identity is ClaimsIdentity identity && identity.IsAuthenticated)
@@ -43,12 +56,40 @@ public class PermissionClaimsMiddleware(RequestDelegate next)
                 if (roleId != NoRoleSentinel)
                 {
                     var permissions = await ResolveRolePermissionsAsync(roleId, roleRepository, permissionCache);
-                    ApplyDerivedClaims(identity, permissions);
+
+                    var moduleScopedCodes = await TryResolveModuleScopedCodesAsync(
+                        context, roleId, roleRepository, moduleRepository);
+
+                    ApplyDerivedClaims(
+                        identity,
+                        moduleScopedCodes is null ? permissions : permissions with { ActionCodes = moduleScopedCodes });
                 }
             }
         }
 
         await next(context);
+    }
+
+    private static async Task<IReadOnlyList<string>?> TryResolveModuleScopedCodesAsync(
+        HttpContext context, int roleId, IRoleRepository roleRepository, IModuleRepository moduleRepository)
+    {
+        if (!context.Request.Headers.TryGetValue(ModuleContextHeaderName, out var headerValues)
+            || headerValues.Count != 1
+            || string.IsNullOrWhiteSpace(headerValues[0]))
+        {
+            // Header ausente, repetido o vacío: no hay contexto que resolver,
+            // se usa el set completo del rol tal como hoy.
+            return null;
+        }
+
+        var module = await moduleRepository.GetByRouteAsync(headerValues[0]!.Trim());
+
+        if (module is null || !module.IsActive)
+        {
+            return null;
+        }
+
+        return await roleRepository.GetActionCodesByModuleAsync(roleId, module.Id);
     }
 
     private static void StripExistingPermissionClaims(ClaimsIdentity identity)
