@@ -1,4 +1,5 @@
 using Inventory.Domain.Actions.Entity;
+using Inventory.Domain.ModuleActions.Entity;
 using Inventory.Domain.Modules.Entity;
 using Inventory.Domain.Modules.Models;
 using Inventory.Domain.RoleActions.Entity;
@@ -43,7 +44,7 @@ public class ModuleMenuTests
         var suffix = Guid.NewGuid().ToString("N");
         var module = await CreateModuleWithActionsAsync(context, $"MMSVis-{suffix}", requiresSystemAdmin: false);
         var role = await CreateRoleAsync(context, $"MMSVisRole-{suffix}");
-        await GrantActionsAsync(context, role.Id, new[] { module.Actions["View"] });
+        await GrantActionsAsync(context, role.Id, module.Module.Id, new[] { module.Actions["View"] });
         var user = await CreateUserAsync(context, $"mms-vis-{suffix}@example.com", role.Id);
 
         try
@@ -67,7 +68,7 @@ public class ModuleMenuTests
         var suffix = Guid.NewGuid().ToString("N");
         var module = await CreateModuleWithActionsAsync(context, $"MMSAdmin-{suffix}", requiresSystemAdmin: true);
         var role = await CreateRoleAsync(context, $"MMSAdminRole-{suffix}");
-        await GrantActionsAsync(context, role.Id, module.Actions.Values);
+        await GrantActionsAsync(context, role.Id, module.Module.Id, module.Actions.Values);
         var user = await CreateUserAsync(context, $"mms-admin-{suffix}@example.com", role.Id);
 
         try
@@ -96,7 +97,7 @@ public class ModuleMenuTests
         var role = await CreateRoleAsync(context, $"MMSContainerRole-{suffix}");
         // Grant only the CHILD's View action — the parent has zero granted
         // Actions of its own and must still render as a container.
-        await GrantActionsAsync(context, role.Id, new[] { child.Actions["View"] });
+        await GrantActionsAsync(context, role.Id, child.Module.Id, new[] { child.Actions["View"] });
         var user = await CreateUserAsync(context, $"mms-container-{suffix}@example.com", role.Id);
 
         try
@@ -162,14 +163,22 @@ public class ModuleMenuTests
             await context.Entry(module).ReloadAsync();
         }
 
+        // Actions es un catálogo global reutilizable (commit d12fd7a): el Code
+        // ya no lo deriva la entidad, así que se construye aquí igual que lo
+        // haría un caller real, y se liga al módulo vía ModuleActions (N:M)
+        // en vez de una FK directa.
         var actions = new Dictionary<string, ActionEntity>();
         foreach (var verb in new[] { "View", "Create", "Edit", "Delete" })
         {
-            // ActionEntity.Create arma el código "{Módulo}{Verbo}" = $"{name}{verb}".
-            var action = ActionEntity.Create(module, verb).Value!;
+            var action = ActionEntity.Create($"{name}{verb}", verb);
             context.Actions.Add(action);
             actions[verb] = action;
         }
+
+        await context.SaveChangesAsync();
+
+        foreach (var action in actions.Values)
+            context.ModuleActions.Add(ModuleActionEntity.Create(module.Id, action.Id));
 
         await context.SaveChangesAsync();
         return (module, actions);
@@ -185,10 +194,10 @@ public class ModuleMenuTests
         return role;
     }
 
-    private static async Task GrantActionsAsync(DataBaseContext context, int roleId, IEnumerable<ActionEntity> actions)
+    private static async Task GrantActionsAsync(DataBaseContext context, int roleId, int moduleId, IEnumerable<ActionEntity> actions)
     {
         foreach (var action in actions)
-            context.RoleActions.Add(new RoleActionEntity { RoleId = roleId, ActionId = action.Id });
+            context.RoleActions.Add(new RoleActionEntity { RoleId = roleId, ModuleId = moduleId, ActionId = action.Id });
 
         await context.SaveChangesAsync();
     }
@@ -223,7 +232,17 @@ public class ModuleMenuTests
 
         foreach (var moduleId in moduleIdsChildFirst)
         {
-            context.Actions.RemoveRange(context.Actions.Where(a => a.ModuleId == moduleId));
+            // Actions ya no tiene FK directa a Module (N:M vía ModuleActions),
+            // así que primero hay que borrar el vínculo y recién ahí la Action.
+            var moduleActionRows = await context.ModuleActions
+                .Where(ma => ma.ModuleId == moduleId)
+                .ToListAsync();
+            var actionIds = moduleActionRows.Select(ma => ma.ActionId).ToList();
+
+            context.ModuleActions.RemoveRange(moduleActionRows);
+            await context.SaveChangesAsync();
+
+            context.Actions.RemoveRange(context.Actions.Where(a => actionIds.Contains(a.Id)));
             await context.SaveChangesAsync();
 
             context.Modules.RemoveRange(context.Modules.Where(m => m.Id == moduleId));

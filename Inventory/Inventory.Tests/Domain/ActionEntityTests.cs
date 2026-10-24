@@ -1,37 +1,26 @@
 using Inventory.Domain.Actions.Entity;
-using Inventory.Domain.Modules.Entity;
 using Xunit;
 
 namespace Inventory.Tests.Domain;
 
+/// <summary>
+/// ActionEntity.Create ya no deriva el código del nombre ni valida nada
+/// (commit d12fd7a: "acciones por modulo (N:M)") — Actions es ahora un
+/// catálogo global reutilizable y el Code lo decide quien llama. La validación
+/// de formato vive hoy en CreateActionCommandValidator, no en la entidad.
+/// </summary>
 public class ActionEntityTests
 {
     [Theory]
-    [InlineData("Users", "View", "UsersView")]
-    [InlineData("Users", "export report", "UsersExportReport")]
-    [InlineData("Order Items", "bulk-edit", "OrderItemsBulkEdit")]
-    public void Create_BuildsCode_AsModulePlusNameInPascalCase(string moduleName, string actionName, string expectedCode)
+    [InlineData("UsersView", "View")]
+    [InlineData("UsersExportReport", "export report")]
+    [InlineData("OrderItemsBulkEdit", "bulk-edit")]
+    public void Create_SetsCodeAndNameVerbatim_AndStartsActive(string code, string name)
     {
-        var module = ModuleEntity.Create(moduleName, icon: null, route: null, parentId: null, sortOrder: 1);
+        var action = ActionEntity.Create(code, name);
 
-        var result = ActionEntity.Create(module, actionName);
-
-        Assert.True(result.IsSuccess);
-        Assert.Equal(expectedCode, result.Value!.Code);
-        Assert.True(result.Value.IsActive);
-    }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("   ")]
-    [InlineData("--- ...")]
-    public void Create_NameWithoutLettersOrDigits_IsRejected(string actionName)
-    {
-        var module = ModuleEntity.Create("Users", icon: null, route: null, parentId: null, sortOrder: 1);
-
-        var result = ActionEntity.Create(module, actionName);
-
-        Assert.False(result.IsSuccess);
-        Assert.Equal("ACTION_INVALID_NAME", result.Error!.Code);
+        Assert.Equal(code, action.Code);
+        Assert.Equal(name, action.Name);
+        Assert.True(action.IsActive);
     }
 }
