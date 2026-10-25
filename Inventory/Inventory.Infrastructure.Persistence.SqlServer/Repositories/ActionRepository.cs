@@ -1,9 +1,9 @@
 using Inventory.Domain.Actions.Entity;
 using Inventory.Domain.Actions.Repositories;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Infrastructure.Persistence.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.Repositories;
+namespace Inventory.Infrastructure.Persistence.SqlServer.Repositories;
 
 public class ActionRepository(DataBaseContext context) : IActionRepository
 {

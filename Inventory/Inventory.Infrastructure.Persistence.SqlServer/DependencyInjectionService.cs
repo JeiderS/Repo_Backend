@@ -4,13 +4,13 @@ using Inventory.Domain.Modules.Repositories;
 using Inventory.Domain.RefreshTokens.Repositories;
 using Inventory.Domain.Roles.Repositories;
 using Inventory.Domain.Users.Repositories;
-using Inventory.Infrastructure.Persistence.Mysql.Common.Persistence;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
-using Inventory.Infrastructure.Persistence.Mysql.Repositories;
+using Inventory.Infrastructure.Persistence.SqlServer.Common.Persistence;
+using Inventory.Infrastructure.Persistence.SqlServer.Context;
+using Inventory.Infrastructure.Persistence.SqlServer.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Inventory.Infrastructure.Persistence.Mysql
+namespace Inventory.Infrastructure.Persistence.SqlServer
 {
     public static class DependencyInjectionService
     {

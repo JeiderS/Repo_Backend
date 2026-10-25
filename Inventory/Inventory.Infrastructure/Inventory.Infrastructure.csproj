@@ -4,7 +4,7 @@
     Infraestructura "técnica" que NO es base de datos: seguridad (JWT, BCrypt)
     y caché. Implementa interfaces definidas en Application
     (IPasswordHasher, IJwtTokenGenerator, IActiveUserCache, IPermissionCache).
-    La persistencia sigue en Inventory.Infrastructure.Persistence.Mysql.
+    La persistencia sigue en Inventory.Infrastructure.Persistence.SqlServer.
   -->
 
   <PropertyGroup>

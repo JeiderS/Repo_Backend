@@ -13,7 +13,7 @@ Cada capa responde **una sola pregunta**:
 |---|---|---|
 | **Domain** | `Inventory.Domain` | ¿**Qué** cosas existen en el negocio y qué reglas cumplen? |
 | **Application** | `Inventory.Application` | ¿**Qué** puede hacer el sistema, paso a paso? |
-| **Infrastructure** | `Inventory.Infrastructure` + `Inventory.Infrastructure.Persistence.Mysql` | ¿**Cómo** se hace lo técnico (BD, JWT, BCrypt, caché)? |
+| **Infrastructure** | `Inventory.Infrastructure` + `Inventory.Infrastructure.Persistence.SqlServer` | ¿**Cómo** se hace lo técnico (BD, JWT, BCrypt, caché)? |
 | **Api** | `Inventory.Api` | ¿**Por dónde** entra y sale la información (HTTP)? |
 
 ### La regla de oro: las dependencias apuntan hacia adentro
@@ -25,7 +25,7 @@ Cada capa responde **una sola pregunta**:
    Inventory.Application  │   Inventory.Infrastructure          (JWT, BCrypt, caché)
                  │        │        │  implementa interfaces de Application
                  ▼        ▼        ▼
-                  Inventory.Domain  ◄── Inventory.Infrastructure.Persistence.Mysql
+                  Inventory.Domain  ◄── Inventory.Infrastructure.Persistence.SqlServer
                   (no depende de nadie)      (EF Core: implementa los repositorios)
 ```
 
@@ -68,7 +68,7 @@ Cada capa responde **una sola pregunta**:
 
 ### Infrastructure — "la nevera y la estufa"
 
-- `Inventory.Infrastructure.Persistence.Mysql`: `DataBaseContext`,
+- `Inventory.Infrastructure.Persistence.SqlServer`: `DataBaseContext`,
   `EntityConfiguration/`, `Repositories/` y `UnitOfWork`.
 - `Inventory.Infrastructure`: `Security/` (JWT, BCrypt) y `Caching/`.
 
@@ -161,7 +161,5 @@ Para ver el detalle de cada paso: `git show <commit>`.
 
 ### Lo que NO se hizo (y por qué)
 
-- **Renombrar `Persistence.Mysql`**: el proyecto usa SQL Server, pero renombrarlo
-  toca todos los namespaces sin enseñar nada nuevo. Se puede hacer cuando quieras.
 - **AutoMapper, repositorio genérico, Specification, Domain Events**: no hacen
   falta para un sistema de este tamaño; agregarían complejidad sin beneficio.

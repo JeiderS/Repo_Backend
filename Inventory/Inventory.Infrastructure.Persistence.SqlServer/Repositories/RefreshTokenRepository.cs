@@ -1,9 +1,9 @@
 using Inventory.Domain.RefreshTokens.Entity;
 using Inventory.Domain.RefreshTokens.Repositories;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Infrastructure.Persistence.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.Repositories;
+namespace Inventory.Infrastructure.Persistence.SqlServer.Repositories;
 
 public class RefreshTokenRepository(DataBaseContext context) : IRefreshTokenRepository
 {

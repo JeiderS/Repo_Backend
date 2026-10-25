@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Inventory.Domain.Users.Entity;
 using Inventory.Domain.UserProfile.Entity;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
+namespace Inventory.Infrastructure.Persistence.SqlServer.EntityConfiguration
 {
     public class UserConfiguration
     {

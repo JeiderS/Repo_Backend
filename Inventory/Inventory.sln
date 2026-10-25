@@ -19,9 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Domain", "Invento
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{FF528A92-7CFF-43E5-9496-B009809B8042}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mysql", "Mysql", "{7D116AFD-2EB2-4652-B743-EA61BA9B1B7C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlServer", "SqlServer", "{7D116AFD-2EB2-4652-B743-EA61BA9B1B7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Infrastructure.Persistence.Mysql", "Inventory.Infrastructure.Persistence.Mysql\Inventory.Infrastructure.Persistence.Mysql.csproj", "{2D52CBB8-64F8-4613-816D-B3E6D5BBB3B6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Infrastructure.Persistence.SqlServer", "Inventory.Infrastructure.Persistence.SqlServer\Inventory.Infrastructure.Persistence.SqlServer.csproj", "{2D52CBB8-64F8-4613-816D-B3E6D5BBB3B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inventory.Tests", "Inventory.Tests\Inventory.Tests.csproj", "{D64D7CC5-B452-407A-8FBC-D7078C141C41}"
 EndProject

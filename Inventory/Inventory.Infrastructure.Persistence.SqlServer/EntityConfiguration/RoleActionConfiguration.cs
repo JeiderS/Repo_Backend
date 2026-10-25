@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Inventory.Domain.RoleActions.Entity;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
+namespace Inventory.Infrastructure.Persistence.SqlServer.EntityConfiguration
 {
     public class RoleActionConfiguration
     {

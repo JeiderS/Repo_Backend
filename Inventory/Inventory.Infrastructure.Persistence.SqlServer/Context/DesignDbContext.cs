@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.Context
+namespace Inventory.Infrastructure.Persistence.SqlServer.Context
 {
     public class DesignTimeDbContextFactory : IDesignTimeDbContextFactory<DataBaseContext>
     {

@@ -5,9 +5,9 @@ using Inventory.Domain.Modules.Models;
 using Inventory.Domain.RoleActions.Entity;
 using Inventory.Domain.Roles.Entity;
 using Inventory.Domain.Users.Entity;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Infrastructure.Persistence.SqlServer.Context;
 using Inventory.Application.Modules.Query.GetModuleMenu;
-using Inventory.Infrastructure.Persistence.Mysql.Repositories;
+using Inventory.Infrastructure.Persistence.SqlServer.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
@@ -23,7 +23,7 @@ namespace Inventory.Tests.Modules;
 ///
 /// This project (Inventory.Tests.csproj) does not reference an EF Core
 /// InMemory provider, only the real SQL Server-backed
-/// <see cref="DataBaseContext"/> via Inventory.Infrastructure.Persistence.Mysql,
+/// <see cref="DataBaseContext"/> via Inventory.Infrastructure.Persistence.SqlServer,
 /// so per design.md's Testing Strategy "In-memory/real DB service test"
 /// option this exercises the real context directly against
 /// INVENTORY_TEST_DEFAULT_CONNECTION — same real-per-tenant-DB dependency

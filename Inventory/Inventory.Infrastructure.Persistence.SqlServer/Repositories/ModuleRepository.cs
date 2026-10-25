@@ -1,10 +1,10 @@
 using Inventory.Domain.ModuleActions.Entity;
 using Inventory.Domain.Modules.Entity;
 using Inventory.Domain.Modules.Repositories;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Infrastructure.Persistence.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.Repositories;
+namespace Inventory.Infrastructure.Persistence.SqlServer.Repositories;
 
 public class ModuleRepository(DataBaseContext context) : IModuleRepository
 {

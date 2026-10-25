@@ -2,10 +2,10 @@ using Inventory.Domain.Common.Authorization;
 using Inventory.Domain.RoleActions.Entity;
 using Inventory.Domain.Roles.Entity;
 using Inventory.Domain.Roles.Repositories;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Infrastructure.Persistence.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.Repositories;
+namespace Inventory.Infrastructure.Persistence.SqlServer.Repositories;
 
 public class RoleRepository(DataBaseContext context) : IRoleRepository
 {

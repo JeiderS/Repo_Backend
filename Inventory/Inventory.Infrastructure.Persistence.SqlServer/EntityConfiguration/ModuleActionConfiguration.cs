@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration
+namespace Inventory.Infrastructure.Persistence.SqlServer.EntityConfiguration
 {
     public class ModuleActionConfiguration
     {

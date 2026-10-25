@@ -1,9 +1,9 @@
 using Inventory.Domain.Users.Entity;
 using Inventory.Domain.Users.Repositories;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Infrastructure.Persistence.SqlServer.Context;
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.Repositories;
+namespace Inventory.Infrastructure.Persistence.SqlServer.Repositories;
 
 /// <summary>
 /// Implementa IUserRepository con EF Core. Solo trae y guarda datos:

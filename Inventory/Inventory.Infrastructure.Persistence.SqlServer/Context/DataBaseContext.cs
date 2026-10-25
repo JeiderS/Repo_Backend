@@ -6,10 +6,10 @@ using Inventory.Domain.RoleActions.Entity;
 using Inventory.Domain.Roles.Entity;
 using Inventory.Domain.UserProfile.Entity;
 using Inventory.Domain.Users.Entity;
-using Inventory.Infrastructure.Persistence.Mysql.EntityConfiguration;
+using Inventory.Infrastructure.Persistence.SqlServer.EntityConfiguration;
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.Context;
+namespace Inventory.Infrastructure.Persistence.SqlServer.Context;
 public class DataBaseContext : DbContext
 {
     public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)

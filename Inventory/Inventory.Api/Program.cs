@@ -1,7 +1,7 @@
 
 using Inventory.Application;
 using Inventory.Infrastructure;
-using Inventory.Infrastructure.Persistence.Mysql;
+using Inventory.Infrastructure.Persistence.SqlServer;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;

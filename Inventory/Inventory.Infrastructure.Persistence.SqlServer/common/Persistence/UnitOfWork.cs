@@ -1,9 +1,9 @@
 using Inventory.Domain.Common.Persistence;
-using Inventory.Infrastructure.Persistence.Mysql.Context;
+using Inventory.Infrastructure.Persistence.SqlServer.Context;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
-namespace Inventory.Infrastructure.Persistence.Mysql.Common.Persistence;
+namespace Inventory.Infrastructure.Persistence.SqlServer.Common.Persistence;
 
 public class UnitOfWork(DataBaseContext context) : IUnitOfWork
 {
