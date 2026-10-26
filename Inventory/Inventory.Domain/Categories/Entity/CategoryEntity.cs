@@ -29,18 +29,16 @@ namespace Inventory.Domain.Categories.Entity
             UpdatedAt = DateTime.UtcNow;
         }
 
-        /// <summary>
-        /// Regla de negocio: desactivar una categoría ya inactiva no hace nada.
-        /// </summary>
-        /// <returns>true si el estado cambió; false si ya estaba inactiva.</returns>
-        public bool Deactivate()
+        public void Activate()
         {
-            if (!IsActive)
-                return false;
+            IsActive = true;
+            UpdatedAt = DateTime.UtcNow;
+        }
 
+        public void Deactivate()
+        {
             IsActive = false;
             UpdatedAt = DateTime.UtcNow;
-            return true;
         }
     }
 }

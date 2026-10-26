@@ -1,6 +1,6 @@
 using Inventory.Api.Controllers.Common;
 using Inventory.Application.Categories.Command.CreateCategory;
-using Inventory.Application.Categories.Command.DeactivateCategory;
+using Inventory.Application.Categories.Command.SetCategoryStatus;
 using Inventory.Application.Categories.Command.UpdateCategory;
 using Inventory.Application.Categories.Query.GetCategories;
 using MediatR;
@@ -53,11 +53,12 @@ namespace Inventory.Api.Controllers.Categories
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "CategoríasDelete")]
-        [HttpPatch("{id:int}/deactivate")]
-        public async Task<IActionResult> Deactivate(int id)
+        [Authorize(Roles = "CategoríasEdit")]
+        [HttpPatch("{id:int}/status")]
+        public async Task<IActionResult> SetStatus(int id, [FromBody] SetCategoryStatusCommand command)
         {
-            var result = await mediator.Send(new DeactivateCategoryCommand(id));
+            command.Id = id;
+            var result = await mediator.Send(command);
             return FromResult(result);
         }
     }
