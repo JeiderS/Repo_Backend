@@ -1,4 +1,5 @@
 using Inventory.Domain.Actions.Repositories;
+using Inventory.Domain.Categories.Repositories;
 using Inventory.Domain.Common.Persistence;
 using Inventory.Domain.Modules.Repositories;
 using Inventory.Domain.RefreshTokens.Repositories;
@@ -39,6 +40,7 @@ namespace Inventory.Infrastructure.Persistence.SqlServer
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IActionRepository, ActionRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             return services;
         }

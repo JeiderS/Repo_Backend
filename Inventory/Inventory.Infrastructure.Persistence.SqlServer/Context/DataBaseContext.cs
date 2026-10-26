@@ -1,4 +1,5 @@
 using Inventory.Domain.Actions.Entity;
+using Inventory.Domain.Categories.Entity;
 using Inventory.Domain.ModuleActions.Entity;
 using Inventory.Domain.Modules.Entity;
 using Inventory.Domain.RefreshTokens.Entity;
@@ -23,6 +24,7 @@ public class DataBaseContext : DbContext
     public DbSet<RoleActionEntity> RoleActions { get; set; }
     public DbSet<ModuleActionEntity> ModuleActions { get; set; }
     public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
+    public DbSet<CategoryEntity> Categories { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -40,5 +42,6 @@ public class DataBaseContext : DbContext
         new RoleActionConfiguration(modelBuilder.Entity<RoleActionEntity>());
         new ModuleActionConfiguration(modelBuilder.Entity<ModuleActionEntity>());
         new RefreshTokenConfiguration(modelBuilder.Entity<RefreshTokenEntity>());
+        new CategoryConfiguration(modelBuilder.Entity<CategoryEntity>());
     }
 }
