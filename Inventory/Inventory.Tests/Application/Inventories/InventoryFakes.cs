@@ -47,6 +47,9 @@ public class FakeInventoryRepository : IInventoryRepository
     public Task<InventoryEntity?> GetByIdAsync(int id) =>
         Task.FromResult(_inventories.TryGetValue(id, out var inventory) ? inventory : null);
 
+    public Task<InventoryEntity?> GetByProductIdAsync(int productId) =>
+        Task.FromResult(_inventories.Values.FirstOrDefault(i => i.ProductId == productId));
+
     public Task<List<InventoryEntity>> GetAllAsync() =>
         Task.FromResult(_inventories.Values.ToList());
 

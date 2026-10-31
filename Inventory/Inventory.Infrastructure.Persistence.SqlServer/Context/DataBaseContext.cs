@@ -8,6 +8,8 @@ using Inventory.Domain.Products.Entity;
 using Inventory.Domain.RefreshTokens.Entity;
 using Inventory.Domain.RoleActions.Entity;
 using Inventory.Domain.Roles.Entity;
+using Inventory.Domain.SaleDetails.Entity;
+using Inventory.Domain.Sales.Entity;
 using Inventory.Domain.UserProfile.Entity;
 using Inventory.Domain.Users.Entity;
 using Inventory.Infrastructure.Persistence.SqlServer.EntityConfiguration;
@@ -31,6 +33,8 @@ public class DataBaseContext : DbContext
     public DbSet<ProductEntity> Products { get; set; }
     public DbSet<InventoryEntity> Inventories { get; set; }
     public DbSet<InventoryMovementEntity> InventoryMovements { get; set; }
+    public DbSet<SaleEntity> Sales { get; set; }
+    public DbSet<SaleDetailEntity> SaleDetails { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -52,5 +56,7 @@ public class DataBaseContext : DbContext
         new ProductConfiguration(modelBuilder.Entity<ProductEntity>());
         new InventoryConfiguration(modelBuilder.Entity<InventoryEntity>());
         new InventoryMovementConfiguration(modelBuilder.Entity<InventoryMovementEntity>());
+        new SaleConfiguration(modelBuilder.Entity<SaleEntity>());
+        new SaleDetailConfiguration(modelBuilder.Entity<SaleDetailEntity>());
     }
 }

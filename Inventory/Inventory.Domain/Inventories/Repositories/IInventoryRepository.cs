@@ -6,6 +6,9 @@ public interface IInventoryRepository
 {
     Task<InventoryEntity?> GetByIdAsync(int id);
 
+    /// <summary>Busca el inventario por el Id del producto (no por su propio Id).</summary>
+    Task<InventoryEntity?> GetByProductIdAsync(int productId);
+
     /// <summary>Todos los inventarios, uno por producto.</summary>
     Task<List<InventoryEntity>> GetAllAsync();
 

@@ -12,6 +12,11 @@ public class InventoryRepository(DataBaseContext context) : IInventoryRepository
         return await context.Inventories.FirstOrDefaultAsync(i => i.Id == id);
     }
 
+    public async Task<InventoryEntity?> GetByProductIdAsync(int productId)
+    {
+        return await context.Inventories.FirstOrDefaultAsync(i => i.ProductId == productId);
+    }
+
     public async Task<List<InventoryEntity>> GetAllAsync()
     {
         return await context.Inventories.ToListAsync();
