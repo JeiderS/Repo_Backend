@@ -1,5 +1,7 @@
 using Inventory.Domain.Actions.Entity;
 using Inventory.Domain.Categories.Entity;
+using Inventory.Domain.Inventories.Entity;
+using Inventory.Domain.InventoryMovements.Entity;
 using Inventory.Domain.ModuleActions.Entity;
 using Inventory.Domain.Modules.Entity;
 using Inventory.Domain.Products.Entity;
@@ -27,6 +29,8 @@ public class DataBaseContext : DbContext
     public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
     public DbSet<CategoryEntity> Categories { get; set; }
     public DbSet<ProductEntity> Products { get; set; }
+    public DbSet<InventoryEntity> Inventories { get; set; }
+    public DbSet<InventoryMovementEntity> InventoryMovements { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -46,5 +50,7 @@ public class DataBaseContext : DbContext
         new RefreshTokenConfiguration(modelBuilder.Entity<RefreshTokenEntity>());
         new CategoryConfiguration(modelBuilder.Entity<CategoryEntity>());
         new ProductConfiguration(modelBuilder.Entity<ProductEntity>());
+        new InventoryConfiguration(modelBuilder.Entity<InventoryEntity>());
+        new InventoryMovementConfiguration(modelBuilder.Entity<InventoryMovementEntity>());
     }
 }

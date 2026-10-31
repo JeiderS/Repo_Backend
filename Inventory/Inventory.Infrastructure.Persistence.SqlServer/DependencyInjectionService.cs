@@ -1,6 +1,8 @@
 using Inventory.Domain.Actions.Repositories;
 using Inventory.Domain.Categories.Repositories;
 using Inventory.Domain.Common.Persistence;
+using Inventory.Domain.Inventories.Repositories;
+using Inventory.Domain.InventoryMovements.Repositories;
 using Inventory.Domain.Modules.Repositories;
 using Inventory.Domain.Products.Repositories;
 using Inventory.Domain.RefreshTokens.Repositories;
@@ -43,6 +45,8 @@ namespace Inventory.Infrastructure.Persistence.SqlServer
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IInventoryRepository, InventoryRepository>();
+            services.AddScoped<IInventoryMovementRepository, InventoryMovementRepository>();
 
             return services;
         }

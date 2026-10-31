@@ -34,4 +34,20 @@ public class UnitOfWork(DataBaseContext context) : IUnitOfWork
             throw new ConcurrencyConflictException("El registro fue modificado por otra operación.", ex);
         }
     }
+
+    public async Task<TResult> ExecuteInTransactionAsync<TResult>(Func<Task<TResult>> operation)
+    {
+        await using var transaction = await context.Database.BeginTransactionAsync();
+        try
+        {
+            var result = await operation();
+            await transaction.CommitAsync();
+            return result;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
 }
