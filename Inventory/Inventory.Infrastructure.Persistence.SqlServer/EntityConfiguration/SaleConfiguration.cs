@@ -32,6 +32,9 @@ namespace Inventory.Infrastructure.Persistence.SqlServer.EntityConfiguration
                 .HasColumnName("Origin")
                 .IsRequired()
                 .HasMaxLength(10);
+
+            builder.Property(s => s.CustomerId)
+                .HasColumnName("CustomerId");
         }
     }
 }

@@ -1,5 +1,6 @@
 using Inventory.Domain.Actions.Entity;
 using Inventory.Domain.Categories.Entity;
+using Inventory.Domain.Customers.Entity;
 using Inventory.Domain.Inventories.Entity;
 using Inventory.Domain.InventoryMovements.Entity;
 using Inventory.Domain.ModuleActions.Entity;
@@ -35,6 +36,7 @@ public class DataBaseContext : DbContext
     public DbSet<InventoryMovementEntity> InventoryMovements { get; set; }
     public DbSet<SaleEntity> Sales { get; set; }
     public DbSet<SaleDetailEntity> SaleDetails { get; set; }
+    public DbSet<CustomerEntity> Customers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -58,5 +60,6 @@ public class DataBaseContext : DbContext
         new InventoryMovementConfiguration(modelBuilder.Entity<InventoryMovementEntity>());
         new SaleConfiguration(modelBuilder.Entity<SaleEntity>());
         new SaleDetailConfiguration(modelBuilder.Entity<SaleDetailEntity>());
+        new CustomerConfiguration(modelBuilder.Entity<CustomerEntity>());
     }
 }

@@ -7,5 +7,7 @@ public class SaleDetailDto
     public DateTime SaleDate { get; set; }
     public string Origin { get; set; } = default!;
     public decimal Total { get; set; }
+    public int? CustomerId { get; set; }
+    public string? CustomerName { get; set; }
     public List<SaleDetailLineDto> Lines { get; set; } = new();
 }

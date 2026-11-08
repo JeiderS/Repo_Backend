@@ -13,13 +13,14 @@ namespace Inventory.Domain.Sales.Entity
         public DateTime SaleDate { get; private set; }
         public decimal Total { get; private set; }
         public string Origin { get; private set; } = default!;
+        public int? CustomerId { get; private set; }
 
         /// <summary>
         /// Regla de negocio: una venta es un registro operativo inmutable, sin
         /// Update ni Delete (igual que InventoryMovementEntity). El Number se
         /// genera acá mismo, sin ida y vuelta a la base de datos.
         /// </summary>
-        public static SaleEntity Create(string origin, decimal total)
+        public static SaleEntity Create(string origin, decimal total, int? customerId = null)
         {
             if (origin != OriginManual && origin != OriginWeb)
                 throw new ArgumentException("Origin must be MANUAL or WEB.", nameof(origin));
@@ -30,6 +31,7 @@ namespace Inventory.Domain.Sales.Entity
                 SaleDate = DateTime.UtcNow,
                 Total = total,
                 Origin = origin,
+                CustomerId = customerId,
             };
         }
     }

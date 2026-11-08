@@ -59,7 +59,7 @@ public class RegisterSaleCommandHandler(
             // anterior de esta misma pasada 2 que ya haya decrementado inventario.
             return await unitOfWork.ExecuteInTransactionAsync(async () =>
             {
-                var sale = SaleEntity.Create(SaleEntity.OriginManual, total);
+                var sale = SaleEntity.Create(SaleEntity.OriginManual, total, request.CustomerId);
                 await saleRepository.AddAsync(sale);
                 await unitOfWork.SaveChangesAsync(cancellationToken);
 

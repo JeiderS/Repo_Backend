@@ -8,6 +8,7 @@ namespace Inventory.Application.Sales.Command.RegisterSale;
 public class RegisterSaleCommand : IRequest<Result<SaleDetailDto, Error>>
 {
     public List<SaleLineItem> Lines { get; set; } = new();
+    public int? CustomerId { get; set; }
 }
 
 /// <summary>

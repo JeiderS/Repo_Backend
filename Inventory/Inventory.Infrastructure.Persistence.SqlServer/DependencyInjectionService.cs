@@ -1,6 +1,7 @@
 using Inventory.Domain.Actions.Repositories;
 using Inventory.Domain.Categories.Repositories;
 using Inventory.Domain.Common.Persistence;
+using Inventory.Domain.Customers.Repositories;
 using Inventory.Domain.Inventories.Repositories;
 using Inventory.Domain.InventoryMovements.Repositories;
 using Inventory.Domain.Modules.Repositories;
@@ -51,6 +52,7 @@ namespace Inventory.Infrastructure.Persistence.SqlServer
             services.AddScoped<IInventoryMovementRepository, InventoryMovementRepository>();
             services.AddScoped<ISaleRepository, SaleRepository>();
             services.AddScoped<ISaleDetailRepository, SaleDetailRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
 
             return services;
         }

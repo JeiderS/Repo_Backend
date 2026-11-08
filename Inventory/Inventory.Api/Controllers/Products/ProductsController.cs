@@ -16,7 +16,7 @@ namespace Inventory.Api.Controllers.Products
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        [Authorize(Roles = "ProductosView")]
+        [Authorize(Roles = "ProductosView, VentasView")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

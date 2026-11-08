@@ -2,6 +2,7 @@ using Inventory.Application.Sales.Dto;
 using Inventory.Application.Sales.Errors;
 using Inventory.Domain.Common.Results;
 using Inventory.Domain.Common.Results.Errors;
+using Inventory.Domain.Customers.Repositories;
 using Inventory.Domain.Products.Repositories;
 using Inventory.Domain.SaleDetails.Repositories;
 using Inventory.Domain.Sales.Repositories;
@@ -12,7 +13,8 @@ namespace Inventory.Application.Sales.Query.GetSaleDetail;
 public class GetSaleDetailQueryHandler(
     ISaleRepository saleRepository,
     ISaleDetailRepository saleDetailRepository,
-    IProductRepository productRepository)
+    IProductRepository productRepository,
+    ICustomerRepository customerRepository)
     : IRequestHandler<GetSaleDetailQuery, Result<SaleDetailDto, Error>>
 {
     public async Task<Result<SaleDetailDto, Error>> Handle(GetSaleDetailQuery request, CancellationToken cancellationToken)
@@ -20,6 +22,13 @@ public class GetSaleDetailQueryHandler(
         var sale = await saleRepository.GetByIdAsync(request.SaleId);
         if (sale is null)
             return Result<SaleDetailDto, Error>.Failure(SaleErrorBuilder.SaleNotFound());
+
+        string? customerName = null;
+        if (sale.CustomerId.HasValue)
+        {
+            var customer = await customerRepository.GetByIdAsync(sale.CustomerId.Value);
+            customerName = customer?.Name;
+        }
 
         var details = await saleDetailRepository.GetBySaleIdAsync(request.SaleId);
 
@@ -45,6 +54,8 @@ public class GetSaleDetailQueryHandler(
             SaleDate = sale.SaleDate,
             Origin = sale.Origin,
             Total = sale.Total,
+            CustomerId = sale.CustomerId,
+            CustomerName = customerName,
             Lines = lines,
         });
     }
